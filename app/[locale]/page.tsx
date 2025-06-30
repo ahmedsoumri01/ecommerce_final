@@ -10,39 +10,32 @@ import { Button } from "@/components/ui/button";
 import { getFeaturedProducts } from "@/lib/data/products";
 import { getFeaturedCategories } from "@/lib/data/categories";
 import Link from "next/link";
+import { useClientDictionary } from "@/hooks/useClientDictionary";
 
 export default function HomePage({ params }: { params: { locale: string } }) {
   const isRTL = params.locale === "ar";
+  const { t } = useClientDictionary(params.locale);
+
   const featuredProducts = getFeaturedProducts().slice(0, 9);
   const featuredCategories = getFeaturedCategories();
 
   const heroSlides = [
     {
       id: 1,
-      title: isRTL ? "كن واحداً مع موسيقاك" : "Be At One With Your Music",
-      subtitle: isRTL
-        ? "سماعات لاسلكية بإلغاء الضوضاء WH-1000XM4"
-        : "WH-1000XM4 Wireless Noise Cancelling",
-      description: isRTL
-        ? "اكتشف تجربة صوتية لا مثيل لها مع أحدث تقنيات إلغاء الضوضاء"
-        : "Experience unparalleled audio with the latest noise cancelling technology",
+      title: t("home_page.hero.title_1"),
+      subtitle: t("home_page.hero.subtitle_1"),
+      description: t("home_page.hero.description_1"),
       image: IphoneImage,
-      cta: isRTL ? "تسوق الآن" : "Shop Now",
+      cta: t("home_page.hero.cta"),
       ctaLink: `/${params.locale}/products`,
     },
     {
       id: 2,
-      title: isRTL
-        ? "قوة الأداء في متناول يدك"
-        : "Power Performance in Your Hands",
-      subtitle: isRTL
-        ? "ماك بوك برو الجديد مع شريحة M2"
-        : "New MacBook Pro with M2 Chip",
-      description: isRTL
-        ? "أداء استثنائي للمحترفين والمبدعين"
-        : "Exceptional performance for professionals and creators",
+      title: t("home_page.hero.title_2"),
+      subtitle: t("home_page.hero.subtitle_2"),
+      description: t("home_page.hero.description_2"),
       image: IphoneImage,
-      cta: isRTL ? "اكتشف المزيد" : "Discover More",
+      cta: t("home_page.hero.cta"),
       ctaLink: `/${params.locale}/products`,
     },
   ];
@@ -56,9 +49,13 @@ export default function HomePage({ params }: { params: { locale: string } }) {
       <section className="py-16">
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center mb-8">
-            <h2 className="text-3xl font-bold">الفئات المميزة</h2>
+            <h2 className="text-3xl font-bold">
+              {t("home_page.featured_categories.title")}
+            </h2>
             <Link href={`/${params.locale}/categories`}>
-              <Button variant="outline">عرض جميع الفئات</Button>
+              <Button variant="outline">
+                {t("home_page.featured_categories.view_all")}
+              </Button>
             </Link>
           </div>
           <CategoriesCarousel
@@ -73,9 +70,13 @@ export default function HomePage({ params }: { params: { locale: string } }) {
       <section className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center mb-8">
-            <h2 className="text-3xl font-bold">المنتجات المميزة</h2>
+            <h2 className="text-3xl font-bold">
+              {t("home_page.featured_products.title")}
+            </h2>
             <Link href={`/${params.locale}/products`}>
-              <Button variant="outline">عرض جميع المنتجات</Button>
+              <Button variant="outline">
+                {t("home_page.featured_products.view_all")}
+              </Button>
             </Link>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -91,7 +92,7 @@ export default function HomePage({ params }: { params: { locale: string } }) {
           <div className="text-center mt-12">
             <Link href={`/${params.locale}/products`}>
               <Button size="lg" className="px-8">
-                عرض المزيد من المنتجات
+                {t("home_page.featured_products.show_more")}
               </Button>
             </Link>
           </div>
@@ -102,10 +103,10 @@ export default function HomePage({ params }: { params: { locale: string } }) {
       <BrandsSection />
 
       {/* Newsletter Section */}
-      <NewsletterSection dict={{}} isRTL={isRTL} />
+      <NewsletterSection dict={t("home_page")} isRTL={isRTL} />
 
       {/* Footer */}
-      <Footer dict={{}} locale={params.locale} isRTL={isRTL} />
+      <Footer dict={t("footer")} locale={params.locale} isRTL={isRTL} />
     </div>
   );
 }

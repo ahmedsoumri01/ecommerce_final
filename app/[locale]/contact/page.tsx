@@ -1,63 +1,67 @@
-"use client"
+"use client";
 
-import type React from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { MapPin, Phone, Mail, Clock } from "lucide-react"
-import { useState } from "react"
+import type React from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { MapPin, Phone, Mail, Clock } from "lucide-react";
+import { useState } from "react";
+import { useClientDictionary } from "@/hooks/useClientDictionary";
 
 export default function ContactPage({
   params,
 }: {
-  params: { locale: string }
+  params: { locale: string };
 }) {
-  const isRTL = params.locale === "ar"
+  const { t } = useClientDictionary(params.locale);
+
+  const isRTL = params.locale === "ar";
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     subject: "",
     message: "",
-  })
+  });
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    // Handle form submission
-    console.log("Form submitted:", formData)
-    // Reset form
-    setFormData({ name: "", email: "", subject: "", message: "" })
-  }
+    e.preventDefault();
+    console.log("Form submitted:", formData);
+    setFormData({ name: "", email: "", subject: "", message: "" });
+  };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     setFormData((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
-    }))
-  }
+    }));
+  };
 
   return (
     <div className={`${isRTL ? "rtl" : "ltr"}`}>
-      {/* Hero Section */}
       <section className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-20">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="text-5xl font-bold mb-6">تواصل معنا</h1>
+          <h1 className="text-5xl font-bold mb-6">
+            {t("contact_us_page.contact_us_title")}
+          </h1>
           <p className="text-xl max-w-2xl mx-auto">
-            نحن هنا لمساعدتك. تواصل معنا في أي وقت وسنكون سعداء للإجابة على استفساراتك
+            {t("contact_us_page.contact_us_subtitle")}
           </p>
         </div>
       </section>
 
-      {/* Contact Info & Form */}
       <section className="py-16">
         <div className="container mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-12">
-            {/* Contact Information */}
             <div className="space-y-8">
               <div>
-                <h2 className="text-3xl font-bold mb-6">معلومات التواصل</h2>
+                <h2 className="text-3xl font-bold mb-6">
+                  {t("contact_us_page.info_title")}
+                </h2>
                 <p className="text-gray-600 mb-8">
-                  يمكنك التواصل معنا من خلال أي من الطرق التالية، وسنكون سعداء لمساعدتك
+                  {t("contact_us_page.info_description")}
                 </p>
               </div>
 
@@ -66,8 +70,12 @@ export default function ContactPage({
                   <CardContent className="flex items-center gap-4 p-6">
                     <MapPin className="h-8 w-8 text-blue-600" />
                     <div>
-                      <h3 className="font-semibold mb-1">العنوان</h3>
-                      <p className="text-gray-600">الرياض، المملكة العربية السعودية</p>
+                      <h3 className="font-semibold mb-1">
+                        {t("contact_us_page.address_label")}
+                      </h3>
+                      <p className="text-gray-600">
+                        {t("contact_us_page.address_value")}
+                      </p>
                     </div>
                   </CardContent>
                 </Card>
@@ -76,8 +84,12 @@ export default function ContactPage({
                   <CardContent className="flex items-center gap-4 p-6">
                     <Phone className="h-8 w-8 text-green-600" />
                     <div>
-                      <h3 className="font-semibold mb-1">الهاتف</h3>
-                      <p className="text-gray-600">+966 50 123 4567</p>
+                      <h3 className="font-semibold mb-1">
+                        {t("contact_us_page.phone_label")}
+                      </h3>
+                      <p className="text-gray-600">
+                        {t("contact_us_page.phone_value")}
+                      </p>
                     </div>
                   </CardContent>
                 </Card>
@@ -86,8 +98,12 @@ export default function ContactPage({
                   <CardContent className="flex items-center gap-4 p-6">
                     <Mail className="h-8 w-8 text-purple-600" />
                     <div>
-                      <h3 className="font-semibold mb-1">البريد الإلكتروني</h3>
-                      <p className="text-gray-600">info@store.com</p>
+                      <h3 className="font-semibold mb-1">
+                        {t("contact_us_page.email_label")}
+                      </h3>
+                      <p className="text-gray-600">
+                        {t("contact_us_page.email_value")}
+                      </p>
                     </div>
                   </CardContent>
                 </Card>
@@ -96,25 +112,33 @@ export default function ContactPage({
                   <CardContent className="flex items-center gap-4 p-6">
                     <Clock className="h-8 w-8 text-orange-600" />
                     <div>
-                      <h3 className="font-semibold mb-1">ساعات العمل</h3>
-                      <p className="text-gray-600">الأحد - الخميس: 9:00 ص - 6:00 م</p>
+                      <h3 className="font-semibold mb-1">
+                        {t("contact_us_page.hours_label")}
+                      </h3>
+                      <p className="text-gray-600">
+                        {t("contact_us_page.hours_value")}
+                      </p>
                     </div>
                   </CardContent>
                 </Card>
               </div>
             </div>
 
-            {/* Contact Form */}
             <Card>
               <CardHeader>
-                <CardTitle className="text-2xl">أرسل لنا رسالة</CardTitle>
+                <CardTitle className="text-2xl">
+                  {t("contact_us_page.form_title")}
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
-                      <label htmlFor="name" className="block text-sm font-medium mb-2">
-                        الاسم *
+                      <label
+                        htmlFor="name"
+                        className="block text-sm font-medium mb-2"
+                      >
+                        {t("contact_us_page.name_label")}
                       </label>
                       <Input
                         id="name"
@@ -122,12 +146,15 @@ export default function ContactPage({
                         value={formData.name}
                         onChange={handleChange}
                         required
-                        placeholder="أدخل اسمك"
+                        placeholder={t("contact_us_page.name_placeholder")}
                       />
                     </div>
                     <div>
-                      <label htmlFor="email" className="block text-sm font-medium mb-2">
-                        البريد الإلكتروني *
+                      <label
+                        htmlFor="email"
+                        className="block text-sm font-medium mb-2"
+                      >
+                        {t("contact_us_page.email_label")}
                       </label>
                       <Input
                         id="email"
@@ -136,14 +163,17 @@ export default function ContactPage({
                         value={formData.email}
                         onChange={handleChange}
                         required
-                        placeholder="أدخل بريدك الإلكتروني"
+                        placeholder={t("contact_us_page.email_placeholder")}
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label htmlFor="subject" className="block text-sm font-medium mb-2">
-                      الموضوع *
+                    <label
+                      htmlFor="subject"
+                      className="block text-sm font-medium mb-2"
+                    >
+                      {t("contact_us_page.subject_label")}
                     </label>
                     <Input
                       id="subject"
@@ -151,13 +181,16 @@ export default function ContactPage({
                       value={formData.subject}
                       onChange={handleChange}
                       required
-                      placeholder="موضوع الرسالة"
+                      placeholder={t("contact_us_page.subject_placeholder")}
                     />
                   </div>
 
                   <div>
-                    <label htmlFor="message" className="block text-sm font-medium mb-2">
-                      الرسالة *
+                    <label
+                      htmlFor="message"
+                      className="block text-sm font-medium mb-2"
+                    >
+                      {t("contact_us_page.message_label")}
                     </label>
                     <Textarea
                       id="message"
@@ -166,12 +199,12 @@ export default function ContactPage({
                       onChange={handleChange}
                       required
                       rows={6}
-                      placeholder="اكتب رسالتك هنا..."
+                      placeholder={t("contact_us_page.message_placeholder")}
                     />
                   </div>
 
                   <Button type="submit" size="lg" className="w-full">
-                    إرسال الرسالة
+                    {t("contact_us_page.submit_button")}
                   </Button>
                 </form>
               </CardContent>
@@ -180,5 +213,5 @@ export default function ContactPage({
         </div>
       </section>
     </div>
-  )
+  );
 }

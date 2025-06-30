@@ -45,5 +45,142 @@
     "loading": "جاري التحميل...",
     "error": "حدث خطأ",
     "language": "اللغة"
+  },
+
+  "contact_us_page": {
+    "contact_us_title": "اتصل بنا",
+    "contact_us_subtitle": "نحن هنا لمساعدتك. تواصل معنا في أي وقت وسنكون سعداء بالإجابة على استفساراتك.",
+    "info_title": "معلومات التواصل",
+    "info_description": "يمكنك التواصل معنا من خلال أي من الطرق التالية، وسنكون سعداء لمساعدتك.",
+    "address_label": "العنوان",
+    "address_value": "الرياض، المملكة العربية السعودية",
+    "phone_label": "الهاتف",
+    "phone_value": "+966 50 123 4567",
+    "email_label": "البريد الإلكتروني",
+    "email_value": "info@store.com",
+    "hours_label": "ساعات العمل",
+    "hours_value": "الأحد - الخميس: 9:00 ص - 6:00 م",
+    "form_title": "أرسل لنا رسالة",
+    "name_label": "الاسم *",
+    "name_placeholder": "أدخل اسمك",
+    "email_label": "البريد الإلكتروني *",
+    "email_placeholder": "أدخل بريدك الإلكتروني",
+    "subject_label": "الموضوع *",
+    "subject_placeholder": "موضوع الرسالة",
+    "message_label": "الرسالة *",
+    "message_placeholder": "اكتب رسالتك هنا...",
+    "submit_button": "إرسال الرسالة"
+  },
+  "about_us_page": {
+    "about_us_title": "من نحن",
+    "about_us_subtitle": "تونيكادو هو متجر إلكتروني رائد لبيع الإكسسوارات والتقنيات والملابس الأنيقة بأفضل الأسعار.",
+    "our_story_title": "قصتنا",
+    "our_story_p1": "بدأت تونيكادو رحلتها في عام 2020 برؤية تهدف إلى جعل التكنولوجيا، والإكسسوارات، والموضة في متناول الجميع.",
+    "our_story_p2": "منذ انطلاقتنا، نمونا لنصبح من أكثر المتاجر الإلكترونية ثقة في المنطقة، حيث نخدم آلاف العملاء السعداء.",
+    "our_story_p3": "نلتزم بتقديم تجربة تسوق استثنائية من خلال خدمة عملاء ممتازة، وتوصيل سريع، وأسعار تنافسية.",
+    "our_values_title": "قيمنا",
+    "our_values_subtitle": "المبادئ التي توجهنا كل يوم",
+    "value_customers_title": "العملاء أولاً",
+    "value_customers_desc": "نضع احتياجات عملائنا في المقدمة ونسعى لتجاوز توقعاتهم.",
+    "value_quality_title": "الجودة",
+    "value_quality_desc": "نختار منتجاتنا بعناية لضمان أفضل جودة وأداء.",
+    "value_innovation_title": "الابتكار",
+    "value_innovation_desc": "نواكب أحدث الاتجاهات والتقنيات لنقدم الأفضل.",
+    "value_trust_title": "الثقة",
+    "value_trust_desc": "نبني علاقات طويلة الأمد مع عملائنا قائمة على الثقة والشفافية.",
+    "team_title": "فريقنا",
+    "team_subtitle": "الأشخاص الذين يجعلون كل شيء ممكناً",
+    "team_member_1_name": "أحمد محمد",
+    "team_member_1_role": "المدير التنفيذي",
+    "team_member_2_name": "فاطمة علي",
+    "team_member_2_role": "مديرة التسويق",
+    "team_member_3_name": "محمد سالم",
+    "team_member_3_role": "مدير التقنية"
+  },
+  "all_categories_page": {
+    "header_title": "جميع الفئات",
+    "header_subtitle": "اكتشف مجموعتنا الواسعة من الفئات والمنتجات المتنوعة",
+    "product_label": "منتج",
+    "explore_label": "اكتشف أفضل منتجات",
+    "featured_title": "الفئات الأكثر شعبية",
+    "featured_subtitle": "الفئات الأكثر طلباً من عملائنا",
+    "featured_desc": "مجموعة متنوعة من منتجات",
+    "product_available": "منتج متاح"
+  },
+  "all_products_page": {
+    "header_title": "All Products",
+    "header_subtitle": "Discover our complete collection of high-quality products",
+    "discover": "Discover the best products of",
+    "price_range": "Price Range",
+    "categories": "Categories",
+    "brands": "Brands",
+    "clear_filters": "Clear Filters",
+    "filter_products": "Filter Products",
+    "sort": {
+      "featured": "Featured",
+      "price_low": "Price: Low to High",
+      "price_high": "Price: High to Low",
+      "rating": "Top Rated",
+      "newest": "Newest"
+    },
+    "search_placeholder": "Search for products...",
+    "no_results_search": "No products match the search",
+    "no_results_filters": "No products match the selected filters",
+    "load_more": "Show More Products",
+    "showing_results": "Showing {count} of {total} products"
+  },
+  "home_page": {
+    "hero": {
+      "title_1": "كن واحداً مع موسيقاك",
+      "subtitle_1": "سماعات لاسلكية بإلغاء الضوضاء WH-1000XM4",
+      "description_1": "اكتشف تجربة صوتية لا مثيل لها مع أحدث تقنيات إلغاء الضوضاء",
+      "title_2": "قوة الأداء في متناول يدك",
+      "subtitle_2": "ماك بوك برو الجديد مع شريحة M2",
+      "description_2": "أداء استثنائي للمحترفين والمبدعين",
+      "cta": "تسوق الآن"
+    },
+    "featured_categories": {
+      "title": "الفئات المميزة",
+      "view_all": "عرض جميع الفئات"
+    },
+    "featured_products": {
+      "title": "المنتجات المميزة",
+      "view_all": "عرض جميع المنتجات",
+      "show_more": "عرض المزيد من المنتجات"
+    },
+    "newsletter_section": {
+      "title": "اشترك في النشرة الإخبارية",
+      "subtitle": "احصل على أحدث العروض والمنتجات الجديدة مباشرة في بريدك الإلكتروني",
+      "email_placeholder": "أدخل بريدك الإلكتروني",
+      "submit_button": "إرسال",
+      "success_message": "شكراً لك! تم الاشتراك بنجاح"
+    }
+  },
+  "footer": {
+    "brand": {
+      "title": "متجرنا",
+      "description": "متجر إلكتروني متخصص في بيع أحدث الأجهزة الإلكترونية والتقنية بأفضل الأسعار"
+    },
+    "categories": {
+      "title": "الفئات",
+      "smartphones": "هواتف ذكية",
+      "laptops": "أجهزة لابتوب",
+      "headphones": "سماعات",
+      "cameras": "كاميرات"
+    },
+    "information": {
+      "title": "معلومات",
+      "about_us": "من نحن",
+      "contact_us": "اتصل بنا",
+      "shipping": "الشحن والتوصيل",
+      "returns": "سياسة الإرجاع"
+    },
+    "contact": {
+      "title": "تواصل معنا",
+      "email": "info@store.com",
+      "phone": "+966 50 123 4567",
+      "address": "الرياض، المملكة العربية السعودية"
+    },
+    "copyright": "© 2024 متجرنا. جميع الحقوق محفوظة."
   }
 }

@@ -45,5 +45,142 @@
     "loading": "Chargement...",
     "error": "Une erreur s'est produite",
     "language": "Langue"
+  },
+
+  "contact_us_page": {
+    "contact_us_title": "Contactez-nous",
+    "contact_us_subtitle": "Nous sommes là pour vous aider. Contactez-nous à tout moment, nous répondrons avec plaisir à vos questions.",
+    "info_title": "Informations de contact",
+    "info_description": "Vous pouvez nous contacter par l’un des moyens suivants, nous serons ravis de vous aider.",
+    "address_label": "Adresse",
+    "address_value": "Riyad, Arabie Saoudite",
+    "phone_label": "Téléphone",
+    "phone_value": "+966 50 123 4567",
+    "email_label": "E-mail",
+    "email_value": "info@store.com",
+    "hours_label": "Heures d'ouverture",
+    "hours_value": "Dimanche - Jeudi : 9h00 - 18h00",
+    "form_title": "Envoyez-nous un message",
+    "name_label": "Nom *",
+    "name_placeholder": "Entrez votre nom",
+    "email_label": "E-mail *",
+    "email_placeholder": "Entrez votre e-mail",
+    "subject_label": "Objet *",
+    "subject_placeholder": "Sujet du message",
+    "message_label": "Message *",
+    "message_placeholder": "Écrivez votre message ici...",
+    "submit_button": "Envoyer le message"
+  },
+  "about_us_page": {
+    "about_us_title": "À propos de nous",
+    "about_us_subtitle": "TuniKado est une boutique en ligne spécialisée dans les accessoires, la technologie et les vêtements tendance à des prix compétitifs.",
+    "our_story_title": "Notre histoire",
+    "our_story_p1": "TuniKado a commencé son aventure en 2020 avec la vision de rendre la technologie, les accessoires et la mode accessibles à tous.",
+    "our_story_p2": "Depuis notre lancement, nous sommes devenus l’une des boutiques les plus fiables de la région, servant des milliers de clients satisfaits.",
+    "our_story_p3": "Nous nous engageons à offrir une expérience d’achat exceptionnelle grâce à un excellent service, une livraison rapide et des prix compétitifs.",
+    "our_values_title": "Nos valeurs",
+    "our_values_subtitle": "Les principes qui nous guident chaque jour",
+    "value_customers_title": "Clients d'abord",
+    "value_customers_desc": "Nous plaçons les besoins de nos clients au centre de nos priorités.",
+    "value_quality_title": "Qualité",
+    "value_quality_desc": "Nous sélectionnons nos produits avec soin pour garantir la meilleure qualité.",
+    "value_innovation_title": "Innovation",
+    "value_innovation_desc": "Nous suivons les dernières tendances pour vous proposer les meilleurs produits.",
+    "value_trust_title": "Confiance",
+    "value_trust_desc": "Nous construisons des relations durables basées sur la confiance et la transparence.",
+    "team_title": "Notre équipe",
+    "team_subtitle": "Les personnes qui rendent tout possible",
+    "team_member_1_name": "Ahmed Mohamed",
+    "team_member_1_role": "Directeur Général",
+    "team_member_2_name": "Fatima Ali",
+    "team_member_2_role": "Directrice Marketing",
+    "team_member_3_name": "Mohamed Salem",
+    "team_member_3_role": "Directeur Technique"
+  },
+  "all_categories_page": {
+    "header_title": "Toutes les catégories",
+    "header_subtitle": "Découvrez notre large gamme de catégories et de produits",
+    "product_label": "produits",
+    "explore_label": "Découvrez les meilleurs de",
+    "featured_title": "Catégories les plus populaires",
+    "featured_subtitle": "Les catégories les plus demandées par nos clients",
+    "featured_desc": "Une variété de produits de haute qualité dans",
+    "product_available": "produits disponibles"
+  },
+  "all_products_page": {
+    "header_title": "Tous les produits",
+    "header_subtitle": "Découvrez notre gamme complète de produits de haute qualité",
+    "discover": "Découvrez les meilleurs produits de",
+    "price_range": "Fourchette de prix",
+    "categories": "Catégories",
+    "brands": "Marques",
+    "clear_filters": "Effacer les filtres",
+    "filter_products": "Filtrer les produits",
+    "sort": {
+      "featured": "Mises en avant",
+      "price_low": "Prix : du plus bas au plus élevé",
+      "price_high": "Prix : du plus élevé au plus bas",
+      "rating": "Meilleures évaluations",
+      "newest": "Nouveautés"
+    },
+    "search_placeholder": "Rechercher des produits...",
+    "no_results_search": "Aucun produit ne correspond à la recherche",
+    "no_results_filters": "Aucun produit ne correspond aux filtres sélectionnés",
+    "load_more": "Afficher plus de produits",
+    "showing_results": "Affichage de {count} sur {total} produits"
+  },
+  "home_page": {
+    "hero": {
+      "title_1": "Soyez en harmonie avec votre musique",
+      "subtitle_1": "Casque sans fil avec suppression du bruit WH-1000XM4",
+      "description_1": "Découvrez une expérience audio incomparable grâce à la dernière technologie de suppression du bruit",
+      "title_2": "Puissance et performance entre vos mains",
+      "subtitle_2": "Nouveau MacBook Pro avec puce M2",
+      "description_2": "Des performances exceptionnelles pour les professionnels et les créateurs",
+      "cta": "Acheter maintenant"
+    },
+    "featured_categories": {
+      "title": "Catégories populaires",
+      "view_all": "Voir toutes les catégories"
+    },
+    "featured_products": {
+      "title": "Produits en vedette",
+      "view_all": "Voir tous les produits",
+      "show_more": "Afficher plus de produits"
+    },
+    "newsletter_section": {
+      "title": "Inscrivez-vous à notre newsletter",
+      "subtitle": "Recevez les dernières offres et nouveautés directement dans votre boîte e-mail",
+      "email_placeholder": "Entrez votre adresse e-mail",
+      "submit_button": "S'abonner",
+      "success_message": "Merci ! Vous vous êtes inscrit avec succès"
+    }
+  },
+  "footer": {
+    "brand": {
+      "title": "Notre Boutique",
+      "description": "Boutique en ligne spécialisée dans la vente des derniers appareils électroniques et technologiques aux meilleurs prix"
+    },
+    "categories": {
+      "title": "Catégories",
+      "smartphones": "Smartphones",
+      "laptops": "Ordinateurs portables",
+      "headphones": "Casques audio",
+      "cameras": "Caméras"
+    },
+    "information": {
+      "title": "Informations",
+      "about_us": "À propos de nous",
+      "contact_us": "Contactez-nous",
+      "shipping": "Livraison",
+      "returns": "Politique de retour"
+    },
+    "contact": {
+      "title": "Contactez-nous",
+      "email": "info@store.com",
+      "phone": "+33 1 23 45 67 89",
+      "address": "Paris, France"
+    },
+    "copyright": "© 2024 Notre Boutique. Tous droits réservés."
   }
 }

@@ -45,5 +45,141 @@
     "loading": "Loading...",
     "error": "An error occurred",
     "language": "Language"
+  },
+  "contact_us_page": {
+    "contact_us_title": "Contact us",
+    "contact_us_subtitle": "We’re here to help. Contact us anytime and we’ll be happy to answer your questions.",
+    "info_title": "Contact Information",
+    "info_description": "Reach out to us through any of the following ways, and we'll be glad to assist you.",
+    "address_label": "Address",
+    "address_value": "Riyadh, Saudi Arabia",
+    "phone_label": "Phone",
+    "phone_value": "+966 50 123 4567",
+    "email_label": "Email",
+    "email_value": "info@store.com",
+    "hours_label": "Working Hours",
+    "hours_value": "Sunday - Thursday: 9:00 AM - 6:00 PM",
+    "form_title": "Send us a message",
+    "name_label": "Name *",
+    "name_placeholder": "Enter your name",
+    "email_placeholder": "Enter your email",
+    "email_label": "Email *",
+    "subject_label": "Subject *",
+    "subject_placeholder": "Message subject",
+    "message_label": "Message *",
+    "message_placeholder": "Write your message here...",
+    "submit_button": "Send Message"
+  },
+  "about_us_page": {
+    "about_us_title": "About Us",
+    "about_us_subtitle": "TuniKado is a leading e-commerce store for the latest accessories, tech, and stylish clothing at great prices.",
+    "our_story_title": "Our Story",
+    "our_story_p1": "TuniKado began its journey in 2020 with a vision to make the latest technology, accessories, and fashion accessible to all.",
+    "our_story_p2": "Since our launch, we’ve grown into one of the most trusted e-commerce stores in the region, serving thousands of happy customers.",
+    "our_story_p3": "We’re committed to delivering exceptional shopping experiences through outstanding service, fast delivery, and competitive pricing.",
+    "our_values_title": "Our Values",
+    "our_values_subtitle": "The principles that guide us every day",
+    "value_customers_title": "Customers First",
+    "value_customers_desc": "We put our customers’ needs at the heart of everything and aim to exceed their expectations.",
+    "value_quality_title": "Quality",
+    "value_quality_desc": "We carefully select our products to ensure top quality and performance.",
+    "value_innovation_title": "Innovation",
+    "value_innovation_desc": "We follow the latest trends and technologies to offer the best.",
+    "value_trust_title": "Trust",
+    "value_trust_desc": "We build lasting relationships based on trust and transparency.",
+    "team_title": "Our Team",
+    "team_subtitle": "The people who make everything possible",
+    "team_member_1_name": "Ahmed Mohamed",
+    "team_member_1_role": "CEO",
+    "team_member_2_name": "Fatima Ali",
+    "team_member_2_role": "Marketing Director",
+    "team_member_3_name": "Mohamed Salem",
+    "team_member_3_role": "CTO"
+  },
+  "all_categories_page": {
+    "header_title": "All Categories",
+    "header_subtitle": "Explore our wide range of categories and products",
+    "product_label": "products",
+    "explore_label": "Explore the best of",
+    "featured_title": "Most Popular Categories",
+    "featured_subtitle": "The most demanded categories by our customers",
+    "featured_desc": "A variety of high-quality",
+    "product_available": "products available"
+  },
+  "all_products_page": {
+    "header_title": "All Products",
+    "header_subtitle": "Explore our full collection of high-quality products",
+    "discover": "Discover the best of",
+    "price_range": "Price Range",
+    "categories": "Categories",
+    "brands": "Brands",
+    "clear_filters": "Clear Filters",
+    "filter_products": "Filter Products",
+    "sort": {
+      "featured": "Featured",
+      "price_low": "Price: Low to High",
+      "price_high": "Price: High to Low",
+      "rating": "Top Rated",
+      "newest": "Newest"
+    },
+    "search_placeholder": "Search for products...",
+    "no_results_search": "No products match your search",
+    "no_results_filters": "No products match the selected filters",
+    "load_more": "Load more products",
+    "showing_results": "Showing {count} of {total} products"
+  },
+  "home_page": {
+    "hero": {
+      "title_1": "Be At One With Your Music",
+      "subtitle_1": "WH-1000XM4 Wireless Noise Cancelling Headphones",
+      "description_1": "Experience unparalleled audio with the latest noise cancelling technology",
+      "title_2": "Power Performance in Your Hands",
+      "subtitle_2": "New MacBook Pro with M2 Chip",
+      "description_2": "Exceptional performance for professionals and creators",
+      "cta": "Shop Now"
+    },
+    "featured_categories": {
+      "title": "Featured Categories",
+      "view_all": "View All Categories"
+    },
+    "featured_products": {
+      "title": "Featured Products",
+      "view_all": "View All Products",
+      "show_more": "Show More Products"
+    },
+    "newsletter_section": {
+      "title": "Subscribe to Our Newsletter",
+      "subtitle": "Get the latest offers and new products delivered straight to your inbox",
+      "email_placeholder": "Enter your email address",
+      "submit_button": "Subscribe",
+      "success_message": "Thank you! Subscription successful"
+    }
+  },
+  "footer": {
+    "brand": {
+      "title": "Our Store",
+      "description": "An online store specializing in selling the latest electronic and tech devices at the best prices"
+    },
+    "categories": {
+      "title": "Categories",
+      "smartphones": "Smartphones",
+      "laptops": "Laptops",
+      "headphones": "Headphones",
+      "cameras": "Cameras"
+    },
+    "information": {
+      "title": "Information",
+      "about_us": "About Us",
+      "contact_us": "Contact Us",
+      "shipping": "Shipping Policy",
+      "returns": "Return Policy"
+    },
+    "contact": {
+      "title": "Contact Us",
+      "email": "info@store.com",
+      "phone": "+1 234 567 8900",
+      "address": "New York, USA"
+    },
+    "copyright": "© 2024 Our Store. All rights reserved."
   }
 }
