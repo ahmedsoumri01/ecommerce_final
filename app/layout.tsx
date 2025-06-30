@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   description:
     "TuniKado - Boutique en ligne d’accessoires et vêtements tendance en Tunisie.",
   manifest: "/manifest.json",
-  themeColor: "#3b82f6",
+  /*  themeColor: "#3b82f6", */
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",

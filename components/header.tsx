@@ -13,35 +13,30 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { useClientDictionary } from "@/hooks/useClientDictionary";
 
 interface HeaderProps {
-  dict: any;
   locale: string;
 }
 
-export function Header({ dict, locale }: HeaderProps) {
+export function Header({ locale }: HeaderProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { t } = useClientDictionary(locale);
+  console.log({
+    t,
+    test: t("header"),
+  });
   const isRTL = locale === "ar";
 
-  // Fallback navigation items
-  const navigation = {
-    home: locale === "ar" ? "الرئيسية" : locale === "fr" ? "Accueil" : "Home",
-    products:
-      locale === "ar" ? "المنتجات" : locale === "fr" ? "Produits" : "Products",
-    about: locale === "ar" ? "حول" : locale === "fr" ? "À propos" : "About",
-    contact:
-      locale === "ar" ? "اتصل بنا" : locale === "fr" ? "Contact" : "Contact",
-  };
-
   const navItems = [
-    { href: `/${locale}`, label: navigation.home },
-    { href: `/${locale}/products`, label: navigation.products },
+    { href: `/${locale}`, label: t("header.home") },
+    { href: `/${locale}/products`, label: t("header.products") },
     {
       href: `/${locale}/categories`,
-      label: locale === "ar" ? "الفئات" : "Categories",
+      label: t("header.Categories"),
     },
-    { href: `/${locale}/about`, label: navigation.about },
-    { href: `/${locale}/contact`, label: navigation.contact },
+    { href: `/${locale}/about`, label: t("header.about") },
+    { href: `/${locale}/contact`, label: t("header.contact") },
   ];
 
   return (
