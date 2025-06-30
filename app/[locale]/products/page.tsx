@@ -156,8 +156,8 @@ export default function ProductsPage({
             className="mb-4"
           />
           <div className="flex justify-between text-sm text-gray-600">
-            <span>${priceRange[0]}</span>
-            <span>${priceRange[1]}</span>
+            <span> {priceRange[0]}</span> DT
+            <span> {priceRange[1]}</span> DT
           </div>
         </div>
       </div>

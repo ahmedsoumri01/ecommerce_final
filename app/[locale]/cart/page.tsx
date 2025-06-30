@@ -148,7 +148,7 @@ export default function CartPage({ params }: { params: { locale: string } }) {
                           {item.product.brand}
                         </p>
                         <p className="text-lg font-bold text-primary mb-4">
-                          ${item.product.price}
+                          {item.product.price} DT
                         </p>
 
                         <div className="flex items-center justify-between">
@@ -233,14 +233,14 @@ export default function CartPage({ params }: { params: { locale: string } }) {
                     </div>
                     <div className="flex justify-between">
                       <span>{t("cart_page.tax")}</span>
-                      <span>${(getTotalPrice() * 0.15).toFixed(2)}</span>
+                      <span> {(getTotalPrice() * 0.15).toFixed(2)} DT</span>
                     </div>
                   </div>
 
                   <div className="border-t pt-4">
                     <div className="flex justify-between text-lg font-bold">
                       <span>{t("cart_page.total")}</span>
-                      <span>${(getTotalPrice() * 1.15).toFixed(2)}</span>
+                      <span> {(getTotalPrice() * 1.15).toFixed(2)} DT</span>
                     </div>
                   </div>
 

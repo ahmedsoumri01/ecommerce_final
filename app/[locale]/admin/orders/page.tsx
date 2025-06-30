@@ -1,50 +1,63 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { Search, Edit, Trash2, Eye, ArrowLeft } from "lucide-react"
-import { adminOrders } from "@/lib/data/admin"
-import Link from "next/link"
-import { useToast } from "@/hooks/use-toast"
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Search, Edit, Trash2, Eye, ArrowLeft } from "lucide-react";
+import { adminOrders } from "@/lib/data/admin";
+import Link from "next/link";
+import { useToast } from "@/hooks/use-toast";
 
 export default function AdminOrdersPage({
   params,
 }: {
-  params: { locale: string }
+  params: { locale: string };
 }) {
-  const [searchQuery, setSearchQuery] = useState("")
-  const [selectedOrder, setSelectedOrder] = useState<any>(null)
-  const [isViewOpen, setIsViewOpen] = useState(false)
-  const { toast } = useToast()
-  const isRTL = params.locale === "ar"
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedOrder, setSelectedOrder] = useState<any>(null);
+  const [isViewOpen, setIsViewOpen] = useState(false);
+  const { toast } = useToast();
+  const isRTL = params.locale === "ar";
 
   const filteredOrders = adminOrders.filter(
     (order) =>
       order.customerName.includes(searchQuery) ||
       order.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      order.id.toString().includes(searchQuery),
-  )
+      order.id.toString().includes(searchQuery)
+  );
 
   const handleStatusUpdate = (orderId: number, newStatus: string) => {
     toast({
       title: "تم تحديث حالة الطلب بنجاح! ✅",
       description: `تم تغيير حالة الطلب إلى ${newStatus}`,
       duration: 3000,
-    })
-  }
+    });
+  };
 
   const handleDelete = (orderId: number) => {
     toast({
       title: "تم حذف الطلب بنجاح! ✅",
       description: "تم حذف الطلب من قاعدة البيانات",
       duration: 3000,
-    })
-  }
+    });
+  };
 
   const getStatusBadge = (status: string) => {
     const statusMap = {
@@ -53,11 +66,12 @@ export default function AdminOrdersPage({
       shipped: { label: "مشحون", variant: "secondary" as const },
       delivered: { label: "تم التسليم", variant: "default" as const },
       cancelled: { label: "ملغي", variant: "destructive" as const },
-    }
+    };
 
-    const statusInfo = statusMap[status as keyof typeof statusMap] || statusMap.pending
-    return <Badge variant={statusInfo.variant}>{statusInfo.label}</Badge>
-  }
+    const statusInfo =
+      statusMap[status as keyof typeof statusMap] || statusMap.pending;
+    return <Badge variant={statusInfo.variant}>{statusInfo.label}</Badge>;
+  };
 
   return (
     <div className={`min-h-screen bg-gray-50 ${isRTL ? "rtl" : "ltr"}`}>
@@ -122,12 +136,17 @@ export default function AdminOrdersPage({
                         <p className="text-sm text-gray-600">{order.email}</p>
                       </div>
                     </TableCell>
-                    <TableCell>${order.total.toFixed(2)}</TableCell>
+                    <TableCell> {order.total.toFixed(2)} DT</TableCell>
                     <TableCell>{getStatusBadge(order.status)}</TableCell>
-                    <TableCell>{new Date(order.orderDate).toLocaleDateString("ar-SA")}</TableCell>
+                    <TableCell>
+                      {new Date(order.orderDate).toLocaleDateString("ar-SA")}
+                    </TableCell>
                     <TableCell>
                       <div className="flex gap-2">
-                        <Dialog open={isViewOpen && selectedOrder?.id === order.id} onOpenChange={setIsViewOpen}>
+                        <Dialog
+                          open={isViewOpen && selectedOrder?.id === order.id}
+                          onOpenChange={setIsViewOpen}
+                        >
                           <DialogTrigger asChild>
                             <Button
                               variant="outline"
@@ -140,43 +159,69 @@ export default function AdminOrdersPage({
                           </DialogTrigger>
                           <DialogContent className="max-w-3xl">
                             <DialogHeader>
-                              <DialogTitle>تفاصيل الطلب #{selectedOrder?.id}</DialogTitle>
+                              <DialogTitle>
+                                تفاصيل الطلب #{selectedOrder?.id}
+                              </DialogTitle>
                             </DialogHeader>
                             {selectedOrder && (
                               <div className="space-y-6">
                                 {/* Customer Info */}
                                 <div className="grid grid-cols-2 gap-4">
                                   <div>
-                                    <h3 className="font-semibold mb-2">معلومات العميل</h3>
+                                    <h3 className="font-semibold mb-2">
+                                      معلومات العميل
+                                    </h3>
                                     <p>
-                                      <strong>الاسم:</strong> {selectedOrder.customerName}
+                                      <strong>الاسم:</strong>{" "}
+                                      {selectedOrder.customerName}
                                     </p>
                                     <p>
-                                      <strong>البريد:</strong> {selectedOrder.email}
+                                      <strong>البريد:</strong>{" "}
+                                      {selectedOrder.email}
                                     </p>
                                     <p>
-                                      <strong>الهاتف:</strong> {selectedOrder.phone}
+                                      <strong>الهاتف:</strong>{" "}
+                                      {selectedOrder.phone}
                                     </p>
                                   </div>
                                   <div>
-                                    <h3 className="font-semibold mb-2">عنوان التوصيل</h3>
+                                    <h3 className="font-semibold mb-2">
+                                      عنوان التوصيل
+                                    </h3>
                                     <p>{selectedOrder.address}</p>
                                   </div>
                                 </div>
 
                                 {/* Order Items */}
                                 <div>
-                                  <h3 className="font-semibold mb-2">المنتجات</h3>
+                                  <h3 className="font-semibold mb-2">
+                                    المنتجات
+                                  </h3>
                                   <div className="space-y-2">
-                                    {selectedOrder.items.map((item: any, index: number) => (
-                                      <div key={index} className="flex justify-between items-center p-3 border rounded">
-                                        <div>
-                                          <p className="font-medium">{item.productName}</p>
-                                          <p className="text-sm text-gray-600">الكمية: {item.quantity}</p>
+                                    {selectedOrder.items.map(
+                                      (item: any, index: number) => (
+                                        <div
+                                          key={index}
+                                          className="flex justify-between items-center p-3 border rounded"
+                                        >
+                                          <div>
+                                            <p className="font-medium">
+                                              {item.productName}
+                                            </p>
+                                            <p className="text-sm text-gray-600">
+                                              الكمية: {item.quantity}
+                                            </p>
+                                          </div>
+                                          <p className="font-semibold">
+                                            {" "}
+                                            {(
+                                              item.price * item.quantity
+                                            ).toFixed(2)}{" "}
+                                            DT
+                                          </p>
                                         </div>
-                                        <p className="font-semibold">${(item.price * item.quantity).toFixed(2)}</p>
-                                      </div>
-                                    ))}
+                                      )
+                                    )}
                                   </div>
                                 </div>
 
@@ -184,7 +229,9 @@ export default function AdminOrdersPage({
                                 <div className="border-t pt-4">
                                   <div className="flex justify-between text-lg font-bold">
                                     <span>المجموع الكلي:</span>
-                                    <span>${selectedOrder.total.toFixed(2)}</span>
+                                    <span>
+                                      {selectedOrder.total.toFixed(2)} DT
+                                    </span>
                                   </div>
                                 </div>
                               </div>
@@ -196,7 +243,9 @@ export default function AdminOrdersPage({
                           variant="outline"
                           size="icon"
                           className="bg-transparent"
-                          onClick={() => handleStatusUpdate(order.id, "shipped")}
+                          onClick={() =>
+                            handleStatusUpdate(order.id, "shipped")
+                          }
                         >
                           <Edit className="h-4 w-4" />
                         </Button>
@@ -219,5 +268,5 @@ export default function AdminOrdersPage({
         </Card>
       </div>
     </div>
-  )
+  );
 }

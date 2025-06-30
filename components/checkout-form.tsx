@@ -295,11 +295,11 @@ export function CheckoutForm({
                         {getProductName(item)}
                       </h4>
                       <p className="text-sm text-gray-500">
-                        {item.quantity} × ${item.product.price}
+                        {item.quantity} × {item.product.price} DT
                       </p>
                     </div>
                     <span className="font-semibold">
-                      ${(item.product.price * item.quantity).toFixed(2)}
+                      {(item.product.price * item.quantity).toFixed(2)} DT
                     </span>
                   </div>
                 ))}
@@ -313,7 +313,7 @@ export function CheckoutForm({
               <CardContent className="space-y-3">
                 <div className="flex justify-between">
                   <span>{t("checkout_form.items_total")}</span>
-                  <span>${totalPrice.toFixed(2)}</span>
+                  <span>{totalPrice.toFixed(2)} DT</span>
                 </div>
                 <div className="flex justify-between">
                   <span>{t("checkout_form.shipping")}</span>
@@ -323,12 +323,12 @@ export function CheckoutForm({
                 </div>
                 <div className="flex justify-between">
                   <span>{t("checkout_form.tax")}</span>
-                  <span>${(totalPrice * 0.15).toFixed(2)}</span>
+                  <span> {(totalPrice * 0.15).toFixed(2)} DT</span>
                 </div>
                 <div className="border-t pt-3">
                   <div className="flex justify-between text-lg font-bold">
                     <span>{t("checkout_form.grand_total")}</span>
-                    <span>${(totalPrice * 1.15).toFixed(2)}</span>
+                    <span> {(totalPrice * 1.15).toFixed(2)} DT</span>
                   </div>
                 </div>
               </CardContent>

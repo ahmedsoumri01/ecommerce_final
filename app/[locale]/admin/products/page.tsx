@@ -1,56 +1,73 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { Plus, Search, Edit, Trash2, Eye, ArrowLeft } from "lucide-react"
-import { products } from "@/lib/data/products"
-import Link from "next/link"
-import { useToast } from "@/hooks/use-toast"
-import { ProductForm } from "@/components/admin/product-form"
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Plus, Search, Edit, Trash2, Eye, ArrowLeft } from "lucide-react";
+import { products } from "@/lib/data/products";
+import Link from "next/link";
+import { useToast } from "@/hooks/use-toast";
+import { ProductForm } from "@/components/admin/product-form";
 
 export default function AdminProductsPage({
   params,
 }: {
-  params: { locale: string }
+  params: { locale: string };
 }) {
-  const [searchQuery, setSearchQuery] = useState("")
-  const [selectedProduct, setSelectedProduct] = useState<any>(null)
-  const [isCreateOpen, setIsCreateOpen] = useState(false)
-  const [isEditOpen, setIsEditOpen] = useState(false)
-  const [isViewOpen, setIsViewOpen] = useState(false)
-  const { toast } = useToast()
-  const isRTL = params.locale === "ar"
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedProduct, setSelectedProduct] = useState<any>(null);
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [isViewOpen, setIsViewOpen] = useState(false);
+  const { toast } = useToast();
+  const isRTL = params.locale === "ar";
 
   const filteredProducts = products.filter(
     (product) =>
       product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       product.nameAr.includes(searchQuery) ||
-      product.brand.toLowerCase().includes(searchQuery.toLowerCase()),
-  )
+      product.brand.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   const handleDelete = (productId: number) => {
     toast({
       title: "تم حذف المنتج بنجاح! ✅",
       description: "تم حذف المنتج من قاعدة البيانات",
       duration: 3000,
-    })
-  }
+    });
+  };
 
   const handleSave = (productData: any) => {
     toast({
-      title: selectedProduct ? "تم تحديث المنتج بنجاح! ✅" : "تم إضافة المنتج بنجاح! ✅",
-      description: selectedProduct ? "تم تحديث بيانات المنتج" : "تم إضافة المنتج الجديد",
+      title: selectedProduct
+        ? "تم تحديث المنتج بنجاح! ✅"
+        : "تم إضافة المنتج بنجاح! ✅",
+      description: selectedProduct
+        ? "تم تحديث بيانات المنتج"
+        : "تم إضافة المنتج الجديد",
       duration: 3000,
-    })
-    setIsCreateOpen(false)
-    setIsEditOpen(false)
-    setSelectedProduct(null)
-  }
+    });
+    setIsCreateOpen(false);
+    setIsEditOpen(false);
+    setSelectedProduct(null);
+  };
 
   return (
     <div className={`min-h-screen bg-gray-50 ${isRTL ? "rtl" : "ltr"}`}>
@@ -127,25 +144,36 @@ export default function AdminProductsPage({
                         <div className="w-12 h-12 bg-gray-200 rounded-md"></div>
                         <div>
                           <p className="font-medium">{product.nameAr}</p>
-                          <p className="text-sm text-gray-600">{product.brand}</p>
+                          <p className="text-sm text-gray-600">
+                            {product.brand}
+                          </p>
                         </div>
                       </div>
                     </TableCell>
                     <TableCell>{product.categoryAr}</TableCell>
-                    <TableCell>${product.price}</TableCell>
+                    <TableCell> {product.price} DT</TableCell>
                     <TableCell>
-                      <Badge variant={product.inStock ? "default" : "destructive"}>
+                      <Badge
+                        variant={product.inStock ? "default" : "destructive"}
+                      >
                         {product.inStock ? "متوفر" : "نفد المخزون"}
                       </Badge>
                     </TableCell>
                     <TableCell>
-                      <Badge variant={product.featured ? "default" : "secondary"}>
+                      <Badge
+                        variant={product.featured ? "default" : "secondary"}
+                      >
                         {product.featured ? "مميز" : "عادي"}
                       </Badge>
                     </TableCell>
                     <TableCell>
                       <div className="flex gap-2">
-                        <Dialog open={isViewOpen && selectedProduct?.id === product.id} onOpenChange={setIsViewOpen}>
+                        <Dialog
+                          open={
+                            isViewOpen && selectedProduct?.id === product.id
+                          }
+                          onOpenChange={setIsViewOpen}
+                        >
                           <DialogTrigger asChild>
                             <Button
                               variant="outline"
@@ -164,32 +192,57 @@ export default function AdminProductsPage({
                               <div className="space-y-4">
                                 <div className="grid grid-cols-2 gap-4">
                                   <div>
-                                    <label className="text-sm font-medium">اسم المنتج (عربي)</label>
-                                    <p className="text-gray-600">{selectedProduct.nameAr}</p>
+                                    <label className="text-sm font-medium">
+                                      اسم المنتج (عربي)
+                                    </label>
+                                    <p className="text-gray-600">
+                                      {selectedProduct.nameAr}
+                                    </p>
                                   </div>
                                   <div>
-                                    <label className="text-sm font-medium">اسم المنتج (إنجليزي)</label>
-                                    <p className="text-gray-600">{selectedProduct.name}</p>
+                                    <label className="text-sm font-medium">
+                                      اسم المنتج (إنجليزي)
+                                    </label>
+                                    <p className="text-gray-600">
+                                      {selectedProduct.name}
+                                    </p>
                                   </div>
                                   <div>
-                                    <label className="text-sm font-medium">العلامة التجارية</label>
-                                    <p className="text-gray-600">{selectedProduct.brand}</p>
+                                    <label className="text-sm font-medium">
+                                      العلامة التجارية
+                                    </label>
+                                    <p className="text-gray-600">
+                                      {selectedProduct.brand}
+                                    </p>
                                   </div>
                                   <div>
-                                    <label className="text-sm font-medium">السعر</label>
-                                    <p className="text-gray-600">${selectedProduct.price}</p>
+                                    <label className="text-sm font-medium">
+                                      السعر
+                                    </label>
+                                    <p className="text-gray-600">
+                                      {selectedProduct.price} DT
+                                    </p>
                                   </div>
                                 </div>
                                 <div>
-                                  <label className="text-sm font-medium">الوصف</label>
-                                  <p className="text-gray-600">{selectedProduct.descriptionAr}</p>
+                                  <label className="text-sm font-medium">
+                                    الوصف
+                                  </label>
+                                  <p className="text-gray-600">
+                                    {selectedProduct.descriptionAr}
+                                  </p>
                                 </div>
                               </div>
                             )}
                           </DialogContent>
                         </Dialog>
 
-                        <Dialog open={isEditOpen && selectedProduct?.id === product.id} onOpenChange={setIsEditOpen}>
+                        <Dialog
+                          open={
+                            isEditOpen && selectedProduct?.id === product.id
+                          }
+                          onOpenChange={setIsEditOpen}
+                        >
                           <DialogTrigger asChild>
                             <Button
                               variant="outline"
@@ -204,7 +257,10 @@ export default function AdminProductsPage({
                             <DialogHeader>
                               <DialogTitle>تعديل المنتج</DialogTitle>
                             </DialogHeader>
-                            <ProductForm product={selectedProduct} onSave={handleSave} />
+                            <ProductForm
+                              product={selectedProduct}
+                              onSave={handleSave}
+                            />
                           </DialogContent>
                         </Dialog>
 
@@ -226,5 +282,5 @@ export default function AdminProductsPage({
         </Card>
       </div>
     </div>
-  )
+  );
 }

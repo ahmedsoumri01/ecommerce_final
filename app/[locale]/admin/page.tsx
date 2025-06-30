@@ -1,20 +1,29 @@
-"use client"
+"use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { ShoppingCart, Package, Users, DollarSign, Clock, CheckCircle, Truck, XCircle } from "lucide-react"
-import { getOrderStats } from "@/lib/data/admin"
-import { products } from "@/lib/data/products"
-import Link from "next/link"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  ShoppingCart,
+  Package,
+  Users,
+  DollarSign,
+  Clock,
+  CheckCircle,
+  Truck,
+  XCircle,
+} from "lucide-react";
+import { getOrderStats } from "@/lib/data/admin";
+import { products } from "@/lib/data/products";
+import Link from "next/link";
 
 export default function AdminDashboard({
   params,
 }: {
-  params: { locale: string }
+  params: { locale: string };
 }) {
-  const isRTL = params.locale === "ar"
-  const orderStats = getOrderStats()
+  const isRTL = params.locale === "ar";
+  const orderStats = getOrderStats();
 
   const kpis = [
     {
@@ -26,7 +35,7 @@ export default function AdminDashboard({
     },
     {
       title: "إجمالي الإيرادات",
-      value: `$${orderStats.totalRevenue.toFixed(2)}`,
+      value: `${orderStats.totalRevenue.toFixed(2)} DT`,
       icon: DollarSign,
       color: "text-green-600",
       bgColor: "bg-green-50",
@@ -45,7 +54,7 @@ export default function AdminDashboard({
       color: "text-orange-600",
       bgColor: "bg-orange-50",
     },
-  ]
+  ];
 
   const orderStatusCards = [
     {
@@ -76,7 +85,7 @@ export default function AdminDashboard({
       color: "text-red-600",
       bgColor: "bg-red-50",
     },
-  ]
+  ];
 
   return (
     <div className={`min-h-screen bg-gray-50 ${isRTL ? "rtl" : "ltr"}`}>
@@ -106,8 +115,12 @@ export default function AdminDashboard({
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">{kpi.title}</p>
-                    <p className="text-2xl font-bold text-gray-900">{kpi.value}</p>
+                    <p className="text-sm font-medium text-gray-600">
+                      {kpi.title}
+                    </p>
+                    <p className="text-2xl font-bold text-gray-900">
+                      {kpi.value}
+                    </p>
                   </div>
                   <div className={`p-3 rounded-full ${kpi.bgColor}`}>
                     <kpi.icon className={`h-6 w-6 ${kpi.color}`} />
@@ -125,8 +138,12 @@ export default function AdminDashboard({
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">{card.title}</p>
-                    <p className="text-2xl font-bold text-gray-900">{card.value}</p>
+                    <p className="text-sm font-medium text-gray-600">
+                      {card.title}
+                    </p>
+                    <p className="text-2xl font-bold text-gray-900">
+                      {card.value}
+                    </p>
                   </div>
                   <div className={`p-3 rounded-full ${card.bgColor}`}>
                     <card.icon className={`h-6 w-6 ${card.color}`} />
@@ -145,7 +162,11 @@ export default function AdminDashboard({
               <CardTitle className="flex items-center justify-between">
                 <span>الطلبات الأخيرة</span>
                 <Link href={`/${params.locale}/admin/orders`}>
-                  <Button variant="outline" size="sm" className="bg-transparent">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="bg-transparent"
+                  >
                     عرض الكل
                   </Button>
                 </Link>
@@ -154,11 +175,29 @@ export default function AdminDashboard({
             <CardContent>
               <div className="space-y-4">
                 {[
-                  { id: "1001", customer: "أحمد محمد", total: "$1,499.98", status: "confirmed" },
-                  { id: "1002", customer: "فاطمة علي", total: "$2,499.99", status: "shipped" },
-                  { id: "1004", customer: "نورا أحمد", total: "$499.99", status: "pending" },
+                  {
+                    id: "1001",
+                    customer: "أحمد محمد",
+                    total: "1,499.98 DT",
+                    status: "confirmed",
+                  },
+                  {
+                    id: "1002",
+                    customer: "فاطمة علي",
+                    total: " 2,499.99  DT",
+                    status: "shipped",
+                  },
+                  {
+                    id: "1004",
+                    customer: "نورا أحمد",
+                    total: " 499.99  DT",
+                    status: "pending",
+                  },
                 ].map((order) => (
-                  <div key={order.id} className="flex items-center justify-between p-3 border rounded-lg">
+                  <div
+                    key={order.id}
+                    className="flex items-center justify-between p-3 border rounded-lg"
+                  >
                     <div>
                       <p className="font-medium">#{order.id}</p>
                       <p className="text-sm text-gray-600">{order.customer}</p>
@@ -170,11 +209,15 @@ export default function AdminDashboard({
                           order.status === "confirmed"
                             ? "default"
                             : order.status === "shipped"
-                              ? "secondary"
-                              : "outline"
+                            ? "secondary"
+                            : "outline"
                         }
                       >
-                        {order.status === "confirmed" ? "مؤكد" : order.status === "shipped" ? "مشحون" : "معلق"}
+                        {order.status === "confirmed"
+                          ? "مؤكد"
+                          : order.status === "shipped"
+                          ? "مشحون"
+                          : "معلق"}
                       </Badge>
                     </div>
                   </div>
@@ -189,7 +232,11 @@ export default function AdminDashboard({
               <CardTitle className="flex items-center justify-between">
                 <span>المنتجات الأكثر مبيعاً</span>
                 <Link href={`/${params.locale}/admin/products`}>
-                  <Button variant="outline" size="sm" className="bg-transparent">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="bg-transparent"
+                  >
                     إدارة المنتجات
                   </Button>
                 </Link>
@@ -198,15 +245,22 @@ export default function AdminDashboard({
             <CardContent>
               <div className="space-y-4">
                 {products.slice(0, 3).map((product) => (
-                  <div key={product.id} className="flex items-center gap-4 p-3 border rounded-lg">
+                  <div
+                    key={product.id}
+                    className="flex items-center gap-4 p-3 border rounded-lg"
+                  >
                     <div className="w-12 h-12 bg-gray-200 rounded-md"></div>
                     <div className="flex-1">
-                      <p className="font-medium line-clamp-1">{product.nameAr}</p>
+                      <p className="font-medium line-clamp-1">
+                        {product.nameAr}
+                      </p>
                       <p className="text-sm text-gray-600">{product.brand}</p>
                     </div>
                     <div className="text-right">
                       <p className="font-semibold">${product.price}</p>
-                      <p className="text-sm text-gray-600">{product.reviews} مبيعة</p>
+                      <p className="text-sm text-gray-600">
+                        {product.reviews} مبيعة
+                      </p>
                     </div>
                   </div>
                 ))}
@@ -216,5 +270,5 @@ export default function AdminDashboard({
         </div>
       </div>
     </div>
-  )
+  );
 }
