@@ -12,16 +12,31 @@ const {
 const usersController = require("../controllers/users.controllers");
 
 // Admin Protected Routes
-router.get("/", adminMiddleware, usersController.getAllUsers);
+router.get("/", authMiddleware, adminMiddleware, usersController.getAllUsers);
 router.get("/:id", authMiddleware, usersController.getUserById);
-router.post("/create", adminMiddleware, usersController.createUser);
+router.post(
+  "/create",
+  authMiddleware,
+  adminMiddleware,
+  usersController.createUser
+);
 router.put("/:id", authMiddleware, usersController.updateUser);
 router.put(
   "/change-password/:id",
   authMiddleware,
   usersController.changePassword
 );
-router.put("/block/:id", adminMiddleware, usersController.blockUser);
-router.delete("/:id", adminMiddleware, usersController.deleteUser);
+router.put(
+  "/block/:id",
+  authMiddleware,
+  adminMiddleware,
+  usersController.blockUser
+);
+router.delete(
+  "/:id",
+  authMiddleware,
+  adminMiddleware,
+  usersController.deleteUser
+);
 
 module.exports = router;

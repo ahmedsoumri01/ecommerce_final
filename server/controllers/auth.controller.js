@@ -4,7 +4,6 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 // JWT Secret (should be in .env)
-const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret_here";
 
 // @desc    Register a new user
 // @route   POST /api/auth/register
@@ -72,7 +71,7 @@ exports.login = async (req, res) => {
         email: user.email,
         role: user.role,
       },
-      JWT_SECRET,
+      process.env.JWT_SECRET,
       { expiresIn: "1d" }
     );
 

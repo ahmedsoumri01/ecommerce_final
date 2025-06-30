@@ -21,8 +21,7 @@ const authMiddleware = async (req, res, next) => {
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = await User.findById(decoded.id).select("-motDePasse"); // Attach user data to request without password
-
+    req.user = await User.findById(decoded.id).select("-password");
     // Check if user exists and is active
     if (!req.user) {
       return res.status(404).json({ message: "User not found." });
@@ -49,6 +48,9 @@ const clientMiddleware = (req, res, next) => {
 
 // Admin role middleware
 const adminMiddleware = (req, res, next) => {
+  console.log({
+    user: req.user,
+  });
   if (req.user.role !== "admin") {
     return res
       .status(403)

@@ -5,6 +5,9 @@ const bcrypt = require("bcryptjs");
 // Get all users (Admin only)
 exports.getAllUsers = async (req, res) => {
   try {
+    console.log({
+      from: "getAllUsers",
+    });
     const users = await User.find().select("-password"); // Exclude password
     res.json(users);
   } catch (error) {

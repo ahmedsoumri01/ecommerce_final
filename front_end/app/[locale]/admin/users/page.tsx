@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -26,44 +27,72 @@ import {
   Trash2,
   Ban,
   CheckCircle,
+  Loader2,
 } from "lucide-react";
-
-// Mock data - replace with real data from your API
-const mockUsers = [
-  {
-    id: "1",
-    firstName: "John",
-    lastName: "Doe",
-    email: "john.doe@example.com",
-    role: "client",
-    accountStatus: "active",
-    createdAt: "2024-01-15",
-  },
-  {
-    id: "2",
-    firstName: "Jane",
-    lastName: "Smith",
-    email: "jane.smith@example.com",
-    role: "admin",
-    accountStatus: "active",
-    createdAt: "2024-01-10",
-  },
-  {
-    id: "3",
-    firstName: "Bob",
-    lastName: "Johnson",
-    email: "bob.johnson@example.com",
-    role: "client",
-    accountStatus: "blocked",
-    createdAt: "2024-01-05",
-  },
-];
+import Link from "next/link";
+import { useUserStore, useFilteredUsers, type User } from "@/stores/user-store";
+import { EditUserModal } from "@/components/modals/edit-user-modal";
+import { DeleteUserDialog } from "@/components/dialogs/delete-user-dialog";
+import { BlockUserDialog } from "@/components/dialogs/block-user-dialog";
 
 export default function UsersManagement({
   params,
 }: {
   params: { locale: string };
 }) {
+  const {
+    getAllUsers,
+    isLoading,
+    searchQuery,
+    setSearchQuery,
+    roleFilter,
+    setRoleFilter,
+    statusFilter,
+    setStatusFilter,
+    users,
+  } = useUserStore();
+
+  const filteredUsers = useFilteredUsers();
+
+  // Modal/Dialog states
+  const [editUser, setEditUser] = useState<User | null>(null);
+  const [deleteUser, setDeleteUser] = useState<User | null>(null);
+  const [blockUser, setBlockUser] = useState<{
+    user: User;
+    action: "block" | "unblock";
+  } | null>(null);
+
+  // Load users on component mount
+  useEffect(() => {
+    getAllUsers();
+  }, [getAllUsers]);
+
+  // Calculate stats
+  const totalUsers = users.length;
+  const activeUsers = users.filter(
+    (user) => user.accountStatus === "active"
+  ).length;
+  const blockedUsers = users.filter(
+    (user) => user.accountStatus === "blocked"
+  ).length;
+  const adminUsers = users.filter((user) => user.role === "admin").length;
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString();
+  };
+
+  const handleEdit = (user: User) => {
+    setEditUser(user);
+  };
+
+  const handleDelete = (user: User) => {
+    setDeleteUser(user);
+  };
+
+  const handleBlock = (user: User, action: "block" | "unblock") => {
+    setBlockUser({ user, action });
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -74,35 +103,41 @@ export default function UsersManagement({
             Manage system users and their permissions
           </p>
         </div>
-        <Button className="flex items-center">
-          <Plus className="h-4 w-4 mr-2" />
-          Add User
-        </Button>
+        <Link href={`/${params.locale}/admin/users/create`}>
+          <Button className="flex items-center">
+            <Plus className="h-4 w-4 mr-2" />
+            Add User
+          </Button>
+        </Link>
       </div>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card>
           <CardContent className="p-4">
-            <div className="text-2xl font-bold">1,234</div>
+            <div className="text-2xl font-bold">{totalUsers}</div>
             <p className="text-sm text-gray-600">Total Users</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4">
-            <div className="text-2xl font-bold text-green-600">1,180</div>
+            <div className="text-2xl font-bold text-green-600">
+              {activeUsers}
+            </div>
             <p className="text-sm text-gray-600">Active Users</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4">
-            <div className="text-2xl font-bold text-red-600">54</div>
+            <div className="text-2xl font-bold text-red-600">
+              {blockedUsers}
+            </div>
             <p className="text-sm text-gray-600">Blocked Users</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4">
-            <div className="text-2xl font-bold text-blue-600">12</div>
+            <div className="text-2xl font-bold text-blue-600">{adminUsers}</div>
             <p className="text-sm text-gray-600">Admins</p>
           </CardContent>
         </Card>
@@ -120,19 +155,39 @@ export default function UsersManagement({
               <Input
                 placeholder="Search users by name or email..."
                 className="pl-10"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
             <div className="flex gap-2">
-              <Button variant="outline" className="bg-transparent">
+              <Button
+                variant={statusFilter === "all" ? "default" : "outline"}
+                onClick={() => setStatusFilter("all")}
+                className={statusFilter !== "all" ? "bg-transparent" : ""}
+              >
                 All Users
               </Button>
-              <Button variant="outline" className="bg-transparent">
+              <Button
+                variant={statusFilter === "active" ? "default" : "outline"}
+                onClick={() => setStatusFilter("active")}
+                className={statusFilter !== "active" ? "bg-transparent" : ""}
+              >
                 Active
               </Button>
-              <Button variant="outline" className="bg-transparent">
+              <Button
+                variant={statusFilter === "blocked" ? "default" : "outline"}
+                onClick={() => setStatusFilter("blocked")}
+                className={statusFilter !== "blocked" ? "bg-transparent" : ""}
+              >
                 Blocked
               </Button>
-              <Button variant="outline" className="bg-transparent">
+              <Button
+                variant={roleFilter === "admin" ? "default" : "outline"}
+                onClick={() =>
+                  setRoleFilter(roleFilter === "admin" ? "all" : "admin")
+                }
+                className={roleFilter !== "admin" ? "bg-transparent" : ""}
+              >
                 Admins
               </Button>
             </div>
@@ -140,89 +195,141 @@ export default function UsersManagement({
 
           {/* Users Table */}
           <div className="rounded-md border">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Email</TableHead>
-                  <TableHead>Role</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Created</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {mockUsers.map((user) => (
-                  <TableRow key={user.id}>
-                    <TableCell className="font-medium">
-                      {user.firstName} {user.lastName}
-                    </TableCell>
-                    <TableCell>{user.email}</TableCell>
-                    <TableCell>
-                      <Badge
-                        variant={
-                          user.role === "admin" ? "default" : "secondary"
-                        }
-                      >
-                        {user.role}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <Badge
-                        variant={
-                          user.accountStatus === "active"
-                            ? "default"
-                            : "destructive"
-                        }
-                        className={
-                          user.accountStatus === "active"
-                            ? "bg-green-100 text-green-800"
-                            : ""
-                        }
-                      >
-                        {user.accountStatus}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>{user.createdAt}</TableCell>
-                    <TableCell className="text-right">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" className="h-8 w-8 p-0">
-                            <MoreHorizontal className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem>
-                            <Edit className="mr-2 h-4 w-4" />
-                            Edit
-                          </DropdownMenuItem>
-                          <DropdownMenuItem>
-                            {user.accountStatus === "active" ? (
-                              <>
-                                <Ban className="mr-2 h-4 w-4" />
-                                Block User
-                              </>
-                            ) : (
-                              <>
-                                <CheckCircle className="mr-2 h-4 w-4" />
-                                Unblock User
-                              </>
-                            )}
-                          </DropdownMenuItem>
-                          <DropdownMenuItem className="text-red-600">
-                            <Trash2 className="mr-2 h-4 w-4" />
-                            Delete
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </TableCell>
+            {isLoading ? (
+              <div className="flex items-center justify-center p-8">
+                <Loader2 className="h-8 w-8 animate-spin" />
+                <span className="ml-2">Loading users...</span>
+              </div>
+            ) : (
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Name</TableHead>
+                    <TableHead>Email</TableHead>
+                    <TableHead>Role</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Created</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {filteredUsers.length === 0 ? (
+                    <TableRow>
+                      <TableCell
+                        colSpan={6}
+                        className="text-center py-8 text-gray-500"
+                      >
+                        No users found
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    filteredUsers.map((user) => (
+                      <TableRow key={user._id}>
+                        <TableCell className="font-medium">
+                          {user.firstName} {user.lastName}
+                        </TableCell>
+                        <TableCell>{user.email}</TableCell>
+                        <TableCell>
+                          <Badge
+                            variant={
+                              user.role === "admin" ? "default" : "secondary"
+                            }
+                          >
+                            {user.role}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          <Badge
+                            variant={
+                              user.accountStatus === "active"
+                                ? "default"
+                                : "destructive"
+                            }
+                            className={
+                              user.accountStatus === "active"
+                                ? "bg-green-100 text-green-800"
+                                : ""
+                            }
+                          >
+                            {user.accountStatus}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>{formatDate(user.createdAt)}</TableCell>
+                        <TableCell className="text-right">
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" className="h-8 w-8 p-0">
+                                <MoreHorizontal className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem
+                                onClick={() => handleEdit(user)}
+                              >
+                                <Edit className="mr-2 h-4 w-4" />
+                                Edit
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                onClick={() =>
+                                  handleBlock(
+                                    user,
+                                    user.accountStatus === "active"
+                                      ? "block"
+                                      : "unblock"
+                                  )
+                                }
+                              >
+                                {user.accountStatus === "active" ? (
+                                  <>
+                                    <Ban className="mr-2 h-4 w-4" />
+                                    Block User
+                                  </>
+                                ) : (
+                                  <>
+                                    <CheckCircle className="mr-2 h-4 w-4" />
+                                    Unblock User
+                                  </>
+                                )}
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                className="text-red-600"
+                                onClick={() => handleDelete(user)}
+                              >
+                                <Trash2 className="mr-2 h-4 w-4" />
+                                Delete
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  )}
+                </TableBody>
+              </Table>
+            )}
           </div>
         </CardContent>
       </Card>
+
+      {/* Modals and Dialogs */}
+      <EditUserModal
+        user={editUser}
+        open={!!editUser}
+        onOpenChange={(open) => !open && setEditUser(null)}
+      />
+
+      <DeleteUserDialog
+        user={deleteUser}
+        open={!!deleteUser}
+        onOpenChange={(open) => !open && setDeleteUser(null)}
+      />
+
+      <BlockUserDialog
+        user={blockUser?.user || null}
+        action={blockUser?.action || "block"}
+        open={!!blockUser}
+        onOpenChange={(open) => !open && setBlockUser(null)}
+      />
     </div>
   );
 }

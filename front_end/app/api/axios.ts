@@ -1,50 +1,34 @@
-import axios, {
-  type AxiosError,
-  type AxiosResponse,
-  type InternalAxiosRequestConfig,
-} from "axios";
+import axios from "axios";
 
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_APP_URL + "/api",
+  baseURL: "http://localhost:3001/api",
+  timeout: 10000,
   headers: {
     "Content-Type": "application/json",
   },
-  withCredentials: true, // If using authentication (cookies, JWT)
 });
 
-// Request Interceptor: Attach token if needed
+// Request interceptor to add auth token
 api.interceptors.request.use(
-  (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
-    console.log("Sending request to:", config.url);
-
-    // Get token from localStorage
-    try {
-      const authState = localStorage.getItem("auth-storage");
-      if (authState) {
-        const { state } = JSON.parse(authState);
-        if (state.token) {
-          config.headers.Authorization = `Bearer ${state.token}`;
-          console.log("Added token to request");
-        }
-      }
-    } catch (error) {
-      console.error("Error accessing auth token:", error);
-    }
-
+  (config) => {
+    // Token is already set in headers by the auth store
     return config;
   },
-  (error: AxiosError): Promise<never> => Promise.reject(error)
+  (error) => {
+    return Promise.reject(error);
+  }
 );
 
+// Response interceptor for handling auth errors
 api.interceptors.response.use(
-  (response: AxiosResponse): AxiosResponse => response,
-  (error: AxiosError): Promise<never> => {
-    console.error("API Error:", error);
-
-    // Handle 401 Unauthorized errors (token expired, invalid, etc.)
+  (response) => {
+    return response;
+  },
+  (error) => {
+    // Handle 401 errors globally if needed
     if (error.response?.status === 401) {
-      console.log("Unauthorized request - might need to log out user");
-      // You could dispatch a logout action here if needed
+      // The auth store will handle this in checkAuth
+      console.warn("Unauthorized request:", error.config?.url);
     }
 
     return Promise.reject(error);
