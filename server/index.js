@@ -3,6 +3,9 @@ const dotenv = require("dotenv");
 const cors = require("cors");
 const connectDB = require("./config/db.js");
 const path = require("path");
+const authRoutes = require("./routes/auth.routes");
+const ordersRoutes = require("./routes/orders.routes.js");
+const productsRoutes = require("./routes/products.routes.js");
 
 // Load environment variables from .env file
 dotenv.config();
@@ -38,6 +41,8 @@ app.use(express.urlencoded({ extended: true }));
 
 // Routes
 app.use("/api/auth", authRoutes);
+app.use("/api/products", productsRoutes);
+app.use("/api/orders", ordersRoutes);
 
 // Define a simple route for testing
 app.get("/", (req, res) => {
