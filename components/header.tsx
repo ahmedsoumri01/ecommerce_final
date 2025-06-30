@@ -91,7 +91,7 @@ export function Header({ locale }: HeaderProps) {
                 <SheetHeader className="p-6 border-b">
                   <SheetTitle className="flex items-center gap-2 text-right">
                     <ShoppingBag className="h-6 w-6 text-primary" />
-                    <span className="text-xl font-bold">Store</span>
+                    <span className="text-xl font-bold">TuniKado</span>
                   </SheetTitle>
                 </SheetHeader>
 

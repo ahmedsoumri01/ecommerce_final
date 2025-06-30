@@ -1,52 +1,59 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Download, X } from "lucide-react"
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Download, X } from "lucide-react";
 
 interface BeforeInstallPromptEvent extends Event {
-  prompt(): Promise<void>
-  userChoice: Promise<{ outcome: "accepted" | "dismissed" }>
+  prompt(): Promise<void>;
+  userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
 }
 
 interface InstallPromptProps {
-  dict: any
+  dict: any;
 }
 
 export function InstallPrompt({ dict }: InstallPromptProps) {
-  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null)
-  const [showInstallPrompt, setShowInstallPrompt] = useState(false)
+  const [deferredPrompt, setDeferredPrompt] =
+    useState<BeforeInstallPromptEvent | null>(null);
+  const [showInstallPrompt, setShowInstallPrompt] = useState(false);
 
   useEffect(() => {
     const handler = (e: Event) => {
-      e.preventDefault()
-      setDeferredPrompt(e as BeforeInstallPromptEvent)
-      setShowInstallPrompt(true)
-    }
+      e.preventDefault();
+      setDeferredPrompt(e as BeforeInstallPromptEvent);
+      setShowInstallPrompt(true);
+    };
 
-    window.addEventListener("beforeinstallprompt", handler)
+    window.addEventListener("beforeinstallprompt", handler);
 
-    return () => window.removeEventListener("beforeinstallprompt", handler)
-  }, [])
+    return () => window.removeEventListener("beforeinstallprompt", handler);
+  }, []);
 
   const handleInstall = async () => {
-    if (!deferredPrompt) return
+    if (!deferredPrompt) return;
 
-    deferredPrompt.prompt()
-    const { outcome } = await deferredPrompt.userChoice
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
 
     if (outcome === "accepted") {
-      setDeferredPrompt(null)
-      setShowInstallPrompt(false)
+      setDeferredPrompt(null);
+      setShowInstallPrompt(false);
     }
-  }
+  };
 
   const handleDismiss = () => {
-    setShowInstallPrompt(false)
-  }
+    setShowInstallPrompt(false);
+  };
 
-  if (!showInstallPrompt) return null
+  if (!showInstallPrompt) return null;
 
   return (
     <div className="fixed bottom-4 left-4 right-4 z-50 md:left-auto md:right-4 md:w-80">
@@ -58,7 +65,9 @@ export function InstallPrompt({ dict }: InstallPromptProps) {
               <X className="h-4 w-4" />
             </Button>
           </div>
-          <CardDescription>قم بتثبيت التطبيق للحصول على تجربة أفضل وإمكانية الوصول بدون إنترنت</CardDescription>
+          <CardDescription>
+            قم بتثبيت التطبيق للحصول على تجربة أفضل وإمكانية الوصول بدون إنترنت
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <Button onClick={handleInstall} className="w-full">
@@ -68,5 +77,5 @@ export function InstallPrompt({ dict }: InstallPromptProps) {
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

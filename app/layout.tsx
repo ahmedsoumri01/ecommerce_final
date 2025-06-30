@@ -54,10 +54,10 @@ export default function RootLayout({
   return (
     <html>
       <head>
-        <meta name="application-name" content="i18n Store" />
+        <meta name="application-name" content="TuniKado" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content="i18n Store" />
+        <meta name="apple-mobile-web-app-title" content="TuniKado" />
         <meta name="format-detection" content="telephone=no" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="msapplication-config" content="/icons/browserconfig.xml" />
