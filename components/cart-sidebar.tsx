@@ -148,7 +148,7 @@ export function CartSidebar({ locale }: CartSidebarProps) {
                         </Button>
                       </div>
                       <p className="font-semibold text-right mt-2">
-                        ${(item.product.price * item.quantity).toFixed(2)}
+                        {(item.product.price * item.quantity).toFixed(2)} DT
                       </p>
                     </div>
                   </div>
@@ -166,9 +166,9 @@ export function CartSidebar({ locale }: CartSidebarProps) {
               <div className="border-t pt-4 space-y-4">
                 <div className="flex justify-between items-center text-lg font-semibold">
                   <span>{t("cart_sidebar.total")}</span>
-                  <span>${getTotalPrice().toFixed(2)}</span>
+                  <span>{getTotalPrice().toFixed(2)} DT</span>
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-2 pb-4">
                   <Link
                     href={`/${locale}/cart`}
                     onClick={() => setCartOpen(false)}

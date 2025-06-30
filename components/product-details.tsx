@@ -213,16 +213,16 @@ export function ProductDetails({
 
       {/* Security Badges */}
       <div className="pt-6 border-t">
-        <div className="flex flex-wrap gap-6 opacity-60">
-          <div className="text-xs text-center hover:text-blue-500">
+        <div className="flex flex-wrap justify-around gap-6 opacity-60">
+          <div className="text-xs flex justify-center items-center text-center hover:text-blue-500">
             <Shield size={30} />
             <span>{t("product_detail_page.secure")}</span>
           </div>
-          <div className="text-xs text-center hover:text-purple-500">
+          <div className="text-xs flex text-center  justify-center items-center  hover:text-purple-500">
             <BookCheck size={30} />
             <span>{t("product_detail_page.trusted")}</span>
           </div>
-          <div className="text-xs text-center hover:text-green-500">
+          <div className="text-xs flex text-center  justify-center items-center  hover:text-green-500">
             <BadgeCheck size={30} />
             <span>{t("product_detail_page.guaranteed")}</span>
           </div>

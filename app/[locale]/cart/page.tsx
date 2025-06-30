@@ -77,7 +77,9 @@ export default function CartPage({ params }: { params: { locale: string } }) {
               <ArrowLeft className="h-4 w-4" />
             </Button>
           </Link>
-          <h1 className="text-3xl font-bold">{t("cart_page.title")}</h1>
+          <h1 className="text-xl sm:text-3xl font-bold">
+            {t("cart_page.title")}
+          </h1>
           {getTotalItems() > 0 && (
             <Badge variant="secondary">({getTotalItems()} عنصر)</Badge>
           )}
@@ -188,14 +190,17 @@ export default function CartPage({ params }: { params: { locale: string } }) {
                               </Button>
                             </div>
                           </div>
+
                           <Button
                             variant="outline"
                             size="sm"
-                            className="text-red-600 hover:text-red-700 bg-transparent"
+                            className="text-red-600 hover:text-red-700 mx-1 bg-transparent"
                             onClick={() => removeItem(item.product.id)}
                           >
                             <Trash2 className="h-4 w-4 mr-2" />
-                            {t("cart_page.remove_item")}
+                            <span className="hidden sm:block">
+                              {t("cart_page.remove_item")}
+                            </span>
                           </Button>
                         </div>
 

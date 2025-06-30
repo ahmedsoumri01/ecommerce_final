@@ -263,13 +263,13 @@ export default function ProductsPage({
               placeholder={t("all_products_page.search_placeholder")}
             />
           </div>
-          <div className="flex gap-4">
+          <div className="block md:flex items-center gap-4">
             {/* Sort Dropdown */}
             <select
               name="sort select"
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="px-4 py-2 border rounded-lg bg-white"
+              className="px-4 py-2 ml-1 border rounded-lg bg-white"
             >
               <option value="featured">
                 {t("all_products_page.sort.featured")}

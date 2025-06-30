@@ -1,32 +1,32 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Image from "next/image"
-import { ChevronLeft, ChevronRight } from "lucide-react"
+import { useState } from "react";
+import Image from "next/image";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface ProductGalleryProps {
-  images: string[]
-  productName: string
+  images: string[];
+  productName: string;
 }
 
 export function ProductGallery({ images, productName }: ProductGalleryProps) {
-  const [selectedImage, setSelectedImage] = useState(0)
-  const [isZoomed, setIsZoomed] = useState(false)
+  const [selectedImage, setSelectedImage] = useState(0);
+  const [isZoomed, setIsZoomed] = useState(false);
 
   const nextImage = () => {
-    setSelectedImage((prev) => (prev + 1) % images.length)
-  }
+    setSelectedImage((prev) => (prev + 1) % images.length);
+  };
 
   const prevImage = () => {
-    setSelectedImage((prev) => (prev - 1 + images.length) % images.length)
-  }
+    setSelectedImage((prev) => (prev - 1 + images.length) % images.length);
+  };
 
   return (
     <div className="space-y-4">
       {/* Main Image */}
       <div className="relative aspect-square overflow-hidden rounded-lg border bg-gray-50">
         <div
-          className="relative w-full h-full cursor-zoom-in"
+          className="relative w-full h-full cursor-zoom-in flex"
           onMouseEnter={() => setIsZoomed(true)}
           onMouseLeave={() => setIsZoomed(false)}
         >
@@ -34,7 +34,9 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
             src={images[selectedImage] || "/placeholder.svg"}
             alt={productName}
             fill
-            className={`object-cover transition-transform duration-300 ${isZoomed ? "scale-150" : "scale-100"}`}
+            className={`object-cover transition-transform duration-300 max-w-[400px] ${
+              isZoomed ? "scale-150" : "scale-100"
+            }`}
           />
         </div>
 
@@ -65,7 +67,9 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
               key={index}
               onClick={() => setSelectedImage(index)}
               className={`flex-shrink-0 w-20 h-20 rounded-md border-2 overflow-hidden transition-colors ${
-                index === selectedImage ? "border-blue-500" : "border-gray-200 hover:border-gray-300"
+                index === selectedImage
+                  ? "border-blue-500"
+                  : "border-gray-200 hover:border-gray-300"
               }`}
             >
               <Image
@@ -80,5 +84,5 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
         </div>
       )}
     </div>
-  )
+  );
 }

@@ -32,7 +32,7 @@ export default function ProductDetailPage({
       <div className="container mx-auto px-4 py-8">
         <div className="grid lg:grid-cols-2 gap-12">
           {/* Product Gallery */}
-          <div>
+          <div className="w-[calc(100vw-30px)] lg:w-[500px]">
             <ProductGallery
               images={productImages}
               productName={isRTL ? product.nameAr : product.name}
