@@ -119,12 +119,12 @@ export function Header({ dict, locale }: HeaderProps) {
 
                   {/* Language Switcher for Mobile */}
                   <div className="p-6 border-t">
-                    <div className="mb-4">
+                    <div className="mb-2">
                       <LanguageSwitcher currentLocale={locale} />
                     </div>
 
                     {/* Login/Register Buttons */}
-                    <div className="space-y-3">
+                    <div className="space-y-3 mb-2">
                       <Link
                         href={`/${locale}/login`}
                         onClick={() => setIsMobileMenuOpen(false)}
