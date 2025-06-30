@@ -7,6 +7,7 @@ const authRoutes = require("./routes/auth.routes");
 const ordersRoutes = require("./routes/orders.routes.js");
 const productsRoutes = require("./routes/products.routes.js");
 const categoryRoutes = require("./routes/categories.routes");
+const orderRoutes = require("./routes/orders.routes");
 
 // Load environment variables from .env file
 dotenv.config();
@@ -45,6 +46,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/products", productsRoutes);
 app.use("/api/orders", ordersRoutes);
 app.use("/api/categories", categoryRoutes);
+app.use("/api/orders", orderRoutes);
 // Define a simple route for testing
 app.get("/", (req, res) => {
   res.send("API is running...");
