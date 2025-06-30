@@ -65,7 +65,7 @@ exports.createUser = async (req, res) => {
 
     res.status(201).json({
       message: "User created successfully",
-      user: newUser.select("-password"),
+      user: newUser,
     });
   } catch (error) {
     console.error("Error creating user:", error.message);
@@ -100,7 +100,7 @@ exports.updateUser = async (req, res) => {
 
     res.json({
       message: "User updated successfully",
-      user: user.select("-password"),
+      user: user,
     });
   } catch (error) {
     console.error("Error updating user:", error.message);
@@ -161,7 +161,7 @@ exports.blockUser = async (req, res) => {
       message: `User ${
         accountStatus === "blocked" ? "blocked" : "unblocked"
       } successfully`,
-      user: user.select("-password"),
+      user: user,
     });
   } catch (error) {
     console.error("Error blocking user:", error.message);
