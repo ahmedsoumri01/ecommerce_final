@@ -1,50 +1,71 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import { useCartStore } from "@/lib/store/cart-store"
-import { Button } from "@/components/ui/button"
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
-import { Badge } from "@/components/ui/badge"
-import { ShoppingCart, Plus, Minus, Trash2, ExternalLink } from "lucide-react"
-import Image from "next/image"
-import Link from "next/link"
+import { useEffect, useState } from "react";
+import { useCartStore } from "@/lib/store/cart-store";
+import { Button } from "@/components/ui/button";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { Badge } from "@/components/ui/badge";
+import { ShoppingCart, Plus, Minus, Trash2, ExternalLink } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { useClientDictionary } from "@/hooks/useClientDictionary";
 
 interface CartSidebarProps {
-  locale: string
+  locale: string;
 }
 
 export function CartSidebar({ locale }: CartSidebarProps) {
-  const [mounted, setMounted] = useState(false)
-  const { items, isOpen, setCartOpen, updateQuantity, removeItem, getTotalItems, getTotalPrice, clearCart } =
-    useCartStore()
+  const [mounted, setMounted] = useState(false);
+  const { t } = useClientDictionary(locale);
+
+  const {
+    items,
+    isOpen,
+    setCartOpen,
+    updateQuantity,
+    removeItem,
+    getTotalItems,
+    getTotalPrice,
+    clearCart,
+  } = useCartStore();
 
   useEffect(() => {
-    setMounted(true)
-  }, [])
+    setMounted(true);
+  }, []);
 
   const getProductName = (item: any) => {
     switch (locale) {
       case "ar":
-        return item.product.nameAr
+        return item.product.nameAr;
       case "fr":
-        return item.product.nameFr
+        return item.product.nameFr;
       default:
-        return item.product.name
+        return item.product.name;
     }
-  }
+  };
 
   if (!mounted) {
     return (
       <Button variant="outline" size="icon" className="relative bg-transparent">
         <ShoppingCart className="h-4 w-4" />
       </Button>
-    )
+    );
   }
 
   return (
     <Sheet open={isOpen} onOpenChange={setCartOpen}>
       <SheetTrigger asChild>
-        <Button variant="outline" size="icon" className="relative bg-transparent">
+        <Button
+          variant="outline"
+          size="icon"
+          className="relative bg-transparent"
+        >
           <ShoppingCart className="h-4 w-4" />
           {getTotalItems() > 0 && (
             <Badge className="absolute -top-2 -right-2 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs">
@@ -66,14 +87,17 @@ export function CartSidebar({ locale }: CartSidebarProps) {
             <div className="flex-1 flex items-center justify-center">
               <div className="text-center">
                 <ShoppingCart className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-                <p className="text-gray-500">سلة التسوق فارغة</p>
+                <p className="text-gray-500">{t("cart_sidebar.empty_cart")}</p>
               </div>
             </div>
           ) : (
             <>
               <div className="flex-1 overflow-y-auto py-4 space-y-4">
                 {items.slice(0, 3).map((item) => (
-                  <div key={item.product.id} className="flex gap-4 p-4 border rounded-lg">
+                  <div
+                    key={item.product.id}
+                    className="flex gap-4 p-4 border rounded-lg"
+                  >
                     <Image
                       src={item.product.image || "/placeholder.svg"}
                       alt={getProductName(item)}
@@ -82,24 +106,34 @@ export function CartSidebar({ locale }: CartSidebarProps) {
                       className="rounded-md object-cover"
                     />
                     <div className="flex-1">
-                      <h4 className="font-semibold text-sm line-clamp-2">{getProductName(item)}</h4>
-                      <p className="text-sm text-gray-500 mb-2">{item.product.brand}</p>
+                      <h4 className="font-semibold text-sm line-clamp-2">
+                        {getProductName(item)}
+                      </h4>
+                      <p className="text-sm text-gray-500 mb-2">
+                        {item.product.brand}
+                      </p>
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
                           <Button
                             size="icon"
                             variant="outline"
                             className="h-8 w-8 bg-transparent"
-                            onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
+                            onClick={() =>
+                              updateQuantity(item.product.id, item.quantity - 1)
+                            }
                           >
                             <Minus className="h-3 w-3" />
                           </Button>
-                          <span className="w-8 text-center">{item.quantity}</span>
+                          <span className="w-8 text-center">
+                            {item.quantity}
+                          </span>
                           <Button
                             size="icon"
                             variant="outline"
                             className="h-8 w-8 bg-transparent"
-                            onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
+                            onClick={() =>
+                              updateQuantity(item.product.id, item.quantity + 1)
+                            }
                           >
                             <Plus className="h-3 w-3" />
                           </Button>
@@ -122,25 +156,34 @@ export function CartSidebar({ locale }: CartSidebarProps) {
 
                 {items.length > 3 && (
                   <div className="text-center py-2">
-                    <p className="text-sm text-gray-500">و {items.length - 3} منتجات أخرى</p>
+                    <p className="text-sm text-gray-500">
+                      و {items.length - 3} منتجات أخرى
+                    </p>
                   </div>
                 )}
               </div>
 
               <div className="border-t pt-4 space-y-4">
                 <div className="flex justify-between items-center text-lg font-semibold">
-                  <span>المجموع:</span>
+                  <span>{t("cart_sidebar.total")}</span>
                   <span>${getTotalPrice().toFixed(2)}</span>
                 </div>
                 <div className="space-y-2">
-                  <Link href={`/${locale}/cart`} onClick={() => setCartOpen(false)}>
+                  <Link
+                    href={`/${locale}/cart`}
+                    onClick={() => setCartOpen(false)}
+                  >
                     <Button className="w-full" size="lg">
                       <ExternalLink className="mr-2 h-4 w-4" />
-                      عرض السلة
+                      {t("cart_sidebar.view_cart")}
                     </Button>
                   </Link>
-                  <Button variant="outline" className="w-full bg-transparent" onClick={clearCart}>
-                    إفراغ السلة
+                  <Button
+                    variant="outline"
+                    className="w-full bg-transparent"
+                    onClick={clearCart}
+                  >
+                    {t("cart_sidebar.clear_cart")}
                   </Button>
                 </div>
               </div>
@@ -149,5 +192,5 @@ export function CartSidebar({ locale }: CartSidebarProps) {
         </div>
       </SheetContent>
     </Sheet>
-  )
+  );
 }

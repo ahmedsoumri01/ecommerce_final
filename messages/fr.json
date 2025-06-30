@@ -217,5 +217,53 @@
     "total": "Total général",
     "checkout_button": "Passer à la caisse",
     "continue_shopping": "Continuer vos achats"
+  },
+  "checkout_form": {
+    "title": "Passer la commande",
+    "delivery_info": "Informations de livraison",
+    "first_name_label": "Prénom",
+    "last_name_label": "Nom",
+    "first_name_placeholder": "Entrez votre prénom",
+    "last_name_placeholder": "Entrez votre nom",
+    "phone_label": "Numéro de téléphone",
+    "phone_placeholder": "+33 1 23 45 67 89",
+    "address_label": "Adresse",
+    "address_placeholder": "Entrez votre adresse complète",
+    "city_label": "Ville",
+    "city_placeholder": "Paris",
+    "postal_code_label": "Code postal",
+    "postal_code_placeholder": "75000",
+    "notes_label": "Notes supplémentaires",
+    "notes_placeholder": "Toute note spéciale pour la commande ou la livraison",
+    "processing": "Traitement en cours...",
+    "confirm_order": "Confirmer la commande",
+    "toast_title": "Commande confirmée avec succès ! ✅",
+    "toast_description": "Nous vous contacterons bientôt pour confirmer la livraison",
+    "order_summary": "Résumé de la commande",
+    "payment_details": "Détails du paiement",
+    "items_total": "Produits",
+    "shipping": "Livraison",
+    "free": "Gratuit",
+    "tax": "Taxe",
+    "grand_total": "Total général",
+    "payment_method": "Méthode de paiement",
+    "cash_on_delivery": "Paiement à la livraison",
+    "pay_on_delivery": "Payez en espèces à la réception de la commande"
+  },
+  "cart_sidebar": {
+    "title": "Panier ({count} article(s))",
+    "empty_cart": "Votre panier est vide",
+    "more_items": "et {count} autres produits",
+    "total": "Total:",
+    "view_cart": "Voir le panier",
+    "clear_cart": "Vider le panier"
+  },
+  "not_found": {
+    "title": "Page non trouvée",
+    "description": "Désolé, nous ne pouvons pas trouver la page que vous cherchez. La page a peut-être été déplacée ou supprimée.",
+    "home_button": "Retour à l'accueil",
+    "browse_products": "Parcourir les produits",
+    "help_text": "Si vous pensez qu'il s'agit d'une erreur, veuillez",
+    "contact_us": "nous contacter"
   }
 }

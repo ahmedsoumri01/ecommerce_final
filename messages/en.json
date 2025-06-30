@@ -18,11 +18,11 @@
     "info_title": "Contact Information",
     "info_description": "Reach out to us through any of the following ways, and we'll be glad to assist you.",
     "address_label": "Address",
-    "address_value": "Riyadh, Saudi Arabia",
+    "address_value": "Tunis, tunisia",
     "phone_label": "Phone",
-    "phone_value": "+966 50 123 4567",
+    "phone_value": "+216 95941469",
     "email_label": "Email",
-    "email_value": "info@store.com",
+    "email_value": "Tuniskado@store.com",
     "hours_label": "Working Hours",
     "hours_value": "Sunday - Thursday: 9:00 AM - 6:00 PM",
     "form_title": "Send us a message",
@@ -123,7 +123,7 @@
   },
   "footer": {
     "brand": {
-      "title": "Our Store",
+      "title": "TuniKado",
       "description": "An online store specializing in selling the latest electronic and tech devices at the best prices"
     },
     "categories": {
@@ -142,11 +142,11 @@
     },
     "contact": {
       "title": "Contact Us",
-      "email": "info@store.com",
-      "phone": "+1 234 567 8900",
-      "address": "New York, USA"
+      "email": "tuniKado@store.com",
+      "phone": "+216 95941469",
+      "address": "Tunis,tunisia"
     },
-    "copyright": "© 2024 Our Store. All rights reserved."
+    "copyright": "© 2025 TuniKado. All rights reserved."
   },
   "product_detail_page": {
     "discount": "Off",
@@ -182,5 +182,53 @@
     "total": "Grand Total",
     "checkout_button": "Proceed to Checkout",
     "continue_shopping": "Continue Shopping"
+  },
+  "checkout_form": {
+    "title": "Complete Your Order",
+    "delivery_info": "Delivery Information",
+    "first_name_label": "First Name",
+    "last_name_label": "Last Name",
+    "first_name_placeholder": "Enter first name",
+    "last_name_placeholder": "Enter last name",
+    "phone_label": "Phone Number",
+    "phone_placeholder": "+1 234 567 8900",
+    "address_label": "Address",
+    "address_placeholder": "Enter full address",
+    "city_label": "City",
+    "city_placeholder": "New York",
+    "postal_code_label": "Postal Code",
+    "postal_code_placeholder": "10001",
+    "notes_label": "Additional Notes",
+    "notes_placeholder": "Any special notes for the order or delivery",
+    "processing": "Processing...",
+    "confirm_order": "Confirm Order",
+    "toast_title": "Order Confirmed Successfully! ✅",
+    "toast_description": "We'll contact you soon to confirm delivery",
+    "order_summary": "Order Summary",
+    "payment_details": "Payment Details",
+    "items_total": "Items",
+    "shipping": "Shipping",
+    "free": "Free",
+    "tax": "Tax",
+    "grand_total": "Grand Total",
+    "payment_method": "Payment Method",
+    "cash_on_delivery": "Cash on Delivery",
+    "pay_on_delivery": "Pay in cash upon receiving the order"
+  },
+  "cart_sidebar": {
+    "title": "Shopping Cart ({count} item(s))",
+    "empty_cart": "Your cart is empty",
+    "more_items": "and {count} more items",
+    "total": "Total:",
+    "view_cart": "View Cart",
+    "clear_cart": "Clear Cart"
+  },
+  "not_found": {
+    "title": "Page Not Found",
+    "description": "Sorry, we couldn't find the page you're looking for. The page might have been moved or deleted.",
+    "home_button": "Go Back Home",
+    "browse_products": "Browse Products",
+    "help_text": "If you think this is an error, please",
+    "contact_us": "contact us"
   }
 }
