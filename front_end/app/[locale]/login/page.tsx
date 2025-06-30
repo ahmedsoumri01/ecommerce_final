@@ -1,62 +1,77 @@
 "use client";
-
-import type React from "react";
-import { useState } from "react";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Eye, EyeOff, Mail, Lock } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 import { useClientDictionary } from "@/hooks/useClientDictionary";
+import { useAuth } from "@/hooks/use-auth";
+import { loginSchema, type LoginFormData } from "@/lib/validations/auth";
+import { useState } from "react";
 
 export default function LoginPage({ params }: { params: { locale: string } }) {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { toast } = useToast();
   const { t } = useClientDictionary(params.locale);
+  const { login, isLoading, user, isAuthenticated, clearError } = useAuth();
+
   const isRTL = params.locale === "ar";
+  const error = searchParams.get("error");
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
-  };
+  const form = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    // Check admin credentials
-    if (
-      formData.email === "admin@admin.com" &&
-      formData.password === "admin123"
-    ) {
+  // Show error message from URL params
+  useEffect(() => {
+    if (error === "account-blocked") {
       toast({
-        title: t("login_page.toast.success_title"),
-        description: t("login_page.toast.success_description"),
-        duration: 3000,
-      });
-      router.push(`/${params.locale}/admin`);
-    } else {
-      toast({
-        title: t("login_page.toast.error_title"),
-        description: t("login_page.toast.error_description"),
-        duration: 3000,
+        title: "Account Blocked",
+        description: "Your account has been blocked. Please contact support.",
+        variant: "destructive",
       });
     }
+  }, [error, toast]);
 
-    setIsLoading(false);
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      const dashboardPath = user.role === "admin" ? "/admin" : "/dashboard";
+      router.replace(`/${params.locale}${dashboardPath}`);
+    }
+  }, [isAuthenticated, user, router, params.locale]);
+
+  // Clear errors when component unmounts
+  useEffect(() => {
+    return () => clearError();
+  }, [clearError]);
+
+  const onSubmit = async (data: LoginFormData) => {
+    const success = await login(data.email, data.password);
+
+    if (success && user) {
+      const dashboardPath = user.role === "admin" ? "/admin" : "/dashboard";
+      router.push(`/${params.locale}${dashboardPath}`);
+    }
   };
 
   return (
@@ -73,75 +88,83 @@ export default function LoginPage({ params }: { params: { locale: string } }) {
           <p className="text-gray-600">{t("login_page.subtitle")}</p>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium mb-2">
-                {t("login_page.email_label")}
-              </label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                  placeholder="admin@admin.com"
-                  className="pl-10"
-                />
-              </div>
-            </div>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("login_page.email_label")}</FormLabel>
+                    <FormControl>
+                      <div className="relative">
+                        <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                        <Input
+                          {...field}
+                          type="email"
+                          placeholder="admin@admin.com"
+                          className="pl-10"
+                          disabled={isLoading}
+                        />
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            <div>
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium mb-2"
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("login_page.password_label")}</FormLabel>
+                    <FormControl>
+                      <div className="relative">
+                        <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                        <Input
+                          {...field}
+                          type={showPassword ? "text" : "password"}
+                          placeholder="admin123"
+                          className="pl-10 pr-10"
+                          disabled={isLoading}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                          disabled={isLoading}
+                        >
+                          {showPassword ? (
+                            <EyeOff className="h-4 w-4" />
+                          ) : (
+                            <Eye className="h-4 w-4" />
+                          )}
+                        </button>
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <Button
+                type="submit"
+                className="w-full"
+                size="lg"
+                disabled={isLoading}
               >
-                {t("login_page.password_label")}
-              </label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-                <Input
-                  id="password"
-                  name="password"
-                  type={showPassword ? "text" : "password"}
-                  value={formData.password}
-                  onChange={handleChange}
-                  required
-                  placeholder="admin123"
-                  className="pl-10 pr-10"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                >
-                  {showPassword ? (
-                    <EyeOff className="h-4 w-4" />
-                  ) : (
-                    <Eye className="h-4 w-4" />
-                  )}
-                </button>
-              </div>
-            </div>
-
-            <Button
-              type="submit"
-              className="w-full"
-              size="lg"
-              disabled={isLoading}
-            >
-              {isLoading ? (
-                <>
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                  {t("login_page.submit_loading")}
-                </>
-              ) : (
-                t("login_page.submit_button")
-              )}
-            </Button>
-          </form>
+                {isLoading ? (
+                  <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                    {t("login_page.submit_loading")}
+                  </>
+                ) : (
+                  t("login_page.submit_button")
+                )}
+              </Button>
+            </form>
+          </Form>
 
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-600">
