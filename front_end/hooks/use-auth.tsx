@@ -9,26 +9,37 @@ export const useAuth = () => {
   const authStore = useAuthStore();
 
   useEffect(() => {
-    // Check auth on mount
-    if (authStore.token && !authStore.user) {
+    // Only check auth after hydration and if we have a token but no user
+    if (
+      authStore.isHydrated &&
+      authStore.token &&
+      !authStore.user &&
+      !authStore.isFetching
+    ) {
       authStore.checkAuth();
     }
-  }, [authStore.token, authStore.user, authStore.checkAuth]);
+  }, [
+    authStore.isHydrated,
+    authStore.token,
+    authStore.user,
+    authStore.isFetching,
+    authStore.checkAuth,
+  ]);
 
   return authStore;
 };
 
 export const useProtectedRoute = (
   requiredRole?: "admin" | "client",
-  redirectTo: string = "/login"
+  redirectTo = "/login"
 ) => {
   const router = useRouter();
   const pathname = usePathname();
-  const { user, isAuthenticated, isFetching, logout } = useAuth();
+  const { user, isAuthenticated, isFetching, logout, isHydrated } = useAuth();
 
   useEffect(() => {
-    // Don't redirect while checking auth
-    if (isFetching) return;
+    // Don't redirect while hydrating or checking auth
+    if (!isHydrated || isFetching) return;
 
     // Not authenticated
     if (!isAuthenticated || !user) {
@@ -75,12 +86,13 @@ export const useProtectedRoute = (
     pathname,
     logout,
     redirectTo,
+    isHydrated,
   ]);
 
   return {
     user,
     isAuthenticated,
-    isLoading: isFetching,
+    isLoading: isFetching || !isHydrated,
     hasRequiredRole: requiredRole ? user?.role === requiredRole : true,
   };
 };

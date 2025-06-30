@@ -21,6 +21,7 @@ export interface AuthState {
   isAuthenticated: boolean;
   isLoading: boolean;
   isFetching: boolean;
+  isHydrated: boolean;
 }
 
 export interface AuthActions {
@@ -36,6 +37,7 @@ export interface AuthActions {
   clearError: () => void;
   checkAuth: () => Promise<void>;
   reset: () => void;
+  setHydrated: () => void;
 }
 
 const initialState: AuthState = {
@@ -45,6 +47,7 @@ const initialState: AuthState = {
   isAuthenticated: false,
   isLoading: false,
   isFetching: false,
+  isHydrated: false,
 };
 
 export const useAuthStore = create<AuthState & AuthActions>()(
@@ -53,11 +56,15 @@ export const useAuthStore = create<AuthState & AuthActions>()(
       (set, get) => {
         // Subscribe to store reset
         subscribeToReset(() => {
-          set(initialState, false, "auth/reset");
+          set({ ...initialState, isHydrated: true }, false, "auth/reset");
         });
 
         return {
           ...initialState,
+
+          setHydrated: () => {
+            set({ isHydrated: true }, false, "auth/hydrated");
+          },
 
           login: async (email: string, password: string): Promise<boolean> => {
             set({ isLoading: true, error: null }, false, "auth/login-start");
@@ -69,6 +76,9 @@ export const useAuthStore = create<AuthState & AuthActions>()(
               });
 
               const { token, user, message } = response.data;
+
+              // Set token in axios headers
+              api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
               set(
                 {
@@ -138,6 +148,9 @@ export const useAuthStore = create<AuthState & AuthActions>()(
           },
 
           logout: () => {
+            // Remove token from axios headers
+            delete api.defaults.headers.common["Authorization"];
+
             set(
               {
                 user: null,
@@ -151,9 +164,6 @@ export const useAuthStore = create<AuthState & AuthActions>()(
               "auth/logout"
             );
 
-            // Clear localStorage
-            localStorage.removeItem("auth-storage");
-
             toast.success("Logged out successfully");
           },
 
@@ -162,13 +172,17 @@ export const useAuthStore = create<AuthState & AuthActions>()(
           },
 
           checkAuth: async () => {
-            const { token } = get();
-            if (!token) return;
+            const { token, isHydrated } = get();
+
+            // Don't check auth if not hydrated or no token
+            if (!isHydrated || !token) return;
 
             set({ isFetching: true }, false, "auth/check-start");
 
             try {
-              // You can add a /me endpoint to verify token validity
+              // Set token in axios headers before making the request
+              api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
               const response = await api.get("/auth/me");
               const { user } = response.data;
 
@@ -182,22 +196,42 @@ export const useAuthStore = create<AuthState & AuthActions>()(
                 "auth/check-success"
               );
             } catch (error) {
-              // Token is invalid, clear auth state
-              set(
-                {
-                  user: null,
-                  token: null,
-                  isAuthenticated: false,
-                  isFetching: false,
-                },
-                false,
-                "auth/check-error"
-              );
+              console.warn("Auth check failed:", error);
+
+              // Only clear auth state if it's a 401 (unauthorized) error
+              const axiosError = error as AxiosError;
+              if (axiosError.response?.status === 401) {
+                // Remove token from axios headers
+                delete api.defaults.headers.common["Authorization"];
+
+                set(
+                  {
+                    user: null,
+                    token: null,
+                    isAuthenticated: false,
+                    isFetching: false,
+                    error: "Session expired. Please login again.",
+                  },
+                  false,
+                  "auth/check-error"
+                );
+
+                toast.error("Session expired. Please login again.");
+              } else {
+                // For other errors (network, server down, etc.), keep the user logged in
+                set(
+                  {
+                    isFetching: false,
+                  },
+                  false,
+                  "auth/check-network-error"
+                );
+              }
             }
           },
 
           reset: () => {
-            set(initialState, false, "auth/reset");
+            set({ ...initialState, isHydrated: true }, false, "auth/reset");
           },
         };
       },
@@ -208,6 +242,17 @@ export const useAuthStore = create<AuthState & AuthActions>()(
           token: state.token,
           isAuthenticated: state.isAuthenticated,
         }),
+        onRehydrateStorage: () => (state) => {
+          // Set hydrated flag and restore token to axios headers
+          if (state) {
+            state.setHydrated();
+            if (state.token) {
+              api.defaults.headers.common[
+                "Authorization"
+              ] = `Bearer ${state.token}`;
+            }
+          }
+        },
       }
     ),
     { name: "auth-store" }

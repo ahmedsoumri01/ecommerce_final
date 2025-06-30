@@ -21,6 +21,7 @@ import { useClientDictionary } from "@/hooks/useClientDictionary";
 import { useAuth } from "@/hooks/use-auth";
 import { loginSchema, type LoginFormData } from "@/lib/validations/auth";
 import { useState } from "react";
+import { useAuthStore } from "@/stores/auth-store";
 
 export default function LoginPage({ params }: { params: { locale: string } }) {
   const [showPassword, setShowPassword] = useState(false);
@@ -28,7 +29,8 @@ export default function LoginPage({ params }: { params: { locale: string } }) {
   const searchParams = useSearchParams();
   const { toast } = useToast();
   const { t } = useClientDictionary(params.locale);
-  const { login, isLoading, user, isAuthenticated, clearError } = useAuth();
+  const { login, isLoading, user, isAuthenticated, clearError, isHydrated } =
+    useAuth();
 
   const isRTL = params.locale === "ar";
   const error = searchParams.get("error");
@@ -51,13 +53,13 @@ export default function LoginPage({ params }: { params: { locale: string } }) {
     }
   }, [error, toast]);
 
-  // Redirect if already authenticated
+  // Redirect if already authenticated (only after hydration)
   useEffect(() => {
-    if (isAuthenticated && user) {
+    if (isHydrated && isAuthenticated && user) {
       const dashboardPath = user.role === "admin" ? "/admin" : "/dashboard";
       router.replace(`/${params.locale}${dashboardPath}`);
     }
-  }, [isAuthenticated, user, router, params.locale]);
+  }, [isAuthenticated, user, router, params.locale, isHydrated]);
 
   // Clear errors when component unmounts
   useEffect(() => {
@@ -65,14 +67,27 @@ export default function LoginPage({ params }: { params: { locale: string } }) {
   }, [clearError]);
 
   const onSubmit = async (data: LoginFormData) => {
-    console.log({ data });
     const success = await login(data.email, data.password);
 
-    if (success && user) {
-      const dashboardPath = user.role === "admin" ? "/admin" : "/dashboard";
-      router.push(`/${params.locale}${dashboardPath}`);
+    if (success) {
+      // Get the updated user from the store using the hook
+      const authStore = useAuthStore.getState();
+      if (authStore.user) {
+        const dashboardPath =
+          authStore.user.role === "admin" ? "/admin" : "/dashboard";
+        router.push(`/${params.locale}${dashboardPath}`);
+      }
     }
   };
+
+  // Show loading while hydrating
+  if (!isHydrated) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
 
   return (
     <div

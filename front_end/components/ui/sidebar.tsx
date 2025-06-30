@@ -145,5 +145,3 @@ export function Sidebar({ items, locale, className }: SidebarProps) {
     </>
   );
 }
-
-// Remove all the other sidebar components and keep only the main Sidebar component
