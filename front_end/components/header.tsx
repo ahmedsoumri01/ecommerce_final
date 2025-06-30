@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { LanguageSwitcher } from "./language-switcher";
-import { ShoppingBag, Menu } from "lucide-react";
+import { ShoppingBag, Menu, User, LogIn } from "lucide-react";
 import { CartSidebar } from "./cart-sidebar";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,6 +14,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { useClientDictionary } from "@/hooks/useClientDictionary";
+import { useAuthStore } from "@/stores/auth-store";
 
 interface HeaderProps {
   locale: string;
@@ -22,6 +23,7 @@ interface HeaderProps {
 export function Header({ locale }: HeaderProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { t } = useClientDictionary(locale);
+  const { user, isAuthenticated } = useAuthStore();
 
   const isRTL = locale === "ar";
 
@@ -69,7 +71,29 @@ export function Header({ locale }: HeaderProps) {
             <div className="hidden md:block">
               <LanguageSwitcher currentLocale={locale} />
             </div>
+            {!user && !isAuthenticated && (
+              <div className="border-2 rounded-sm transition duration-300 hover:bg-blue-500">
+                <Link
+                  href="/login"
+                  className="flex items-center justify-center p-1 text-black transition duration-300 group hover:text-white"
+                >
+                  <LogIn className="transition duration-300 group-hover:text-white" />
+                </Link>
+              </div>
+            )}
 
+            <div>
+              {user && isAuthenticated && (
+                <div>
+                  <Link
+                    href={user?.role === "admin" ? "/admin" : "/dashboard"}
+                    className="hover:text-blue-400"
+                  >
+                    <User />
+                  </Link>
+                </div>
+              )}
+            </div>
             {/* Mobile Menu */}
             <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
               <SheetTrigger asChild>

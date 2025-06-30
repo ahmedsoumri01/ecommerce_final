@@ -47,7 +47,6 @@ export default function LoginPage({ params }: { params: { locale: string } }) {
       toast({
         title: "Account Blocked",
         description: "Your account has been blocked. Please contact support.",
-        variant: "destructive",
       });
     }
   }, [error, toast]);
@@ -66,6 +65,7 @@ export default function LoginPage({ params }: { params: { locale: string } }) {
   }, [clearError]);
 
   const onSubmit = async (data: LoginFormData) => {
+    console.log({ data });
     const success = await login(data.email, data.password);
 
     if (success && user) {
