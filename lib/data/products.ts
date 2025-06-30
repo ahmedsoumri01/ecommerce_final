@@ -8,7 +8,7 @@ export interface Product {
   brand: string;
   price: number;
   originalPrice?: number;
-  image: string;
+  image: any;
   category: string;
   categoryAr: string;
   categoryFr: string;
