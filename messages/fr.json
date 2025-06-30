@@ -265,5 +265,24 @@
     "browse_products": "Parcourir les produits",
     "help_text": "Si vous pensez qu'il s'agit d'une erreur, veuillez",
     "contact_us": "nous contacter"
+  },
+  "login_page": {
+    "title": "Connexion",
+    "subtitle": "Entrez vos identifiants pour accéder à votre compte",
+    "email_label": "Adresse e-mail",
+    "password_label": "Mot de passe",
+    "submit_button": "Se connecter",
+    "submit_loading": "Connexion en cours...",
+    "no_account": "Vous n'avez pas de compte ?",
+    "create_account": "Créer un compte",
+    "demo_title": "Identifiants d'administration (démo)",
+    "demo_email": "E-mail",
+    "demo_password": "Mot de passe",
+    "toast": {
+      "success_title": "Connexion réussie ! 🎉",
+      "success_description": "Bienvenue dans le tableau de bord",
+      "error_title": "Erreur de connexion ❌",
+      "error_description": "Email ou mot de passe incorrect"
+    }
   }
 }

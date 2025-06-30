@@ -230,5 +230,24 @@
     "browse_products": "Browse Products",
     "help_text": "If you think this is an error, please",
     "contact_us": "contact us"
+  },
+  "login_page": {
+    "title": "Login",
+    "subtitle": "Enter your details to access your account",
+    "email_label": "Email Address",
+    "password_label": "Password",
+    "submit_button": "Login",
+    "submit_loading": "Logging in...",
+    "no_account": "Don't have an account?",
+    "create_account": "Create a new account",
+    "demo_title": "Admin Demo Credentials:",
+    "demo_email": "Email",
+    "demo_password": "Password",
+    "toast": {
+      "success_title": "Login successful! 🎉",
+      "success_description": "Welcome to the dashboard",
+      "error_title": "Login failed ❌",
+      "error_description": "Invalid email or password"
+    }
   }
 }
