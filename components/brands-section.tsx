@@ -1,17 +1,20 @@
-import Image from "next/image"
-
+import Image from "next/image";
+import TuniKadoLogo from "@/public/images/logo/tunikado_logo.png";
+import SamsungLogo from "@/public/images/logo/samsung_logo.png";
+import HocoLogo from "@/public/images/logo/hoco_logo.png";
+import AppleLogo from "@/public/images/logo/apple_logo.png";
 interface Brand {
-  id: number
-  name: string
-  logo: string
+  id: number;
+  name: string;
+  logo: any;
 }
 
 const brands: Brand[] = [
-  { id: 1, name: "Apple", logo: "/placeholder.svg?height=80&width=120" },
-  { id: 2, name: "Samsung", logo: "/placeholder.svg?height=80&width=120" },
-  { id: 3, name: "Sony", logo: "/placeholder.svg?height=80&width=120" },
-  { id: 4, name: "Dell", logo: "/placeholder.svg?height=80&width=120" },
-]
+  { id: 1, name: "Tunikado", logo: TuniKadoLogo },
+  { id: 2, name: "Samsung", logo: SamsungLogo },
+  { id: 3, name: "Hoco", logo: HocoLogo },
+  { id: 4, name: "apple ", logo: AppleLogo },
+];
 
 export function BrandsSection() {
   return (
@@ -35,5 +38,5 @@ export function BrandsSection() {
         </div>
       </div>
     </section>
-  )
+  );
 }

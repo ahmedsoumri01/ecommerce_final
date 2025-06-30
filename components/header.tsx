@@ -1,46 +1,61 @@
-"use client"
+"use client";
 
-import Link from "next/link"
-import { useState } from "react"
-import { LanguageSwitcher } from "./language-switcher"
-import { ShoppingBag, Menu } from "lucide-react"
-import { CartSidebar } from "./cart-sidebar"
-import { Button } from "@/components/ui/button"
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
+import Link from "next/link";
+import { useState } from "react";
+import { LanguageSwitcher } from "./language-switcher";
+import { ShoppingBag, Menu } from "lucide-react";
+import { CartSidebar } from "./cart-sidebar";
+import { Button } from "@/components/ui/button";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
 interface HeaderProps {
-  dict: any
-  locale: string
+  dict: any;
+  locale: string;
 }
 
 export function Header({ dict, locale }: HeaderProps) {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const isRTL = locale === "ar"
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const isRTL = locale === "ar";
 
   // Fallback navigation items
   const navigation = {
     home: locale === "ar" ? "الرئيسية" : locale === "fr" ? "Accueil" : "Home",
-    products: locale === "ar" ? "المنتجات" : locale === "fr" ? "Produits" : "Products",
+    products:
+      locale === "ar" ? "المنتجات" : locale === "fr" ? "Produits" : "Products",
     about: locale === "ar" ? "حول" : locale === "fr" ? "À propos" : "About",
-    contact: locale === "ar" ? "اتصل بنا" : locale === "fr" ? "Contact" : "Contact",
-  }
+    contact:
+      locale === "ar" ? "اتصل بنا" : locale === "fr" ? "Contact" : "Contact",
+  };
 
   const navItems = [
     { href: `/${locale}`, label: navigation.home },
     { href: `/${locale}/products`, label: navigation.products },
-    { href: `/${locale}/categories`, label: locale === "ar" ? "الفئات" : "Categories" },
+    {
+      href: `/${locale}/categories`,
+      label: locale === "ar" ? "الفئات" : "Categories",
+    },
     { href: `/${locale}/about`, label: navigation.about },
     { href: `/${locale}/contact`, label: navigation.contact },
-  ]
+  ];
 
   return (
-    <header className={`border-b bg-white sticky top-0 z-50 shadow-sm ${isRTL ? "rtl" : "ltr"}`}>
+    <header
+      className={`border-b bg-white sticky top-0 z-50 shadow-sm ${
+        isRTL ? "rtl" : "ltr"
+      }`}
+    >
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link href={`/${locale}`} className="flex items-center gap-2">
             <ShoppingBag className="h-6 w-6 text-primary" />
-            <span className="text-xl font-bold">Store</span>
+            <span className="text-xl font-bold">TuniKado</span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -66,11 +81,18 @@ export function Header({ dict, locale }: HeaderProps) {
             {/* Mobile Menu */}
             <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
               <SheetTrigger asChild>
-                <Button variant="outline" size="icon" className="md:hidden bg-transparent">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="md:hidden bg-transparent"
+                >
                   <Menu className="h-5 w-5" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side={isRTL ? "left" : "right"} className="w-80 p-0">
+              <SheetContent
+                side={isRTL ? "left" : "right"}
+                className="w-80 p-0"
+              >
                 <SheetHeader className="p-6 border-b">
                   <SheetTitle className="flex items-center gap-2 text-right">
                     <ShoppingBag className="h-6 w-6 text-primary" />
@@ -109,7 +131,11 @@ export function Header({ dict, locale }: HeaderProps) {
                         className="block w-full"
                       >
                         <Button className="w-full">
-                          {locale === "ar" ? "تسجيل الدخول" : locale === "fr" ? "Connexion" : "Login"}
+                          {locale === "ar"
+                            ? "تسجيل الدخول"
+                            : locale === "fr"
+                            ? "Connexion"
+                            : "Login"}
                         </Button>
                       </Link>
                       <Link
@@ -117,8 +143,15 @@ export function Header({ dict, locale }: HeaderProps) {
                         onClick={() => setIsMobileMenuOpen(false)}
                         className="block w-full"
                       >
-                        <Button variant="outline" className="w-full bg-transparent">
-                          {locale === "ar" ? "إنشاء حساب" : locale === "fr" ? "S'inscrire" : "Register"}
+                        <Button
+                          variant="outline"
+                          className="w-full bg-transparent"
+                        >
+                          {locale === "ar"
+                            ? "إنشاء حساب"
+                            : locale === "fr"
+                            ? "S'inscrire"
+                            : "Register"}
                         </Button>
                       </Link>
                     </div>
@@ -130,5 +163,5 @@ export function Header({ dict, locale }: HeaderProps) {
         </div>
       </div>
     </header>
-  )
+  );
 }
