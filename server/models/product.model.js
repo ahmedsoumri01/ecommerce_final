@@ -26,8 +26,9 @@ const ProductSchema = new mongoose.Schema(
     originalPrice: {
       type: Number,
     },
-    image: {
-      type: String, // or use Buffer if storing binary data
+    images: {
+      type: [String], // <-- Changed from "image" to array of strings
+      default: [],
     },
     category: {
       type: mongoose.Schema.Types.ObjectId,
