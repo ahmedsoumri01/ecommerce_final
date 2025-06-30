@@ -1,0 +1,34 @@
+{
+  "header": {
+    "home": "Home",
+    "products": "Products",
+    "about": "About",
+    "contact": "Contact"
+  },
+  "home": {
+    "title": "Welcome to Our Website",
+    "subtitle": "We provide the best products and services",
+    "description": "Discover our wide range of high-quality products designed specifically to meet your needs.",
+    "cta": "Shop Now",
+    "features": {
+      "quality": "High Quality",
+      "delivery": "Fast Delivery",
+      "support": "24/7 Support"
+    }
+  },
+  "products": {
+    "title": "Our Products",
+    "subtitle": "Discover our diverse collection",
+    "product1": {
+      "name": "Advanced Smartphone",
+      "description": "Smartphone with latest technology and high-resolution camera",
+      "price": "$999"
+    },
+    "product2": {
+      "name": "Premium Cotton Shirt",
+      "description": "Shirt made from the finest Egyptian cotton",
+      "price": "$149"
+    },
+    "addToCart": "Add to Cart"
+  }
+}

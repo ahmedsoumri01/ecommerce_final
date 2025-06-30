@@ -1,0 +1,48 @@
+{
+  "header": {
+    "home": "Home",
+    "products": "Products",
+    "about": "About",
+    "contact": "Contact"
+  },
+  "home": {
+    "title": "Welcome to Our Website",
+    "subtitle": "We provide the best products and services",
+    "description": "Discover our wide range of high-quality products designed specifically to meet your needs. We are committed to providing the best shopping experience for our valued customers.",
+    "cta": "Shop Now",
+    "features": {
+      "quality": "High Quality",
+      "delivery": "Fast Delivery",
+      "support": "24/7 Support"
+    }
+  },
+  "products": {
+    "title": "Our Products",
+    "subtitle": "Discover our diverse collection",
+    "categories": {
+      "electronics": "Electronics",
+      "clothing": "Clothing",
+      "home": "Home & Garden"
+    },
+    "product1": {
+      "name": "Advanced Smartphone",
+      "description": "Smartphone with latest technology and high-resolution camera",
+      "price": "$999"
+    },
+    "product2": {
+      "name": "Premium Cotton Shirt",
+      "description": "Shirt made from the finest Egyptian cotton",
+      "price": "$149"
+    },
+    "product3": {
+      "name": "Kitchen Utensil Set",
+      "description": "Complete set of high-quality kitchen utensils",
+      "price": "$299"
+    }
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "language": "Language"
+  }
+}

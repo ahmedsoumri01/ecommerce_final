@@ -1,0 +1,48 @@
+{
+  "header": {
+    "home": "Accueil",
+    "products": "Produits",
+    "about": "À propos",
+    "contact": "Contact"
+  },
+  "home": {
+    "title": "Bienvenue sur notre site",
+    "subtitle": "Nous offrons les meilleurs produits et services",
+    "description": "Découvrez notre large gamme de produits de haute qualité conçus spécifiquement pour répondre à vos besoins. Nous nous engageons à offrir la meilleure expérience d'achat à nos précieux clients.",
+    "cta": "Acheter maintenant",
+    "features": {
+      "quality": "Haute qualité",
+      "delivery": "Livraison rapide",
+      "support": "Support 24/7"
+    }
+  },
+  "products": {
+    "title": "Nos produits",
+    "subtitle": "Découvrez notre collection diversifiée",
+    "categories": {
+      "electronics": "Électronique",
+      "clothing": "Vêtements",
+      "home": "Maison et jardin"
+    },
+    "product1": {
+      "name": "Smartphone avancé",
+      "description": "Smartphone avec la dernière technologie et caméra haute résolution",
+      "price": "999€"
+    },
+    "product2": {
+      "name": "Chemise en coton premium",
+      "description": "Chemise fabriquée à partir du meilleur coton égyptien",
+      "price": "149€"
+    },
+    "product3": {
+      "name": "Set d'ustensiles de cuisine",
+      "description": "Ensemble complet d'ustensiles de cuisine de haute qualité",
+      "price": "299€"
+    }
+  },
+  "common": {
+    "loading": "Chargement...",
+    "error": "Une erreur s'est produite",
+    "language": "Langue"
+  }
+}
