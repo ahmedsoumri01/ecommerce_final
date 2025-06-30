@@ -22,10 +22,7 @@ interface HeaderProps {
 export function Header({ locale }: HeaderProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { t } = useClientDictionary(locale);
-  console.log({
-    t,
-    test: t("header"),
-  });
+
   const isRTL = locale === "ar";
 
   const navItems = [
