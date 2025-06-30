@@ -1,4 +1,4 @@
-// product.model.js
+// models/product.model.js
 const mongoose = require("mongoose");
 
 const ProductSchema = new mongoose.Schema(
@@ -27,7 +27,7 @@ const ProductSchema = new mongoose.Schema(
       type: Number,
     },
     images: {
-      type: [String], // <-- Changed from "image" to array of strings
+      type: [String],
       default: [],
     },
     category: {
@@ -60,6 +60,11 @@ const ProductSchema = new mongoose.Schema(
       required: true,
       unique: true,
       index: true,
+    },
+    audience: {
+      type: String,
+      enum: ["public", "private"],
+      default: "public",
     },
   },
   {

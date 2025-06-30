@@ -3,8 +3,8 @@ const express = require("express");
 const router = express.Router();
 
 // Import middlewares
-const { adminMiddleware } = require("../middleware/auth.middleware");
-const { uploadSingle } = require("../middleware/upload.middleware");
+const { adminMiddleware } = require("../middlewares/auth.middleware");
+const { uploadSingle } = require("../middlewares/upload.middleware");
 
 // Import controller
 const categoriesController = require("../controllers/categories.controller");
