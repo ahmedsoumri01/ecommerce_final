@@ -182,5 +182,40 @@
       "address": "الرياض، المملكة العربية السعودية"
     },
     "copyright": "© 2024 متجرنا. جميع الحقوق محفوظة."
+  },
+  "product_detail_page": {
+    "discount": "خصم",
+    "reviews_label": "تقييم",
+    "quantity_label": "الكمية",
+    "add_to_cart": "إضافة إلى السلة",
+    "out_of_stock": "نفد المخزون",
+    "in_stock": "متوفر",
+    "out_of_stock_badge": "نفد المخزون",
+    "availability": "التوفر",
+    "category": "الفئة",
+    "share_product": "شارك المنتج",
+    "secure": "آمن",
+    "trusted": "موثوق",
+    "guaranteed": "مضمون"
+  },
+  "cart_page": {
+    "title": "سلة التسوق",
+    "empty_cart_title": "سلة التسوق فارغة",
+    "empty_cart_description": "لم تقم بإضافة أي منتجات إلى سلة التسوق بعد",
+    "browse_products": "تصفح المنتجات",
+    "items_count": "{count} عنصر",
+    "products": "المنتجات",
+    "clear_cart": "إفراغ السلة",
+    "quantity_label": "الكمية",
+    "remove_item": "حذف",
+    "total_item": "المجموع",
+    "order_summary": "ملخص الطلب",
+    "items_total": "المنتجات ({count})",
+    "shipping": "الشحن",
+    "free": "مجاني",
+    "tax": "الضريبة",
+    "total": "المجموع الكلي",
+    "checkout_button": "إتمام الطلب",
+    "continue_shopping": "متابعة التسوق"
   }
 }

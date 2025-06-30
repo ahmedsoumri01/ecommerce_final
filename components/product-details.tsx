@@ -8,6 +8,8 @@ import { Star, Plus, Minus, Heart, BookCheck, BadgeCheck } from "lucide-react";
 import type { Product } from "@/lib/data/products";
 import { SocialShare } from "./social-share";
 import { Shield } from "lucide-react";
+import { useClientDictionary } from "@/hooks/useClientDictionary";
+
 interface ProductDetailsProps {
   product: Product;
   locale: string;
@@ -19,6 +21,7 @@ export function ProductDetails({
   locale,
   isRTL = false,
 }: ProductDetailsProps) {
+  const { t } = useClientDictionary(locale); // assuming params passed via page
   const [quantity, setQuantity] = useState(1);
   const [isWishlisted, setIsWishlisted] = useState(false);
   const { addItem } = useCartStore();
@@ -90,7 +93,7 @@ export function ProductDetails({
                 product.originalPrice) *
                 100
             )}
-            % خصم
+            % {t("product_detail_page.discount")}
           </Badge>
         )}
       </div>
@@ -110,7 +113,7 @@ export function ProductDetails({
           ))}
         </div>
         <span className="text-sm text-muted-foreground">
-          ({product.reviews} تقييم)
+          ({product.reviews} {t("product_detail_page.reviews_label")})
         </span>
       </div>
 
@@ -124,7 +127,9 @@ export function ProductDetails({
       {/* Quantity and Add to Cart */}
       <div className="space-y-4">
         <div className="flex items-center gap-4">
-          <span className="font-medium">الكمية:</span>
+          <span className="font-medium">
+            {t("product_detail_page.quantity_label")}:
+          </span>
           <div className="flex items-center border rounded-lg">
             <Button
               variant="ghost"
@@ -156,7 +161,9 @@ export function ProductDetails({
             onClick={handleAddToCart}
             disabled={!product.inStock}
           >
-            {product.inStock ? "إضافة إلى السلة" : "نفد المخزون"}
+            {product.inStock
+              ? t("product_detail_page.add_to_cart")
+              : t("product_detail_page.out_of_stock")}
           </Button>
           <Button
             variant="outline"
@@ -174,21 +181,29 @@ export function ProductDetails({
       {/* Product Info */}
       <div className="space-y-3 pt-6 border-t">
         <div className="flex items-center gap-2">
-          <span className="font-medium">التوفر:</span>
+          <span className="font-medium">
+            {t("product_detail_page.availability")}:
+          </span>
           <Badge variant={product.inStock ? "default" : "destructive"}>
-            {product.inStock ? "متوفر" : "نفد المخزون"}
+            {product.inStock
+              ? t("product_detail_page.in_stock")
+              : t("product_detail_page.out_of_stock_badge")}
           </Badge>
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="font-medium">الفئة:</span>
+          <span className="font-medium">
+            {t("product_detail_page.category")}:
+          </span>
           <Badge variant="outline">{getCategoryName()}</Badge>
         </div>
       </div>
 
       {/* Social Sharing */}
       <div className="pt-6 border-t">
-        <p className="font-medium mb-3">شارك المنتج:</p>
+        <p className="font-medium mb-3">
+          {t("product_detail_page.share_product")}:
+        </p>
         <SocialShare
           url={currentUrl}
           title={getProductName()}
@@ -201,15 +216,15 @@ export function ProductDetails({
         <div className="flex flex-wrap gap-6 opacity-60">
           <div className="text-xs text-center hover:text-blue-500">
             <Shield size={30} />
-            <span>آمن</span>
+            <span>{t("product_detail_page.secure")}</span>
           </div>
           <div className="text-xs text-center hover:text-purple-500">
             <BookCheck size={30} />
-            <span>موثوق</span>
+            <span>{t("product_detail_page.trusted")}</span>
           </div>
           <div className="text-xs text-center hover:text-green-500">
             <BadgeCheck size={30} />
-            <span>مضمون</span>
+            <span>{t("product_detail_page.guaranteed")}</span>
           </div>
         </div>
       </div>

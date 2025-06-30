@@ -182,5 +182,40 @@
       "address": "Paris, France"
     },
     "copyright": "© 2024 Notre Boutique. Tous droits réservés."
+  },
+  "product_detail_page": {
+    "discount": "Réduction",
+    "reviews_label": "Avis",
+    "quantity_label": "Quantité",
+    "add_to_cart": "Ajouter au panier",
+    "out_of_stock": "Rupture de stock",
+    "in_stock": "En stock",
+    "out_of_stock_badge": "Épuisé",
+    "availability": "Disponibilité",
+    "category": "Catégorie",
+    "share_product": "Partager le produit",
+    "secure": "Sécurisé",
+    "trusted": "Fiable",
+    "guaranteed": "Garanti"
+  },
+  "cart_page": {
+    "title": "Panier",
+    "empty_cart_title": "Votre panier est vide",
+    "empty_cart_description": "Vous n'avez pas encore ajouté de produits à votre panier",
+    "browse_products": "Parcourir les produits",
+    "items_count": "{count} article(s)",
+    "products": "Produits",
+    "clear_cart": "Vider le panier",
+    "quantity_label": "Quantité",
+    "remove_item": "Supprimer",
+    "total_item": "Total",
+    "order_summary": "Résumé de la commande",
+    "items_total": "Produits ({count})",
+    "shipping": "Livraison",
+    "free": "Gratuit",
+    "tax": "Taxes",
+    "total": "Total général",
+    "checkout_button": "Passer à la caisse",
+    "continue_shopping": "Continuer vos achats"
   }
 }
