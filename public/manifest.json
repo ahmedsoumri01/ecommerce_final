@@ -1,7 +1,7 @@
 {
-  "name": "Next.js i18n Store",
-  "short_name": "i18n Store",
-  "description": "A multilingual store with PWA capabilities",
+  "name": "TuniKado - Boutique en ligne de mode et accessoires",
+  "short_name": "TuniKado",
+  "description": "TuniKado - Achetez des vêtements et accessoires tendance en ligne en Tunisie.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
@@ -57,7 +57,7 @@
       "purpose": "maskable any"
     }
   ],
-  "categories": ["shopping", "business"],
-  "lang": "ar",
-  "dir": "rtl"
+  "categories": ["shopping", "fashion", "accessories", "ecommerce"],
+  "lang": "fr",
+  "dir": "ltr"
 }

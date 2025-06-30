@@ -1,41 +1,55 @@
-import type React from "react"
-import type { Metadata } from "next"
-import { Inter } from "next/font/google"
-import "./globals.css"
+import type React from "react";
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] })
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Next.js i18n Store",
-  description: "A simple Next.js store with internationalization and PWA",
+  title: "TuniKado",
+  description:
+    "TuniKado - Boutique en ligne d’accessoires et vêtements tendance en Tunisie.",
   manifest: "/manifest.json",
   themeColor: "#3b82f6",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "i18n Store",
+    title: "TuniKado",
   },
   formatDetection: {
     telephone: false,
   },
   openGraph: {
     type: "website",
-    siteName: "Next.js i18n Store",
-    title: "Next.js i18n Store",
-    description: "A multilingual store with PWA capabilities",
+    siteName: "TuniKado",
+    url: "https://www.tunikado.tn", // Replace with your real domain
+    title: "TuniKado - Mode & Accessoires en ligne",
+    description:
+      "Découvrez les dernières tendances en vêtements et accessoires de mode chez TuniKado.",
+    images: [
+      {
+        url: "/images/og-image.jpg", // Replace with your actual OG image
+        width: 1200,
+        height: 630,
+        alt: "TuniKado - Boutique en ligne",
+      },
+    ],
   },
   twitter: {
-    card: "summary",
-    title: "Next.js i18n Store",
-    description: "A multilingual store with PWA capabilities",
+    card: "summary_large_image",
+    site: "@tunikado", // Replace with your Twitter handle if available
+    title: "TuniKado - Mode & Accessoires en ligne",
+    description:
+      "Boutique en ligne tunisienne spécialisée dans la vente de vêtements et accessoires fashion.",
+    images: ["/images/twitter-card.jpg"], // Replace with actual Twitter card image
   },
-    generator: 'v0.dev'
-}
+  generator: "Next.js + TypeScript + i18n + PWA",
+};
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
     <html>
@@ -52,16 +66,34 @@ export default function RootLayout({
         <meta name="theme-color" content="#3b82f6" />
 
         <link rel="apple-touch-icon" href="/icons/icon-152x152.png" />
-        <link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152x152.png" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-192x192.png" />
+        <link
+          rel="apple-touch-icon"
+          sizes="152x152"
+          href="/icons/icon-152x152.png"
+        />
+        <link
+          rel="apple-touch-icon"
+          sizes="180x180"
+          href="/icons/icon-192x192.png"
+        />
 
-        <link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-72x72.png" />
-        <link rel="icon" type="image/png" sizes="16x16" href="/icons/icon-72x72.png" />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="32x32"
+          href="/icons/icon-72x72.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="16x16"
+          href="/icons/icon-72x72.png"
+        />
         <link rel="manifest" href="/manifest.json" />
         <link rel="mask-icon" href="/icons/icon-512x512.png" color="#3b82f6" />
         <link rel="shortcut icon" href="/favicon.ico" />
       </head>
       <body className={inter.className}>{children}</body>
     </html>
-  )
+  );
 }
