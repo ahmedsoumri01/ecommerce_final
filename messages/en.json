@@ -249,5 +249,31 @@
       "error_title": "Login failed ❌",
       "error_description": "Invalid email or password"
     }
+  },
+  "register_page": {
+    "title": "Créer un nouveau compte",
+    "subtitle": "Entrez vos informations pour créer un nouveau compte",
+    "first_name_label": "Prénom",
+    "last_name_label": "Nom",
+    "first_name_placeholder": "Jean",
+    "last_name_placeholder": "Dupont",
+    "email_label": "Adresse e-mail",
+    "email_placeholder": "jean@example.com",
+    "phone_label": "Numéro de téléphone",
+    "phone_placeholder": "+33 1 23 45 67 89",
+    "password_label": "Mot de passe",
+    "password_placeholder": "Mot de passe fort",
+    "confirm_password_label": "Confirmer le mot de passe",
+    "confirm_password_placeholder": "Répétez le mot de passe",
+    "submit_button": "Créer un compte",
+    "submit_loading": "Création en cours...",
+    "already_account": "Vous avez déjà un compte ?",
+    "login_link": "Se connecter",
+    "toast": {
+      "password_mismatch_title": "Erreur de mot de passe ❌",
+      "password_mismatch_description": "Le mot de passe et la confirmation ne correspondent pas",
+      "success_title": "Compte créé avec succès ! 🎉",
+      "success_description": "Vous pouvez maintenant vous connecter à votre compte"
+    }
   }
 }

@@ -53,11 +53,11 @@
     "info_title": "Informations de contact",
     "info_description": "Vous pouvez nous contacter par l’un des moyens suivants, nous serons ravis de vous aider.",
     "address_label": "Adresse",
-    "address_value": "Riyad, Arabie Saoudite",
+    "address_value": "Tunis,tunisa",
     "phone_label": "Téléphone",
-    "phone_value": "+966 50 123 4567",
+    "phone_value": "+216 95941469",
     "email_label": "E-mail",
-    "email_value": "info@store.com",
+    "email_value": "TuniKado@store.com",
     "hours_label": "Heures d'ouverture",
     "hours_value": "Dimanche - Jeudi : 9h00 - 18h00",
     "form_title": "Envoyez-nous un message",
@@ -283,6 +283,32 @@
       "success_description": "Bienvenue dans le tableau de bord",
       "error_title": "Erreur de connexion ❌",
       "error_description": "Email ou mot de passe incorrect"
+    }
+  },
+  "register_page": {
+    "title": "Create a New Account",
+    "subtitle": "Enter your details to create a new account",
+    "first_name_label": "First Name",
+    "last_name_label": "Last Name",
+    "first_name_placeholder": "John",
+    "last_name_placeholder": "Doe",
+    "email_label": "Email Address",
+    "email_placeholder": "john@example.com",
+    "phone_label": "Phone Number",
+    "phone_placeholder": "+1 234 567 8900",
+    "password_label": "Password",
+    "password_placeholder": "Strong password",
+    "confirm_password_label": "Confirm Password",
+    "confirm_password_placeholder": "Re-enter your password",
+    "submit_button": "Create Account",
+    "submit_loading": "Creating account...",
+    "already_account": "Already have an account?",
+    "login_link": "Login",
+    "toast": {
+      "password_mismatch_title": "Password mismatch ❌",
+      "password_mismatch_description": "The password and confirmation do not match",
+      "success_title": "Account created successfully! 🎉",
+      "success_description": "You can now log in to your account"
     }
   }
 }
