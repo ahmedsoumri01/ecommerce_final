@@ -20,60 +20,46 @@ import {
 } from "@/components/ui/dropdown-menu";
 import {
   Search,
+  Plus,
   MoreHorizontal,
-  Eye,
-  Truck,
+  Edit,
+  Trash2,
+  Ban,
   CheckCircle,
-  XCircle,
 } from "lucide-react";
 
 // Mock data - replace with real data from your API
-const mockOrders = [
+const mockUsers = [
   {
-    id: "ORD-001",
-    customer: "John Doe",
+    id: "1",
+    firstName: "John",
+    lastName: "Doe",
     email: "john.doe@example.com",
-    total: 299.99,
-    status: "pending",
-    items: 3,
+    role: "client",
+    accountStatus: "active",
     createdAt: "2024-01-15",
   },
   {
-    id: "ORD-002",
-    customer: "Jane Smith",
+    id: "2",
+    firstName: "Jane",
+    lastName: "Smith",
     email: "jane.smith@example.com",
-    total: 149.99,
-    status: "shipped",
-    items: 2,
-    createdAt: "2024-01-14",
+    role: "admin",
+    accountStatus: "active",
+    createdAt: "2024-01-10",
   },
   {
-    id: "ORD-003",
-    customer: "Bob Johnson",
+    id: "3",
+    firstName: "Bob",
+    lastName: "Johnson",
     email: "bob.johnson@example.com",
-    total: 599.99,
-    status: "delivered",
-    items: 1,
-    createdAt: "2024-01-13",
+    role: "client",
+    accountStatus: "blocked",
+    createdAt: "2024-01-05",
   },
 ];
 
-const getStatusColor = (status: string) => {
-  switch (status) {
-    case "pending":
-      return "bg-yellow-100 text-yellow-800";
-    case "shipped":
-      return "bg-blue-100 text-blue-800";
-    case "delivered":
-      return "bg-green-100 text-green-800";
-    case "cancelled":
-      return "bg-red-100 text-red-800";
-    default:
-      return "bg-gray-100 text-gray-800";
-  }
-};
-
-export default function OrdersManagement({
+export default function UsersManagement({
   params,
 }: {
   params: { locale: string };
@@ -83,105 +69,121 @@ export default function OrdersManagement({
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">
-            Orders Management
-          </h1>
-          <p className="text-gray-600">Track and manage customer orders</p>
+          <h1 className="text-2xl font-bold text-gray-900">User Management</h1>
+          <p className="text-gray-600">
+            Manage system users and their permissions
+          </p>
         </div>
+        <Button className="flex items-center">
+          <Plus className="h-4 w-4 mr-2" />
+          Add User
+        </Button>
       </div>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card>
           <CardContent className="p-4">
-            <div className="text-2xl font-bold">789</div>
-            <p className="text-sm text-gray-600">Total Orders</p>
+            <div className="text-2xl font-bold">1,234</div>
+            <p className="text-sm text-gray-600">Total Users</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4">
-            <div className="text-2xl font-bold text-yellow-600">45</div>
-            <p className="text-sm text-gray-600">Pending Orders</p>
+            <div className="text-2xl font-bold text-green-600">1,180</div>
+            <p className="text-sm text-gray-600">Active Users</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4">
-            <div className="text-2xl font-bold text-blue-600">123</div>
-            <p className="text-sm text-gray-600">Shipped Orders</p>
+            <div className="text-2xl font-bold text-red-600">54</div>
+            <p className="text-sm text-gray-600">Blocked Users</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4">
-            <div className="text-2xl font-bold text-green-600">621</div>
-            <p className="text-sm text-gray-600">Delivered Orders</p>
+            <div className="text-2xl font-bold text-blue-600">12</div>
+            <p className="text-sm text-gray-600">Admins</p>
           </CardContent>
         </Card>
       </div>
 
-      {/* Orders List */}
+      {/* Filters and Search */}
       <Card>
         <CardHeader>
-          <CardTitle>Orders List</CardTitle>
+          <CardTitle>Users List</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex flex-col sm:flex-row gap-4 mb-6">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
               <Input
-                placeholder="Search orders by ID or customer..."
+                placeholder="Search users by name or email..."
                 className="pl-10"
               />
             </div>
             <div className="flex gap-2">
               <Button variant="outline" className="bg-transparent">
-                All
+                All Users
               </Button>
               <Button variant="outline" className="bg-transparent">
-                Pending
+                Active
               </Button>
               <Button variant="outline" className="bg-transparent">
-                Shipped
+                Blocked
               </Button>
               <Button variant="outline" className="bg-transparent">
-                Delivered
+                Admins
               </Button>
             </div>
           </div>
 
-          {/* Orders Table */}
+          {/* Users Table */}
           <div className="rounded-md border">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Order ID</TableHead>
-                  <TableHead>Customer</TableHead>
-                  <TableHead>Items</TableHead>
-                  <TableHead>Total</TableHead>
+                  <TableHead>Name</TableHead>
+                  <TableHead>Email</TableHead>
+                  <TableHead>Role</TableHead>
                   <TableHead>Status</TableHead>
-                  <TableHead>Date</TableHead>
+                  <TableHead>Created</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {mockOrders.map((order) => (
-                  <TableRow key={order.id}>
-                    <TableCell className="font-medium">{order.id}</TableCell>
-                    <TableCell>
-                      <div>
-                        <div className="font-medium">{order.customer}</div>
-                        <div className="text-sm text-gray-500">
-                          {order.email}
-                        </div>
-                      </div>
+                {mockUsers.map((user) => (
+                  <TableRow key={user.id}>
+                    <TableCell className="font-medium">
+                      {user.firstName} {user.lastName}
                     </TableCell>
-                    <TableCell>{order.items} items</TableCell>
-                    <TableCell>${order.total}</TableCell>
+                    <TableCell>{user.email}</TableCell>
                     <TableCell>
-                      <Badge className={getStatusColor(order.status)}>
-                        {order.status}
+                      <Badge
+                        variant={
+                          user.role === "admin" ? "default" : "secondary"
+                        }
+                      >
+                        {user.role}
                       </Badge>
                     </TableCell>
-                    <TableCell>{order.createdAt}</TableCell>
+                    <TableCell>
+                      <Badge
+                        variant={
+                          user.accountStatus === "active"
+                            ? "default"
+                            : "destructive"
+                        }
+                        className={
+                          user.accountStatus === "active"
+                            ? "bg-green-100 text-green-800"
+                            : ""
+                        }
+                      >
+                        {user.accountStatus}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>{user.createdAt}</TableCell>
                     <TableCell className="text-right">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
@@ -191,24 +193,25 @@ export default function OrdersManagement({
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                           <DropdownMenuItem>
-                            <Eye className="mr-2 h-4 w-4" />
-                            View Details
+                            <Edit className="mr-2 h-4 w-4" />
+                            Edit
                           </DropdownMenuItem>
-                          {order.status === "pending" && (
-                            <DropdownMenuItem>
-                              <Truck className="mr-2 h-4 w-4" />
-                              Mark as Shipped
-                            </DropdownMenuItem>
-                          )}
-                          {order.status === "shipped" && (
-                            <DropdownMenuItem>
-                              <CheckCircle className="mr-2 h-4 w-4" />
-                              Mark as Delivered
-                            </DropdownMenuItem>
-                          )}
+                          <DropdownMenuItem>
+                            {user.accountStatus === "active" ? (
+                              <>
+                                <Ban className="mr-2 h-4 w-4" />
+                                Block User
+                              </>
+                            ) : (
+                              <>
+                                <CheckCircle className="mr-2 h-4 w-4" />
+                                Unblock User
+                              </>
+                            )}
+                          </DropdownMenuItem>
                           <DropdownMenuItem className="text-red-600">
-                            <XCircle className="mr-2 h-4 w-4" />
-                            Cancel Order
+                            <Trash2 className="mr-2 h-4 w-4" />
+                            Delete
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>

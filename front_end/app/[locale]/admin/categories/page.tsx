@@ -18,48 +18,37 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Search,
-  Plus,
-  MoreHorizontal,
-  Edit,
-  Trash2,
-  Eye,
-  Package,
-} from "lucide-react";
+import { Search, Plus, MoreHorizontal, Edit, Trash2, Eye } from "lucide-react";
 
 // Mock data - replace with real data from your API
-const mockProducts = [
+const mockCategories = [
   {
     id: "1",
-    name: "iPhone 15 Pro",
-    category: "Electronics",
-    price: 999.99,
-    stock: 25,
+    name: "Electronics",
+    description: "Electronic devices and accessories",
+    productCount: 45,
     status: "active",
     createdAt: "2024-01-15",
   },
   {
     id: "2",
-    name: "Nike Air Max",
-    category: "Clothing",
-    price: 129.99,
-    stock: 0,
-    status: "out_of_stock",
+    name: "Clothing",
+    description: "Fashion and apparel items",
+    productCount: 128,
+    status: "active",
     createdAt: "2024-01-10",
   },
   {
     id: "3",
-    name: "MacBook Pro",
-    category: "Electronics",
-    price: 1999.99,
-    stock: 12,
-    status: "active",
+    name: "Books",
+    description: "Books and educational materials",
+    productCount: 67,
+    status: "inactive",
     createdAt: "2024-01-05",
   },
 ];
 
-export default function ProductsManagement({
+export default function CategoriesManagement({
   params,
 }: {
   params: { locale: string };
@@ -70,15 +59,15 @@ export default function ProductsManagement({
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">
-            Products Management
+            Categories Management
           </h1>
           <p className="text-gray-600">
-            Manage your product inventory and details
+            Organize your products with categories
           </p>
         </div>
         <Button className="flex items-center">
           <Plus className="h-4 w-4 mr-2" />
-          Add Product
+          Add Category
         </Button>
       </div>
 
@@ -86,121 +75,96 @@ export default function ProductsManagement({
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card>
           <CardContent className="p-4">
-            <div className="text-2xl font-bold">456</div>
+            <div className="text-2xl font-bold">24</div>
+            <p className="text-sm text-gray-600">Total Categories</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-4">
+            <div className="text-2xl font-bold text-green-600">20</div>
+            <p className="text-sm text-gray-600">Active Categories</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-4">
+            <div className="text-2xl font-bold text-gray-600">4</div>
+            <p className="text-sm text-gray-600">Inactive Categories</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-4">
+            <div className="text-2xl font-bold text-blue-600">456</div>
             <p className="text-sm text-gray-600">Total Products</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-4">
-            <div className="text-2xl font-bold text-green-600">398</div>
-            <p className="text-sm text-gray-600">In Stock</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-4">
-            <div className="text-2xl font-bold text-red-600">58</div>
-            <p className="text-sm text-gray-600">Out of Stock</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-4">
-            <div className="text-2xl font-bold text-blue-600">$45,678</div>
-            <p className="text-sm text-gray-600">Total Value</p>
           </CardContent>
         </Card>
       </div>
 
-      {/* Products List */}
+      {/* Categories List */}
       <Card>
         <CardHeader>
-          <CardTitle>Products List</CardTitle>
+          <CardTitle>Categories List</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex flex-col sm:flex-row gap-4 mb-6">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-              <Input placeholder="Search products..." className="pl-10" />
+              <Input placeholder="Search categories..." className="pl-10" />
             </div>
             <div className="flex gap-2">
               <Button variant="outline" className="bg-transparent">
                 All
               </Button>
               <Button variant="outline" className="bg-transparent">
-                In Stock
+                Active
               </Button>
               <Button variant="outline" className="bg-transparent">
-                Out of Stock
-              </Button>
-              <Button variant="outline" className="bg-transparent">
-                Low Stock
+                Inactive
               </Button>
             </div>
           </div>
 
-          {/* Products Table */}
+          {/* Categories Table */}
           <div className="rounded-md border">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Product</TableHead>
-                  <TableHead>Category</TableHead>
-                  <TableHead>Price</TableHead>
-                  <TableHead>Stock</TableHead>
+                  <TableHead>Name</TableHead>
+                  <TableHead>Description</TableHead>
+                  <TableHead>Products</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Created</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {mockProducts.map((product) => (
-                  <TableRow key={product.id}>
+                {mockCategories.map((category) => (
+                  <TableRow key={category.id}>
                     <TableCell className="font-medium">
-                      <div className="flex items-center">
-                        <Package className="h-4 w-4 mr-2 text-gray-400" />
-                        {product.name}
-                      </div>
+                      {category.name}
                     </TableCell>
-                    <TableCell>{product.category}</TableCell>
-                    <TableCell>${product.price}</TableCell>
+                    <TableCell className="max-w-xs truncate">
+                      {category.description}
+                    </TableCell>
                     <TableCell>
-                      <Badge
-                        variant={
-                          product.stock > 10
-                            ? "default"
-                            : product.stock > 0
-                            ? "secondary"
-                            : "destructive"
-                        }
-                        className={
-                          product.stock > 10
-                            ? "bg-green-100 text-green-800"
-                            : product.stock > 0
-                            ? "bg-yellow-100 text-yellow-800"
-                            : ""
-                        }
-                      >
-                        {product.stock} units
+                      <Badge variant="secondary">
+                        {category.productCount} products
                       </Badge>
                     </TableCell>
                     <TableCell>
                       <Badge
                         variant={
-                          product.status === "active"
-                            ? "default"
-                            : "destructive"
+                          category.status === "active" ? "default" : "secondary"
                         }
                         className={
-                          product.status === "active"
+                          category.status === "active"
                             ? "bg-green-100 text-green-800"
                             : ""
                         }
                       >
-                        {product.status === "out_of_stock"
-                          ? "Out of Stock"
-                          : product.status}
+                        {category.status}
                       </Badge>
                     </TableCell>
-                    <TableCell>{product.createdAt}</TableCell>
+                    <TableCell>{category.createdAt}</TableCell>
                     <TableCell className="text-right">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
@@ -211,7 +175,7 @@ export default function ProductsManagement({
                         <DropdownMenuContent align="end">
                           <DropdownMenuItem>
                             <Eye className="mr-2 h-4 w-4" />
-                            View Details
+                            View Products
                           </DropdownMenuItem>
                           <DropdownMenuItem>
                             <Edit className="mr-2 h-4 w-4" />
