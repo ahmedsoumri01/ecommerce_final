@@ -60,7 +60,8 @@ interface OrderStore {
   error: string | null;
   searchTerm: string;
   statusFilter: string;
-
+  confirmingOrders: boolean;
+  confirmError: string | null;
   // Actions
   fetchOrders: () => Promise<void>;
   fetchOrderById: (id: string) => Promise<Order | null>;
@@ -70,6 +71,7 @@ interface OrderStore {
   deleteOrder: (id: string) => Promise<boolean>;
   changeOrderStatus: (id: string, status: string) => Promise<boolean>;
   cancelOrder: (id: string) => Promise<boolean>;
+  confirmOrders: (orderIds: string[]) => Promise<boolean>;
 
   // Filters
   setSearchTerm: (term: string) => void;
@@ -120,7 +122,35 @@ export const useOrderStore = create<OrderStore>()(
           return null;
         }
       },
+      confirmOrders: async (orderIds) => {
+        set({ confirmingOrders: true, confirmError: null });
 
+        try {
+          const response = await api.put("/orders/confirm-multiple", {
+            orderIds,
+          });
+          const updatedCount = response.data.updatedOrderCount;
+
+          // Update local store
+          set((state) => ({
+            orders: state.orders.map((order) =>
+              orderIds.includes(order._id)
+                ? { ...order, status: "confirmed" }
+                : order
+            ),
+            confirmingOrders: false,
+          }));
+
+          toast.success(`${updatedCount} order(s) confirmed successfully`);
+          return true;
+        } catch (error: any) {
+          const errorMessage =
+            error.response?.data?.message || "Failed to confirm orders";
+          set({ confirmError: errorMessage, confirmingOrders: false });
+          toast.error(errorMessage);
+          return false;
+        }
+      },
       fetchOrderByReference: async (orderRef: string) => {
         try {
           const response = await api.get(`/orders/reference/${orderRef}`);
