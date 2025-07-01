@@ -266,6 +266,7 @@ export default function ProductsPage({
           <div className="block md:flex items-center gap-4">
             {/* Sort Dropdown */}
             <select
+              title="sort_products_select"
               name="sort select"
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
