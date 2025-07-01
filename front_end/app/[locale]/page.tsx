@@ -10,13 +10,32 @@ import { Button } from "@/components/ui/button";
 import { getFeaturedProducts } from "@/lib/data/products";
 import Link from "next/link";
 import { useClientDictionary } from "@/hooks/useClientDictionary";
+import { Product, useProductStore } from "@/stores/product-store";
+import { useEffect, useState } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function HomePage({ params }: { params: { locale: string } }) {
   const isRTL = params.locale === "ar";
   const { t } = useClientDictionary(params.locale);
 
-  const featuredProducts = getFeaturedProducts().slice(0, 9);
+  // Product store
+  const { products, getAllProducts, isLoading } = useProductStore();
 
+  // Local state for featured products
+  const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
+  // Fetch products on component mount
+  useEffect(() => {
+    getAllProducts();
+  }, [getAllProducts]);
+  // Update featured products when products change
+  useEffect(() => {
+    if (products.length > 0) {
+      // Get random 8 products (you can change this number)
+      const shuffled = [...products].sort(() => 0.5 - Math.random());
+      const randomProducts = shuffled.slice(0, 8);
+      setFeaturedProducts(randomProducts);
+    }
+  }, [products]);
   const heroSlides = [
     {
       id: 1,
@@ -37,7 +56,17 @@ export default function HomePage({ params }: { params: { locale: string } }) {
       ctaLink: `/${params.locale}/products`,
     },
   ];
-
+  // Loading skeleton component for products
+  const ProductSkeleton = () => (
+    <div className="space-y-4">
+      <Skeleton className="h-64 w-full rounded-lg" />
+      <div className="space-y-2">
+        <Skeleton className="h-4 w-3/4" />
+        <Skeleton className="h-4 w-1/2" />
+        <Skeleton className="h-8 w-full" />
+      </div>
+    </div>
+  );
   return (
     <div className={isRTL ? "rtl" : "ltr"}>
       {/* Hero Carousel */}
@@ -68,28 +97,49 @@ export default function HomePage({ params }: { params: { locale: string } }) {
               {t("home_page.featured_products.title")}
             </h2>
             <Link href={`/${params.locale}/products`}>
-              <Button variant="outline">
+              <Button variant="outline" className="bg-transparent">
                 {t("home_page.featured_products.view_all")}
               </Button>
             </Link>
           </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {featuredProducts.map((product) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                locale={params.locale}
-                isRTL={isRTL}
-              />
-            ))}
+
+          {/* Products Grid */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {isLoading ? (
+              // Show loading skeletons
+              Array.from({ length: 8 }).map((_, index) => (
+                <ProductSkeleton key={index} />
+              ))
+            ) : featuredProducts.length > 0 ? (
+              // Show actual products
+              featuredProducts.map((product) => (
+                <ProductCard
+                  key={product._id}
+                  product={product}
+                  locale={params.locale}
+                  isRTL={isRTL}
+                />
+              ))
+            ) : (
+              // Show empty state
+              <div className="col-span-full text-center py-12">
+                <p className="text-gray-500 text-lg">
+                  لا توجد منتجات متاحة حالياً
+                </p>
+              </div>
+            )}
           </div>
-          <div className="text-center mt-12">
-            <Link href={`/${params.locale}/products`}>
-              <Button size="lg" className="px-8">
-                {t("home_page.featured_products.show_more")}
-              </Button>
-            </Link>
-          </div>
+
+          {/* Show More Button */}
+          {featuredProducts.length > 0 && (
+            <div className="text-center mt-12">
+              <Link href={`/${params.locale}/products`}>
+                <Button size="lg" className="px-8">
+                  {t("home_page.featured_products.show_more")}
+                </Button>
+              </Link>
+            </div>
+          )}
         </div>
       </section>
 
