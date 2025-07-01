@@ -103,7 +103,7 @@ export function MultipleImageUpload({
         return (value as string[]).map((url) =>
           url.startsWith("/")
             ? `${
-                process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"
+                process.env.NEXT_PUBLIC_ASSETS_URL || "http://localhost:5000"
               }${url}`
             : url
         );

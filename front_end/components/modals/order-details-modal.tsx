@@ -107,7 +107,7 @@ export function OrderDetailsModal({
                 </div>
                 <div className="text-right">
                   <div className="text-2xl font-bold">
-                    ${order.total.toFixed(2)}
+                    {order.total.toFixed(2)} DT
                   </div>
                   <div className="text-sm text-gray-500 flex items-center gap-1">
                     <Calendar className="h-3 w-3" />
@@ -194,11 +194,11 @@ export function OrderDetailsModal({
                       <div className="flex-1">
                         <div className="font-medium">{item.product.name}</div>
                         <div className="text-sm text-gray-500">
-                          Quantity: {item.quantity} × ${item.price.toFixed(2)}
+                          Quantity: {item.quantity} × {item.price.toFixed(2)} DT
                         </div>
                       </div>
                       <div className="font-semibold">
-                        ${(item.quantity * item.price).toFixed(2)}
+                        {(item.quantity * item.price).toFixed(2)} DT
                       </div>
                     </div>
                   ))}
@@ -208,7 +208,7 @@ export function OrderDetailsModal({
                 <div className="flex justify-end pt-4 border-t">
                   <div className="text-right">
                     <div className="text-lg font-semibold">
-                      Total: ${order.total.toFixed(2)}
+                      Total: {order.total.toFixed(2)} DT
                     </div>
                   </div>
                 </div>

@@ -22,12 +22,12 @@
     "product1": {
       "name": "Advanced Smartphone",
       "description": "Smartphone with latest technology and high-resolution camera",
-      "price": "$999"
+      "price": "999 DT"
     },
     "product2": {
       "name": "Premium Cotton Shirt",
       "description": "Shirt made from the finest Egyptian cotton",
-      "price": "$149"
+      "price": "149 DT"
     },
     "addToCart": "Add to Cart"
   }

@@ -518,7 +518,7 @@ export default function CreateOrderPage({
               <div className="flex justify-end pt-4 border-t">
                 <div className="text-right">
                   <div className="text-lg font-semibold">
-                    Total: ${currentTotal.toFixed(2)}
+                    Total: {currentTotal.toFixed(2)} DT
                   </div>
                 </div>
               </div>

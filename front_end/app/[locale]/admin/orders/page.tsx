@@ -279,7 +279,7 @@ export default function OrdersManagement({
                           </div>
                         </TableCell>
                         <TableCell>{order.items.length} items</TableCell>
-                        <TableCell>${order.total.toFixed(2)}</TableCell>
+                        <TableCell>{order.total.toFixed(2)} DT</TableCell>
                         <TableCell>
                           <Badge className={getStatusColor(order.status)}>
                             {order.status}
