@@ -22,13 +22,13 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     siteName: "TuniKado",
-    url: "https://www.tunikado.tn", // Replace with your real domain
+    url: "https://www.tunikado.tn",
     title: "TuniKado - Mode & Accessoires en ligne",
     description:
       "Découvrez les dernières tendances en vêtements et accessoires de mode chez TuniKado.",
     images: [
       {
-        url: "/images/og-image.jpg", // Replace with your actual OG image
+        url: "/metadata/og-image.png",
         width: 1200,
         height: 630,
         alt: "TuniKado - Boutique en ligne",
@@ -41,7 +41,7 @@ export const metadata: Metadata = {
     title: "TuniKado - Mode & Accessoires en ligne",
     description:
       "Boutique en ligne tunisienne spécialisée dans la vente de vêtements et accessoires fashion.",
-    images: ["/images/twitter-card.jpg"], // Replace with actual Twitter card image
+    images: ["/images/og-image.png"],
   },
   generator: "Next.js + TypeScript + i18n + PWA",
 };
