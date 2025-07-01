@@ -8,7 +8,6 @@ import { NewsletterSection } from "@/components/newsletter-section";
 import { Footer } from "@/components/footer";
 import { Button } from "@/components/ui/button";
 import { getFeaturedProducts } from "@/lib/data/products";
-import { getFeaturedCategories } from "@/lib/data/categories";
 import Link from "next/link";
 import { useClientDictionary } from "@/hooks/useClientDictionary";
 
@@ -17,7 +16,6 @@ export default function HomePage({ params }: { params: { locale: string } }) {
   const { t } = useClientDictionary(params.locale);
 
   const featuredProducts = getFeaturedProducts().slice(0, 9);
-  const featuredCategories = getFeaturedCategories();
 
   const heroSlides = [
     {
@@ -58,11 +56,7 @@ export default function HomePage({ params }: { params: { locale: string } }) {
               </Button>
             </Link>
           </div>
-          <CategoriesCarousel
-            categories={featuredCategories}
-            locale={params.locale}
-            isRTL={isRTL}
-          />
+          <CategoriesCarousel locale={params.locale} isRTL={isRTL} />
         </div>
       </section>
 

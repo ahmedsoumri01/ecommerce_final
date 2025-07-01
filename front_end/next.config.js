@@ -2,6 +2,8 @@ const withPWA = require("next-pwa")({
   dest: "public",
   register: true,
   skipWaiting: true,
+  disable: process.env.NODE_ENV === "development", // Disable PWA in development
+
   runtimeCaching: [
     {
       urlPattern: /^https?.*/,
@@ -14,7 +16,7 @@ const withPWA = require("next-pwa")({
       },
     },
   ],
-})
+});
 
 /** @type {import('next').NextConfig} */
 const nextConfig = withPWA({
@@ -26,7 +28,7 @@ const nextConfig = withPWA({
   },
   images: {
     unoptimized: true,
-  },
-})
+  }, // Add i18n configuration to handle locales properly
+});
 
-module.exports = nextConfig
+module.exports = nextConfig;

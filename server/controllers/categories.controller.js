@@ -4,9 +4,39 @@ const fs = require("fs");
 const path = require("path");
 
 // Get all categories
+// controllers/categories.controller.js
+
 exports.getAllCategories = async (req, res) => {
   try {
-    const categories = await Category.find();
+    const categories = await Category.aggregate([
+      {
+        $lookup: {
+          from: "products", // Make sure this matches your product collection name
+          localField: "_id",
+          foreignField: "category",
+          as: "products",
+        },
+      },
+      {
+        $addFields: {
+          publicProductCount: {
+            $size: {
+              $filter: {
+                input: "$products",
+                as: "product",
+                cond: { $eq: ["$$product.audience", "public"] },
+              },
+            },
+          },
+        },
+      },
+      {
+        $project: {
+          products: 0, // Remove the products array from final output
+        },
+      },
+    ]);
+
     res.json(categories);
   } catch (error) {
     console.error("Error fetching categories:", error.message);

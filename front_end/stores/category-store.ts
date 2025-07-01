@@ -15,6 +15,7 @@ export interface Category {
   featured: boolean;
   createdAt: string;
   updatedAt: string;
+  publicProductCount: number;
 }
 
 export interface CreateCategoryData {
