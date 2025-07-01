@@ -38,7 +38,8 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
         >
           <Image
             src={
-              process.env.NEXT_PUBLIC_ASSETS_URL + galleryImages[selectedImage]
+              process.env.NEXT_PUBLIC_ASSETS_URL +
+                galleryImages[selectedImage] || "/placeholder.svg"
             }
             alt={productName}
             fill
@@ -91,7 +92,10 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
               }`}
             >
               <Image
-                src={process.env.NEXT_PUBLIC_ASSETS_URL + image}
+                src={
+                  process.env.NEXT_PUBLIC_ASSETS_URL + image ||
+                  "/placeholder.svg"
+                }
                 alt={`${productName} ${index + 1}`}
                 width={80}
                 height={80}

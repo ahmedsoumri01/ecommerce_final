@@ -90,7 +90,8 @@ export function CategoriesCarousel({
                         <Image
                           alt="categorie image"
                           src={
-                            process.env.NEXT_PUBLIC_ASSETS_URL + category?.image
+                            process.env.NEXT_PUBLIC_ASSETS_URL +
+                              category?.image || "/placeholder.svg"
                           }
                           width={500}
                           height={500}

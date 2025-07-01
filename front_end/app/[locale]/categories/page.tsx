@@ -123,7 +123,7 @@ export default function CategoriesPage({
                             alt="categorie image"
                             src={
                               process.env.NEXT_PUBLIC_ASSETS_URL +
-                              category?.image
+                                category?.image || "/placeholder.svg"
                             }
                             width={500}
                             height={500}
@@ -199,7 +199,7 @@ export default function CategoriesPage({
                             alt="categorie image"
                             src={
                               process.env.NEXT_PUBLIC_ASSETS_URL +
-                              category?.image
+                                category?.image || "/placeholder.svg"
                             }
                             width={500}
                             height={500}
