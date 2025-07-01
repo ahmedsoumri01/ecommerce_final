@@ -53,7 +53,7 @@ export function Header({ locale }: HeaderProps) {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-6">
+          <nav className="hidden lg:flex items-center gap-6">
             {navItems.map((item) => (
               <Link
                 key={item.href}
@@ -68,7 +68,7 @@ export function Header({ locale }: HeaderProps) {
           {/* Right Side Actions */}
           <div className="flex items-center gap-4">
             <CartSidebar locale={locale} />
-            <div className="hidden md:block">
+            <div className="hidden lg:block">
               <LanguageSwitcher currentLocale={locale} />
             </div>
             {!user && !isAuthenticated && (
@@ -100,7 +100,7 @@ export function Header({ locale }: HeaderProps) {
                 <Button
                   variant="outline"
                   size="icon"
-                  className="md:hidden bg-transparent"
+                  className="lg:hidden bg-transparent"
                 >
                   <Menu className="h-5 w-5" />
                 </Button>
@@ -140,36 +140,37 @@ export function Header({ locale }: HeaderProps) {
                     </div>
 
                     {/* Login/Register Buttons */}
-                    <div className="space-y-3 mb-2">
-                      <Link
-                        href={`/${locale}/login`}
-                        onClick={() => setIsMobileMenuOpen(false)}
-                        className="block w-full"
-                      >
-                        <Button className="w-full">
-                          {locale === "ar"
-                            ? "تسجيل الدخول"
-                            : locale === "fr"
-                            ? "Connexion"
-                            : "Login"}
-                        </Button>
-                      </Link>
-                      <Link
-                        href={`/${locale}/register`}
-                        onClick={() => setIsMobileMenuOpen(false)}
-                        className="block w-full"
-                      >
-                        <Button
-                          variant="outline"
-                          className="w-full bg-transparent"
+                    <div className="space-y-5 mb-16">
+                      {user && isAuthenticated ? (
+                        <div>
+                          <Link
+                            href={
+                              user?.role === "admin" ? "/admin" : "/dashboard"
+                            }
+                            onClick={() => setIsMobileMenuOpen(false)}
+                            className="block w-full"
+                          >
+                            <Button className="w-full">
+                              {" "}
+                              <User /> My Dashboard
+                            </Button>
+                          </Link>
+                        </div>
+                      ) : (
+                        <Link
+                          href={`/${locale}/login`}
+                          onClick={() => setIsMobileMenuOpen(false)}
+                          className="block w-full"
                         >
-                          {locale === "ar"
-                            ? "إنشاء حساب"
-                            : locale === "fr"
-                            ? "S'inscrire"
-                            : "Register"}
-                        </Button>
-                      </Link>
+                          <Button className="w-full">
+                            {locale === "ar"
+                              ? "تسجيل الدخول"
+                              : locale === "fr"
+                              ? "Connexion"
+                              : "Login"}
+                          </Button>
+                        </Link>
+                      )}
                     </div>
                   </div>
                 </div>
