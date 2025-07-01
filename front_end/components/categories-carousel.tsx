@@ -8,7 +8,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import type { Category } from "@/lib/data/categories";
+import type { Category } from "@/stores/category-store";
 import {
   useCategoryStore,
   useFilteredCategories,
