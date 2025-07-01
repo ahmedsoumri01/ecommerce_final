@@ -149,6 +149,7 @@ export function ExportOrdersModal({
 
   const handleConfirmOrders = async () => {
     const orderIds = orders.map((order) => order._id);
+    console.log({ orderIds });
     const success = await confirmOrders(orderIds);
 
     if (success) {

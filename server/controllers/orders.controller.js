@@ -103,14 +103,24 @@ exports.createOrder = async (req, res) => {
 exports.confirmOrders = async (req, res) => {
   const { orderIds } = req.body;
 
+  console.log({ orderIds, body: req.body });
+
   if (!Array.isArray(orderIds) || orderIds.length === 0) {
     return res.status(400).json({ message: "No valid order IDs provided" });
   }
 
   try {
+    // Convert string IDs to ObjectId
+    const objectIds = orderIds.map((id) => new mongoose.Types.ObjectId(id));
+
     const result = await Order.updateMany(
-      { _id: { $in: orderIds }, status: { $ne: "delivered" } },
-      { $set: { status: "confirmed" } }
+      {
+        _id: { $in: objectIds },
+        status: { $ne: "delivered" },
+      },
+      {
+        $set: { status: "confirmed" },
+      }
     );
 
     if (result.modifiedCount === 0) {

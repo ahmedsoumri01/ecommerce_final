@@ -10,11 +10,11 @@ export default function AdminDashboard({
 }: {
   params: { locale: string };
 }) {
-  return (
+  /*  return (
     <div className="flex items-center justify-center text-4xl font-bold">
       This page still under development
     </div>
-  );
+  ); */
   return (
     <div className="space-y-6">
       {/* Welcome Card */}

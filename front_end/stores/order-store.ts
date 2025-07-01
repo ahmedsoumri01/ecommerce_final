@@ -127,6 +127,7 @@ export const useOrderStore = create<OrderStore>()(
       },
 
       confirmOrders: async (orderIds) => {
+        console.log({ orderIds });
         set({ confirmingOrders: true, confirmError: null });
         try {
           const response = await api.put("/orders/confirm-multiple", {
