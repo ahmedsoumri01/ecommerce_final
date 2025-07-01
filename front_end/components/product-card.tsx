@@ -1,6 +1,7 @@
 "use client";
 
 import type React from "react";
+import NoImage from "@/public/placeholder.jpg";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -62,16 +63,29 @@ export function ProductCard({
     <Link href={`/${locale}/products/${product._id}`}>
       <Card className="group hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer">
         <div className="relative overflow-hidden">
-          <Image
-            src={
-              process.env.NEXT_PUBLIC_ASSETS_URL + product.images?.[0] ||
-              "/placeholder.svg"
-            }
-            alt={getProductName()}
-            width={300}
-            height={300}
-            className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
-          />
+          {product?.images.length > 0 ? (
+            <>
+              {" "}
+              <Image
+                src={process.env.NEXT_PUBLIC_ASSETS_URL + product?.images?.[0]}
+                alt={getProductName()}
+                width={300}
+                height={300}
+                className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
+              />
+            </>
+          ) : (
+            <>
+              <Image
+                src={NoImage}
+                alt={getProductName()}
+                width={300}
+                height={300}
+                className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
+              />
+            </>
+          )}
+
           {product.originalPrice && product.originalPrice > product.price && (
             <Badge className="absolute top-3 left-3 bg-red-500 hover:bg-red-600">
               {Math.round(
