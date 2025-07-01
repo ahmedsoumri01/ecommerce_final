@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { ProductGallery } from "@/components/product-gallery";
 import { ProductDetails } from "@/components/product-details";
 import { useProductStore, type Product } from "@/stores/product-store";
-import { notFound } from "next/navigation";
 import { Loader2, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -137,7 +136,9 @@ export default function ProductDetailPage({
           {/* Product Gallery */}
           <div className="w-full lg:w-[500px]">
             <ProductGallery
+              product={product}
               images={productImages}
+              locale={params.locale}
               productName={getProductName()}
             />
           </div>
