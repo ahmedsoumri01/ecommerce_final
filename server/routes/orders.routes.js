@@ -3,21 +3,54 @@ const express = require("express");
 const router = express.Router();
 
 // Middlewares
-const { adminMiddleware } = require("../middlewares/auth.middleware");
+const {
+  adminMiddleware,
+  authMiddleware,
+} = require("../middlewares/auth.middleware");
 
 // Controllers
 const ordersController = require("../controllers/orders.controller");
 
 // Public Routes
-router.get("/", adminMiddleware, ordersController.getAllOrders); // Admin only for now
-router.get("/:id", adminMiddleware, ordersController.getOrderById);
+router.get("/", authMiddleware, adminMiddleware, ordersController.getAllOrders); // Admin only for now
+router.get(
+  "/:id",
+  authMiddleware,
+  adminMiddleware,
+  ordersController.getOrderById
+);
 router.get("/reference/:orderRef", ordersController.getOrderByReference); // Can be public or protected
 
 // Admin Protected Routes
-router.post("/create", adminMiddleware, ordersController.createOrder);
-router.put("/:id", adminMiddleware, ordersController.updateOrder);
-router.delete("/:id", adminMiddleware, ordersController.deleteOrder);
-router.put("/status/:id", adminMiddleware, ordersController.changeOrderStatus);
-router.put("/cancel/:id", adminMiddleware, ordersController.cancelOrder);
+router.post(
+  "/create",
+  authMiddleware,
+  adminMiddleware,
+  ordersController.createOrder
+);
+router.put(
+  "/:id",
+  authMiddleware,
+  adminMiddleware,
+  ordersController.updateOrder
+);
+router.delete(
+  "/:id",
+  authMiddleware,
+  adminMiddleware,
+  ordersController.deleteOrder
+);
+router.put(
+  "/status/:id",
+  authMiddleware,
+  adminMiddleware,
+  ordersController.changeOrderStatus
+);
+router.put(
+  "/cancel/:id",
+  authMiddleware,
+  adminMiddleware,
+  ordersController.cancelOrder
+);
 
 module.exports = router;
