@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -41,6 +41,7 @@ export default function CreateOrderPage({
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [selectedState, setSelectedState] = useState("");
+
   const { createOrder } = useOrderStore();
   const { products, getAllProducts } = useProductStore();
 
@@ -67,42 +68,63 @@ export default function CreateOrderPage({
     name: "items",
   });
 
-  useEffect(() => {
+  // Memoize getAllProducts to prevent infinite re-renders
+  const fetchProducts = useCallback(() => {
     getAllProducts();
   }, [getAllProducts]);
 
+  // Fetch products only once on mount
   useEffect(() => {
-    // Generate order reference
+    fetchProducts();
+  }, [fetchProducts]);
+
+  // Generate order reference only once on mount
+  useEffect(() => {
     const generateOrderRef = () => {
       const timestamp = Date.now().toString().slice(-6);
       const random = Math.random().toString(36).substring(2, 5).toUpperCase();
       return `ORD-${timestamp}-${random}`;
     };
 
-    form.setValue("orderRef", generateOrderRef());
-  }, [form]);
+    if (!form.getValues("orderRef")) {
+      form.setValue("orderRef", generateOrderRef());
+    }
+  }, []); // Empty dependency array - only run once
 
-  // Calculate total when items change
+  // Calculate total when items change - use form.watch with proper cleanup
   useEffect(() => {
-    const subscription = form.watch((value, { name }) => {
-      if (name?.startsWith("items")) {
+    const subscription = form.watch((value, { name, type }) => {
+      // Only recalculate if items array changed
+      if (name?.startsWith("items") && type === "change") {
         const items = value.items || [];
         const total = items.reduce((sum, item) => {
-          return sum + (item?.quantity || 0) * (item?.price || 0);
+          const quantity = Number(item?.quantity) || 0;
+          const price = Number(item?.price) || 0;
+          return sum + quantity * price;
         }, 0);
-        form.setValue("total", total);
+
+        // Only update if total actually changed to prevent infinite loops
+        const currentTotal = form.getValues("total");
+        if (currentTotal !== total) {
+          form.setValue("total", total, { shouldValidate: false });
+        }
       }
     });
+
     return () => subscription.unsubscribe();
   }, [form]);
 
   const onSubmit = async (data: CreateOrderFormData) => {
     setLoading(true);
-    const success = await createOrder(data);
-    setLoading(false);
-
-    if (success) {
-      router.push(`/${params.locale}/admin/orders`);
+    try {
+      const success = await createOrder(data);
+      if (success) {
+        router.push(`/${params.locale}/admin/orders`);
+      }
+    } catch (error) {
+      console.error("Error creating order:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -116,16 +138,24 @@ export default function CreateOrderPage({
     }
   };
 
-  const handleProductChange = (index: number, productId: string) => {
-    const product = products.find((p) => p._id === productId);
-    if (product) {
-      form.setValue(`items.${index}.price`, product.price);
-    }
-  };
+  const handleProductChange = useCallback(
+    (index: number, productId: string) => {
+      const product = products.find((p) => p._id === productId);
+      if (product) {
+        form.setValue(`items.${index}.price`, product.price, {
+          shouldValidate: false,
+        });
+      }
+    },
+    [products, form]
+  );
 
   const availableCities = selectedState
     ? tunisiaCities[selectedState] || []
     : [];
+
+  // Get current total for display
+  const currentTotal = form.watch("total") || 0;
 
   return (
     <div className="space-y-6">
@@ -164,7 +194,6 @@ export default function CreateOrderPage({
                     </FormItem>
                   )}
                 />
-
                 <FormField
                   control={form.control}
                   name="email"
@@ -183,7 +212,6 @@ export default function CreateOrderPage({
                   )}
                 />
               </div>
-
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <FormField
                   control={form.control}
@@ -198,7 +226,6 @@ export default function CreateOrderPage({
                     </FormItem>
                   )}
                 />
-
                 <FormField
                   control={form.control}
                   name="phoneNumbertwo"
@@ -238,7 +265,6 @@ export default function CreateOrderPage({
                   </FormItem>
                 )}
               />
-
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <FormField
                   control={form.control}
@@ -271,7 +297,6 @@ export default function CreateOrderPage({
                     </FormItem>
                   )}
                 />
-
                 <FormField
                   control={form.control}
                   name="city"
@@ -300,7 +325,6 @@ export default function CreateOrderPage({
                   )}
                 />
               </div>
-
               <FormField
                 control={form.control}
                 name="comment"
@@ -344,7 +368,6 @@ export default function CreateOrderPage({
                     </FormItem>
                   )}
                 />
-
                 <FormField
                   control={form.control}
                   name="status"
@@ -431,7 +454,6 @@ export default function CreateOrderPage({
                       </FormItem>
                     )}
                   />
-
                   <FormField
                     control={form.control}
                     name={`items.${index}.quantity`}
@@ -444,18 +466,17 @@ export default function CreateOrderPage({
                             min="1"
                             placeholder="1"
                             {...field}
-                            onChange={(e) =>
-                              field.onChange(
-                                Number.parseInt(e.target.value) || 1
-                              )
-                            }
+                            onChange={(e) => {
+                              const value =
+                                Number.parseInt(e.target.value) || 1;
+                              field.onChange(value);
+                            }}
                           />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-
                   <FormField
                     control={form.control}
                     name={`items.${index}.price`}
@@ -469,18 +490,17 @@ export default function CreateOrderPage({
                             min="0"
                             placeholder="0.00"
                             {...field}
-                            onChange={(e) =>
-                              field.onChange(
-                                Number.parseFloat(e.target.value) || 0
-                              )
-                            }
+                            onChange={(e) => {
+                              const value =
+                                Number.parseFloat(e.target.value) || 0;
+                              field.onChange(value);
+                            }}
                           />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-
                   <div className="flex items-end">
                     <Button
                       type="button"
@@ -494,12 +514,11 @@ export default function CreateOrderPage({
                   </div>
                 </div>
               ))}
-
               {/* Total */}
               <div className="flex justify-end pt-4 border-t">
                 <div className="text-right">
                   <div className="text-lg font-semibold">
-                    Total: ${form.watch("total")?.toFixed(2) || "0.00"}
+                    Total: ${currentTotal.toFixed(2)}
                   </div>
                 </div>
               </div>
