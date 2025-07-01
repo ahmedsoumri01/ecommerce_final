@@ -83,7 +83,8 @@ export function ImageUpload({
               src={
                 imageUrl.startsWith("/")
                   ? `${
-                      process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"
+                      process.env.NEXT_PUBLIC_ASSETS_URL ||
+                      "http://localhost:5000"
                     }${imageUrl}`
                   : imageUrl
               }

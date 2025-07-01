@@ -100,7 +100,7 @@ export default function CategoriesManagement({
     if (!imagePath) return null;
     if (imagePath.startsWith("http")) return imagePath;
     return `${
-      process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"
+      process.env.NEXT_PUBLIC_ASSETS_URL || "http://localhost:5000"
     }${imagePath}`;
   };
 
