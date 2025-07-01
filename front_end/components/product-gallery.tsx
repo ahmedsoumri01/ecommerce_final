@@ -13,12 +13,18 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
   const [selectedImage, setSelectedImage] = useState(0);
   const [isZoomed, setIsZoomed] = useState(false);
 
+  // Ensure we have at least one image
+  const galleryImages =
+    images && images.length > 0 ? images : ["/placeholder.svg"];
+
   const nextImage = () => {
-    setSelectedImage((prev) => (prev + 1) % images.length);
+    setSelectedImage((prev) => (prev + 1) % galleryImages.length);
   };
 
   const prevImage = () => {
-    setSelectedImage((prev) => (prev - 1 + images.length) % images.length);
+    setSelectedImage(
+      (prev) => (prev - 1 + galleryImages.length) % galleryImages.length
+    );
   };
 
   return (
@@ -31,7 +37,9 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
           onMouseLeave={() => setIsZoomed(false)}
         >
           <Image
-            src={images[selectedImage] || "/placeholder.svg"}
+            src={
+              process.env.NEXT_PUBLIC_ASSETS_URL + galleryImages[selectedImage]
+            }
             alt={productName}
             fill
             className={`object-cover transition-transform duration-300 max-w-[400px] ${
@@ -41,17 +49,17 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
         </div>
 
         {/* Navigation Arrows */}
-        {images.length > 1 && (
+        {galleryImages.length > 1 && (
           <>
             <button
-              title="arrow left"
+              title="Previous image"
               onClick={prevImage}
               className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-2 shadow-md transition-colors"
             >
               <ChevronLeft className="h-4 w-4" />
             </button>
             <button
-              title="arrow right"
+              title="Next image"
               onClick={nextImage}
               className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-2 shadow-md transition-colors"
             >
@@ -59,14 +67,21 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
             </button>
           </>
         )}
+
+        {/* Image Counter */}
+        {galleryImages.length > 1 && (
+          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-black/50 text-white px-2 py-1 rounded text-sm">
+            {selectedImage + 1} / {galleryImages.length}
+          </div>
+        )}
       </div>
 
       {/* Thumbnail Images */}
-      {images.length > 1 && (
+      {galleryImages.length > 1 && (
         <div className="flex gap-2 overflow-x-auto">
-          {images.map((image, index) => (
+          {galleryImages.map((image, index) => (
             <button
-              title="Thumbnail Images "
+              title={`View image ${index + 1}`}
               key={index}
               onClick={() => setSelectedImage(index)}
               className={`flex-shrink-0 w-20 h-20 rounded-md border-2 overflow-hidden transition-colors ${
@@ -76,7 +91,7 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
               }`}
             >
               <Image
-                src={image || "/placeholder.svg"}
+                src={process.env.NEXT_PUBLIC_ASSETS_URL + image}
                 alt={`${productName} ${index + 1}`}
                 width={80}
                 height={80}

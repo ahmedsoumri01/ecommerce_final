@@ -1,9 +1,13 @@
 "use client";
 
-import { products } from "@/lib/data/products";
+import { useEffect, useState } from "react";
 import { ProductGallery } from "@/components/product-gallery";
 import { ProductDetails } from "@/components/product-details";
+import { useProductStore, type Product } from "@/stores/product-store";
 import { notFound } from "next/navigation";
+import { Loader2, AlertCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 
 export default function ProductDetailPage({
   params,
@@ -11,31 +15,130 @@ export default function ProductDetailPage({
   params: { locale: string; id: string };
 }) {
   const isRTL = params.locale === "ar";
+  const { getProductById, selectedProduct, isLoading, error, clearError } =
+    useProductStore();
+  const [product, setProduct] = useState<Product | null>(null);
+  const [fetchError, setFetchError] = useState<string | null>(null);
+  const fetchProduct = async () => {
+    try {
+      setFetchError(null);
+      const fetchedProduct = await getProductById(params.id);
 
-  const product = products.find((p) => p.id === Number.parseInt(params.id));
+      if (!fetchedProduct) {
+        setFetchError("Product not found");
+        return;
+      }
 
-  if (!product) {
-    notFound();
+      setProduct(fetchedProduct);
+    } catch (err) {
+      console.error("Error fetching product:", err);
+      setFetchError("Failed to load product");
+    }
+  };
+  useEffect(() => {
+    if (params.id) {
+      fetchProduct();
+    }
+
+    // Cleanup function
+    return () => {
+      clearError();
+    };
+  }, [params.id]);
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <div
+        className={`min-h-screen flex items-center justify-center ${
+          isRTL ? "rtl" : "ltr"
+        }`}
+      >
+        <div className="flex flex-col items-center gap-4">
+          <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+          <span>جاري تحميل المنتج...</span>
+        </div>
+      </div>
+    );
   }
 
-  // Generate multiple images for gallery (in real app, these would come from the product data)
-  const productImages = [
-    product.image,
-    product.image,
-    product.image,
-    product.image,
-    product.image,
-  ];
+  // Error state
+  if (error || fetchError) {
+    return (
+      <div
+        className={`min-h-screen flex items-center justify-center ${
+          isRTL ? "rtl" : "ltr"
+        }`}
+      >
+        <Card className="max-w-md w-full mx-4">
+          <CardContent className="flex flex-col items-center gap-4 p-6">
+            <AlertCircle className="h-12 w-12 text-red-500" />
+            <div className="text-center">
+              <h2 className="text-xl font-semibold text-gray-900 mb-2">
+                خطأ في تحميل المنتج
+              </h2>
+              <p className="text-gray-600 mb-4">{error || fetchError}</p>
+              <Button
+                onClick={() => window.location.reload()}
+                variant="outline"
+              >
+                إعادة المحاولة
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  // Product not found - ONLY check this after loading is complete
+  if (!isLoading && !product && fetchError === "Product not found") {
+    /*  notFound(); */
+  }
+
+  // If still loading or no product yet, show loading
+  if (!product) {
+    return (
+      <div
+        className={`min-h-screen flex items-center justify-center ${
+          isRTL ? "rtl" : "ltr"
+        }`}
+      >
+        <div className="flex flex-col items-center gap-4">
+          <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+          <span>جاري تحميل المنتج...</span>
+        </div>
+      </div>
+    );
+  }
+
+  // Use product images or fallback to placeholder
+  const productImages =
+    product.images && product.images.length > 0
+      ? product.images
+      : ["/placeholder.svg"];
+
+  // Get product name based on locale
+  const getProductName = () => {
+    switch (params.locale) {
+      case "ar":
+        return product.nameAr || product.name;
+      case "fr":
+        return product.nameFr || product.name;
+      default:
+        return product.name;
+    }
+  };
 
   return (
     <div className={`${isRTL ? "rtl" : "ltr"}`}>
       <div className="container mx-auto px-4 py-8">
         <div className="grid lg:grid-cols-2 gap-12">
           {/* Product Gallery */}
-          <div className="w-[calc(100vw-30px)] lg:w-[500px]">
+          <div className="w-full lg:w-[500px]">
             <ProductGallery
               images={productImages}
-              productName={isRTL ? product.nameAr : product.name}
+              productName={getProductName()}
             />
           </div>
 

@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useCartStore } from "@/lib/store/cart-store";
 import { Star, Plus, Minus, Heart, BookCheck, BadgeCheck } from "lucide-react";
-import type { Product } from "@/lib/data/products";
+import type { Product } from "@/stores/product-store";
 import { SocialShare } from "./social-share";
 import { Shield } from "lucide-react";
 import { useClientDictionary } from "@/hooks/useClientDictionary";
@@ -21,7 +21,7 @@ export function ProductDetails({
   locale,
   isRTL = false,
 }: ProductDetailsProps) {
-  const { t } = useClientDictionary(locale); // assuming params passed via page
+  const { t } = useClientDictionary(locale);
   const [quantity, setQuantity] = useState(1);
   const [isWishlisted, setIsWishlisted] = useState(false);
   const { addItem } = useCartStore();
@@ -29,9 +29,9 @@ export function ProductDetails({
   const getProductName = () => {
     switch (locale) {
       case "ar":
-        return product.nameAr;
+        return product.nameAr || product.name;
       case "fr":
-        return product.nameFr;
+        return product.nameFr || product.name;
       default:
         return product.name;
     }
@@ -40,23 +40,17 @@ export function ProductDetails({
   const getProductDescription = () => {
     switch (locale) {
       case "ar":
-        return product.descriptionAr;
+        return product.descriptionAr || product.description;
       case "fr":
-        return product.descriptionFr;
+        return product.descriptionFr || product.description;
       default:
         return product.description;
     }
   };
 
   const getCategoryName = () => {
-    switch (locale) {
-      case "ar":
-        return product.categoryAr;
-      case "fr":
-        return product.categoryFr;
-      default:
-        return product.category;
-    }
+    // Since category is now an object with _id and name
+    return product.category.name;
   };
 
   const handleAddToCart = () => {
@@ -68,12 +62,25 @@ export function ProductDetails({
 
   const currentUrl = typeof window !== "undefined" ? window.location.href : "";
 
+  // Calculate discount percentage
+  const hasDiscount =
+    product.originalPrice && product.originalPrice > product.price;
+  const discountPercentage = hasDiscount
+    ? Math.round(
+        ((product.originalPrice! - product.price) / product.originalPrice!) *
+          100
+      )
+    : 0;
+
   return (
     <div className="space-y-6">
       {/* Product Name */}
       <div>
         <p className="text-sm text-muted-foreground mb-2">{product.brand}</p>
         <h1 className="text-3xl font-bold leading-tight">{getProductName()}</h1>
+        <p className="text-sm text-gray-500 mt-1">
+          رقم المنتج: {product.productRef}
+        </p>
       </div>
 
       {/* Price */}
@@ -81,20 +88,15 @@ export function ProductDetails({
         <span className="text-4xl font-bold text-primary">
           {product.price} DT
         </span>
-        {product.originalPrice && (
-          <span className="text-xl text-muted-foreground line-through">
-            {product.originalPrice} DT
-          </span>
-        )}
-        {product.originalPrice && (
-          <Badge className="bg-red-500 hover:bg-red-600">
-            {Math.round(
-              ((product.originalPrice - product.price) /
-                product.originalPrice) *
-                100
-            )}
-            % {t("product_detail_page.discount")}
-          </Badge>
+        {hasDiscount && (
+          <>
+            <span className="text-xl text-muted-foreground line-through">
+              {product.originalPrice} DT
+            </span>
+            <Badge className="bg-red-500 hover:bg-red-600">
+              {discountPercentage}% {t("product_detail_page.discount")}
+            </Badge>
+          </>
         )}
       </div>
 
@@ -105,15 +107,13 @@ export function ProductDetails({
             <Star
               key={i}
               className={`h-5 w-5 ${
-                i < Math.floor(product.rating)
-                  ? "fill-yellow-400 text-yellow-400"
-                  : "text-gray-300"
+                i < 4 ? "fill-yellow-400 text-yellow-400" : "text-gray-300"
               }`}
             />
           ))}
         </div>
         <span className="text-sm text-muted-foreground">
-          ({product.reviews} {t("product_detail_page.reviews_label")})
+          (25 {t("product_detail_page.reviews_label")})
         </span>
       </div>
 
@@ -197,6 +197,24 @@ export function ProductDetails({
           </span>
           <Badge variant="outline">{getCategoryName()}</Badge>
         </div>
+
+        {product.featured && (
+          <div className="flex items-center gap-2">
+            <span className="font-medium">المنتج:</span>
+            <Badge variant="default" className="bg-blue-600">
+              مميز
+            </Badge>
+          </div>
+        )}
+
+        <div className="flex items-center gap-2">
+          <span className="font-medium">الحالة:</span>
+          <Badge
+            variant={product.audience === "public" ? "default" : "secondary"}
+          >
+            {product.audience === "public" ? "عام" : "خاص"}
+          </Badge>
+        </div>
       </div>
 
       {/* Social Sharing */}
@@ -218,11 +236,11 @@ export function ProductDetails({
             <Shield size={30} />
             <span>{t("product_detail_page.secure")}</span>
           </div>
-          <div className="text-xs flex text-center  justify-center items-center  hover:text-purple-500">
+          <div className="text-xs flex text-center justify-center items-center hover:text-purple-500">
             <BookCheck size={30} />
             <span>{t("product_detail_page.trusted")}</span>
           </div>
-          <div className="text-xs flex text-center  justify-center items-center  hover:text-green-500">
+          <div className="text-xs flex text-center justify-center items-center hover:text-green-500">
             <BadgeCheck size={30} />
             <span>{t("product_detail_page.guaranteed")}</span>
           </div>
