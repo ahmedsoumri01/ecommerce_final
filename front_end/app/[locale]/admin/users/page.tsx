@@ -96,14 +96,14 @@ export default function UsersManagement({
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex justify-between items-center">
+      <div className="block my-1 md:flex justify-between items-center">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">User Management</h1>
           <p className="text-gray-600">
             Manage system users and their permissions
           </p>
         </div>
-        <Link href={`/${params.locale}/admin/users/create`}>
+        <Link className="my-1" href={`/${params.locale}/admin/users/create`}>
           <Button className="flex items-center">
             <Plus className="h-4 w-4 mr-2" />
             Add User
@@ -159,7 +159,7 @@ export default function UsersManagement({
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
               <Button
                 variant={statusFilter === "all" ? "default" : "outline"}
                 onClick={() => setStatusFilter("all")}
@@ -194,7 +194,7 @@ export default function UsersManagement({
           </div>
 
           {/* Users Table */}
-          <div className="rounded-md border">
+          <div className="rounded-md border overflow-y-auto max-w-[290px] sm:max-w-[590px] md:max-w-[690px]">
             {isLoading ? (
               <div className="flex items-center justify-center p-8">
                 <Loader2 className="h-8 w-8 animate-spin" />

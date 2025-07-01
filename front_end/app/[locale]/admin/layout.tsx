@@ -89,7 +89,7 @@ export default function AdminLayout({
         <header className="bg-white shadow-sm border-b">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center h-16">
-              <div className="flex items-center ml-12 md:ml-0">
+              <div className="items-center hidden sm:flex md:ml-12 lg:ml-0">
                 <Shield className="h-8 w-8 text-blue-600 mr-3" />
                 <h1 className="text-xl font-semibold text-gray-900">
                   Admin Panel
