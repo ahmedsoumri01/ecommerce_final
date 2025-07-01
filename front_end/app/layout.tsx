@@ -66,16 +66,6 @@ export default function RootLayout({
         <meta name="theme-color" content="#3b82f6" />
 
         <link rel="apple-touch-icon" href="/icons/icon-152x152.png" />
-        <link
-          rel="apple-touch-icon"
-          sizes="152x152"
-          href="/icons/icon-152x152.png"
-        />
-        <link
-          rel="apple-touch-icon"
-          sizes="180x180"
-          href="/icons/icon-192x192.png"
-        />
 
         <link
           rel="icon"

@@ -67,7 +67,6 @@ export function ProductDetails({
 
       {/* Price */}
       <div className="hidden items-center gap-4  lg:flex">
-        cc
         <span className="text-4xl flex rtl:flex-row-reverse font-bold text-primary">
           <span> {product.price}</span> <span>DT</span>
         </span>
