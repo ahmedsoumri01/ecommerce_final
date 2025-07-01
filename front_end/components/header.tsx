@@ -74,7 +74,7 @@ export function Header({ locale }: HeaderProps) {
             {!user && !isAuthenticated && (
               <div className="border-2 rounded-sm transition duration-300 hover:bg-blue-500">
                 <Link
-                  href="/login"
+                  href={`/${locale}/login`}
                   className="flex items-center justify-center p-1 text-black transition duration-300 group hover:text-white"
                 >
                   <LogIn className="transition duration-300 group-hover:text-white" />
@@ -86,7 +86,11 @@ export function Header({ locale }: HeaderProps) {
               {user && isAuthenticated && (
                 <div>
                   <Link
-                    href={user?.role === "admin" ? "/admin" : "/dashboard"}
+                    href={
+                      user?.role === "admin"
+                        ? `/${locale}/admin`
+                        : `/${locale}/dashboard`
+                    }
                     className="hover:text-blue-400"
                   >
                     <User />
@@ -145,7 +149,9 @@ export function Header({ locale }: HeaderProps) {
                         <div>
                           <Link
                             href={
-                              user?.role === "admin" ? "/admin" : "/dashboard"
+                              user?.role === "admin"
+                                ? `/${locale}/admin`
+                                : `/${locale}/dashboard`
                             }
                             onClick={() => setIsMobileMenuOpen(false)}
                             className="block w-full"
