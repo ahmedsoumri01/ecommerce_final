@@ -55,7 +55,7 @@ export function ProductDetails({
   return (
     <div className="space-y-6">
       {/* Product Name */}
-      <div>
+      <div className="hidden lg:block">
         <p className="text-sm text-muted-foreground mb-2 rtl:text-end">
           {product.brand}
         </p>
@@ -66,7 +66,8 @@ export function ProductDetails({
       </div>
 
       {/* Price */}
-      <div className="flex items-center gap-4">
+      <div className="hidden items-center gap-4  lg:flex">
+        cc
         <span className="text-4xl flex rtl:flex-row-reverse font-bold text-primary">
           <span> {product.price}</span> <span>DT</span>
         </span>
@@ -105,8 +106,12 @@ export function ProductDetails({
           {getProductDescription()}
         </p>
       </div>
-
-      <QuickOrderForm product={product} locale={locale} isRTL={isRTL} />
+      <div className="block lg:hidden">
+        <QuickOrderForm product={product} locale={locale} isRTL={isRTL} />
+      </div>
+      <div className="hidden lg:block">
+        <QuickOrderForm product={product} locale={locale} isRTL={isRTL} />
+      </div>
     </div>
   );
 }

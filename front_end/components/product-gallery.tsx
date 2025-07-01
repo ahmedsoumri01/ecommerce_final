@@ -82,7 +82,15 @@ export function ProductGallery({
     addItem(product, quantity);
   };
   const increaseQuantity = () => setQuantity((prev) => prev + 1);
-  const decreaseQuantity = () => setQuantity((prev) => Math.max(1, prev - 1));
+  const decreaseQuantity = () => setQuantity((prev) => Math.max(1, prev - 1)); // Calculate discount percentage
+  const hasDiscount =
+    product.originalPrice && product.originalPrice > product.price;
+  const discountPercentage = hasDiscount
+    ? Math.round(
+        ((product.originalPrice! - product.price) / product.originalPrice!) *
+          100
+      )
+    : 0;
   return (
     <>
       <div className="space-y-4">
@@ -163,6 +171,30 @@ export function ProductGallery({
           </div>
         )}
       </div>
+      {/* Product Name */}
+      <div className="lg:hidden">
+        <h1 className="text-3xl font-bold leading-tight">{getProductName()}</h1>
+        <p className="text-sm text-gray-500 mt-1">
+          رقم المنتج: {product.productRef}
+        </p>
+      </div>
+
+      {/* Price */}
+      <div className="flex items-center gap-4 lg:hidden">
+        <span className="text-4xl flex rtl:flex-row-reverse font-bold text-primary">
+          <span> {product.price}</span> <span>DT</span>
+        </span>
+        {hasDiscount && (
+          <>
+            <span className="text-xl text-red-500 text-muted-foreground flex rtl:flex-row-reverse line-through">
+              <span> {product.originalPrice}</span> <span> DT</span>
+            </span>
+            <Badge className="bg-red-500 hover:bg-red-600">
+              {discountPercentage}% {t("product_detail_page.discount")}
+            </Badge>
+          </>
+        )}
+      </div>
       {/* Quantity and Add to Cart */}
       <div className="space-y-4 mt-3">
         <div className="flex items-center gap-4">
@@ -238,7 +270,7 @@ export function ProductGallery({
       </div>
 
       {/* Social Sharing */}
-      <div className="pt-6 border-t">
+      <div className="pt-6 border-t hidden lg:block">
         <p className="font-medium mb-3">
           {t("product_detail_page.share_product")}:
         </p>
