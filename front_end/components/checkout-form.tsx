@@ -1,14 +1,24 @@
 "use client";
+
 import type React from "react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft, CreditCard, MapPin, User } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { ArrowLeft, CreditCard, MapPin, User, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import type { CartItem } from "@/lib/store/cart-store";
 import { useClientDictionary } from "@/hooks/useClientDictionary";
+import { useOrderStore } from "@/stores/order-store";
+import { tunisiaStates, tunisiaCities } from "@/lib/data/tunisia-locations";
 
 interface CheckoutFormProps {
   locale: string;
@@ -19,13 +29,14 @@ interface CheckoutFormProps {
 }
 
 interface FormData {
-  firstName: string;
-  lastName: string;
-  phone: string;
+  customerName: string;
+  email: string;
+  phoneNumberOne: string;
+  phoneNumbertwo: string;
   address: string;
   city: string;
-  postalCode: string;
-  notes: string;
+  state: string;
+  comment: string;
 }
 
 export function CheckoutForm({
@@ -37,15 +48,19 @@ export function CheckoutForm({
 }: CheckoutFormProps) {
   const { t } = useClientDictionary(locale);
   const { toast } = useToast();
+  const { createOrder } = useOrderStore();
+
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [selectedState, setSelectedState] = useState("");
   const [formData, setFormData] = useState<FormData>({
-    firstName: "",
-    lastName: "",
-    phone: "",
+    customerName: "",
+    email: "",
+    phoneNumberOne: "",
+    phoneNumbertwo: "",
     address: "",
     city: "",
-    postalCode: "",
-    notes: "",
+    state: "",
+    comment: "",
   });
 
   const isRTL = locale === "ar";
@@ -59,57 +74,91 @@ export function CheckoutForm({
     }));
   };
 
+  const handleSelectChange = (name: string, value: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+
+    // Reset city when state changes
+    if (name === "state") {
+      setSelectedState(value);
+      setFormData((prev) => ({
+        ...prev,
+        city: "",
+      }));
+    }
+  };
+
+  const generateOrderRef = () => {
+    const timestamp = Date.now().toString().slice(-6);
+    const random = Math.random().toString(36).substring(2, 5).toUpperCase();
+    return `ORD-${timestamp}-${random}`;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    try {
+      // Prepare order data for API
+      const orderData = {
+        customerName: formData.customerName,
+        email: formData.email,
+        phoneNumberOne: formData.phoneNumberOne,
+        phoneNumbertwo: formData.phoneNumbertwo || undefined,
+        address: formData.address,
+        city: formData.city,
+        state: formData.state || undefined,
+        comment: formData.comment || undefined,
+        orderRef: generateOrderRef(),
+        total: totalPrice * 1.15, // Including tax
+        status: "pending",
+        items: cartItems.map((item) => ({
+          product: item.product._id, // Product ID
+          quantity: item.quantity,
+          price: item.product.price,
+        })),
+      };
 
-    // Prepare order data
-    const orderData = {
-      customer: formData,
-      items: cartItems.map((item) => ({
-        productId: item.product.id,
-        productName: item.product.name,
-        quantity: item.quantity,
-        price: item.product.price,
-        total: item.product.price * item.quantity,
-      })),
-      summary: {
-        subtotal: totalPrice,
-        tax: totalPrice * 0.15,
-        shipping: 0,
-        total: totalPrice * 1.15,
-      },
-      orderDate: new Date().toISOString(),
-      status: "confirmed",
-    };
+      console.log("🛒 Order Data being sent:", orderData);
 
-    // Log to console
-    console.log("🛒 Order Data:", orderData);
+      const success = await createOrder(orderData);
 
-    // Show success toast
-    toast({
-      title: t("checkout_form.toast_title"),
-      description: t("checkout_form.toast_description"),
-      duration: 5000,
-    });
-
-    setIsSubmitting(false);
-    onSuccess();
+      if (success) {
+        toast({
+          title: t("checkout_form.toast_title"),
+          description: t("checkout_form.toast_description"),
+          duration: 5000,
+        });
+        onSuccess();
+      }
+    } catch (error) {
+      console.error("Error creating order:", error);
+      toast({
+        title: "خطأ في الطلب",
+        description: "حدث خطأ أثناء إنشاء الطلب. يرجى المحاولة مرة أخرى.",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const getProductName = (item: CartItem) => {
     switch (locale) {
       case "ar":
-        return item.product.nameAr;
+        return item.product.nameAr || item.product.name;
       case "fr":
-        return item.product.nameFr;
+        return item.product.nameFr || item.product.name;
       default:
         return item.product.name;
     }
   };
+
+  // Get available cities based on selected state
+  const availableCities = selectedState
+    ? tunisiaCities[selectedState] || []
+    : [];
 
   return (
     <div className={`min-h-screen bg-gray-50 ${isRTL ? "rtl" : "ltr"}`}>
@@ -126,6 +175,7 @@ export function CheckoutForm({
           </Button>
           <h1 className="text-3xl font-bold">{t("checkout_form.title")}</h1>
         </div>
+
         <div className="grid lg:grid-cols-2 gap-8">
           {/* Checkout Form */}
           <Card>
@@ -141,61 +191,82 @@ export function CheckoutForm({
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
                     <label
-                      htmlFor="firstName"
+                      htmlFor="customerName"
                       className="block text-sm font-medium mb-2"
                     >
-                      {t("checkout_form.first_name_label")} *
+                      الاسم الكامل *
                     </label>
                     <Input
-                      id="firstName"
-                      name="firstName"
-                      value={formData.firstName}
+                      id="customerName"
+                      name="customerName"
+                      value={formData.customerName}
                       onChange={handleChange}
                       required
-                      placeholder={t("checkout_form.first_name_placeholder")}
+                      placeholder="أدخل الاسم الكامل"
                     />
                   </div>
                   <div>
                     <label
-                      htmlFor="lastName"
+                      htmlFor="email"
                       className="block text-sm font-medium mb-2"
                     >
-                      {t("checkout_form.last_name_label")} *
+                      البريد الإلكتروني *
                     </label>
                     <Input
-                      id="lastName"
-                      name="lastName"
-                      value={formData.lastName}
+                      id="email"
+                      name="email"
+                      type="email"
+                      value={formData.email}
                       onChange={handleChange}
                       required
-                      placeholder={t("checkout_form.last_name_placeholder")}
+                      placeholder="أدخل البريد الإلكتروني"
                     />
                   </div>
                 </div>
-                <div>
-                  <label
-                    htmlFor="phone"
-                    className="block text-sm font-medium mb-2"
-                  >
-                    {t("checkout_form.phone_label")} *
-                  </label>
-                  <Input
-                    id="phone"
-                    name="phone"
-                    type="tel"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    required
-                    placeholder={t("checkout_form.phone_placeholder")}
-                  />
+
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <label
+                      htmlFor="phoneNumberOne"
+                      className="block text-sm font-medium mb-2"
+                    >
+                      رقم الهاتف الأول *
+                    </label>
+                    <Input
+                      id="phoneNumberOne"
+                      name="phoneNumberOne"
+                      type="tel"
+                      value={formData.phoneNumberOne}
+                      onChange={handleChange}
+                      required
+                      placeholder="أدخل رقم الهاتف"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor="phoneNumbertwo"
+                      className="block text-sm font-medium mb-2"
+                    >
+                      رقم الهاتف الثاني
+                    </label>
+                    <Input
+                      id="phoneNumbertwo"
+                      name="phoneNumbertwo"
+                      type="tel"
+                      value={formData.phoneNumbertwo}
+                      onChange={handleChange}
+                      placeholder="أدخل رقم الهاتف الثاني (اختياري)"
+                    />
+                  </div>
                 </div>
+
                 {/* Address Information */}
                 <div>
                   <label
                     htmlFor="address"
                     className="block text-sm font-medium mb-2"
                   >
-                    {t("checkout_form.address_label")} *
+                    العنوان *
                   </label>
                   <Textarea
                     id="address"
@@ -204,58 +275,87 @@ export function CheckoutForm({
                     onChange={handleChange}
                     required
                     rows={3}
-                    placeholder={t("checkout_form.address_placeholder")}
+                    placeholder="أدخل العنوان الكامل"
                   />
                 </div>
+
                 <div className="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <label
+                      htmlFor="state"
+                      className="block text-sm font-medium mb-2"
+                    >
+                      الولاية
+                    </label>
+                    <Select
+                      value={formData.state}
+                      onValueChange={(value) =>
+                        handleSelectChange("state", value)
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="اختر الولاية" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {tunisiaStates.map((state) => (
+                          <SelectItem key={state.value} value={state.value}>
+                            {state.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
                   <div>
                     <label
                       htmlFor="city"
                       className="block text-sm font-medium mb-2"
                     >
-                      {t("checkout_form.city_label")} *
+                      المدينة *
                     </label>
-                    <Input
-                      id="city"
-                      name="city"
+                    <Select
                       value={formData.city}
-                      onChange={handleChange}
-                      required
-                      placeholder={t("checkout_form.city_placeholder")}
-                    />
-                  </div>
-                  <div>
-                    <label
-                      htmlFor="postalCode"
-                      className="block text-sm font-medium mb-2"
+                      onValueChange={(value) =>
+                        handleSelectChange("city", value)
+                      }
+                      disabled={!selectedState}
                     >
-                      {t("checkout_form.postal_code_label")}
-                    </label>
-                    <Input
-                      id="postalCode"
-                      name="postalCode"
-                      value={formData.postalCode}
-                      onChange={handleChange}
-                      placeholder={t("checkout_form.postal_code_placeholder")}
-                    />
+                      <SelectTrigger>
+                        <SelectValue
+                          placeholder={
+                            selectedState
+                              ? "اختر المدينة"
+                              : "اختر الولاية أولاً"
+                          }
+                        />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {availableCities.map((city) => (
+                          <SelectItem key={city.value} value={city.value}>
+                            {city.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
                 </div>
+
                 <div>
                   <label
-                    htmlFor="notes"
+                    htmlFor="comment"
                     className="block text-sm font-medium mb-2"
                   >
-                    {t("checkout_form.notes_label")}
+                    ملاحظات إضافية
                   </label>
                   <Textarea
-                    id="notes"
-                    name="notes"
-                    value={formData.notes}
+                    id="comment"
+                    name="comment"
+                    value={formData.comment}
                     onChange={handleChange}
                     rows={3}
-                    placeholder={t("checkout_form.notes_placeholder")}
+                    placeholder="أي ملاحظات أو تعليمات خاصة للتوصيل"
                   />
                 </div>
+
                 <Button
                   type="submit"
                   size="lg"
@@ -264,19 +364,20 @@ export function CheckoutForm({
                 >
                   {isSubmitting ? (
                     <>
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                      {t("checkout_form.processing")}
+                      <Loader2 className="animate-spin h-4 w-4 mr-2" />
+                      جاري المعالجة...
                     </>
                   ) : (
                     <>
                       <CreditCard className="mr-2 h-4 w-4" />
-                      {t("checkout_form.confirm_order")}
+                      تأكيد الطلب
                     </>
                   )}
                 </Button>
               </form>
             </CardContent>
           </Card>
+
           {/* Order Summary */}
           <div className="space-y-6">
             {/* Items Summary */}
@@ -287,7 +388,7 @@ export function CheckoutForm({
               <CardContent className="space-y-4">
                 {cartItems.map((item) => (
                   <div
-                    key={item.product.id}
+                    key={item.product._id}
                     className="flex justify-between items-center"
                   >
                     <div className="flex-1">
@@ -305,6 +406,7 @@ export function CheckoutForm({
                 ))}
               </CardContent>
             </Card>
+
             {/* Price Summary */}
             <Card>
               <CardHeader>
@@ -323,16 +425,17 @@ export function CheckoutForm({
                 </div>
                 <div className="flex justify-between">
                   <span>{t("checkout_form.tax")}</span>
-                  <span> {(totalPrice * 0.15).toFixed(2)} DT</span>
+                  <span>{(totalPrice * 0.15).toFixed(2)} DT</span>
                 </div>
                 <div className="border-t pt-3">
                   <div className="flex justify-between text-lg font-bold">
                     <span>{t("checkout_form.grand_total")}</span>
-                    <span> {(totalPrice * 1.15).toFixed(2)} DT</span>
+                    <span>{(totalPrice * 1.15).toFixed(2)} DT</span>
                   </div>
                 </div>
               </CardContent>
             </Card>
+
             {/* Payment Method */}
             <Card>
               <CardHeader>
