@@ -44,12 +44,14 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
         {images.length > 1 && (
           <>
             <button
+              title="arrow left"
               onClick={prevImage}
               className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-2 shadow-md transition-colors"
             >
               <ChevronLeft className="h-4 w-4" />
             </button>
             <button
+              title="arrow right"
               onClick={nextImage}
               className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-2 shadow-md transition-colors"
             >
@@ -64,6 +66,7 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
         <div className="flex gap-2 overflow-x-auto">
           {images.map((image, index) => (
             <button
+              title="Thumbnail Images "
               key={index}
               onClick={() => setSelectedImage(index)}
               className={`flex-shrink-0 w-20 h-20 rounded-md border-2 overflow-hidden transition-colors ${

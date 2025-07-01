@@ -138,7 +138,10 @@ export function MultipleImageUpload({
             <div key={index} className="relative group">
               <div className="relative w-full h-32 border-2 border-dashed border-gray-300 rounded-lg overflow-hidden">
                 <img
-                  src={image || "/placeholder.svg"}
+                  src={
+                    process.env.NEXT_PUBLIC_ASSETS_URL + image ||
+                    "/placeholder.svg"
+                  }
                   alt={`Preview ${index + 1}`}
                   className="w-full h-full object-cover"
                 />

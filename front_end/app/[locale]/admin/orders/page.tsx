@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,52 +19,32 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useOrderStore } from "@/stores/order-store";
+import { OrderDetailsModal } from "@/components/modals/order-details-modal";
+import { EditOrderModal } from "@/components/modals/edit-order-modal";
+import { DeleteOrderDialog } from "@/components/dialogs/delete-order-dialog";
+import { ChangeOrderStatusModal } from "@/components/modals/change-order-status-modal";
 import {
   Search,
   MoreHorizontal,
   Eye,
-  Truck,
-  CheckCircle,
+  Edit,
+  Trash2,
+  RefreshCw,
   XCircle,
+  Plus,
+  Loader2,
 } from "lucide-react";
-
-// Mock data - replace with real data from your API
-const mockOrders = [
-  {
-    id: "ORD-001",
-    customer: "John Doe",
-    email: "john.doe@example.com",
-    total: 299.99,
-    status: "pending",
-    items: 3,
-    createdAt: "2024-01-15",
-  },
-  {
-    id: "ORD-002",
-    customer: "Jane Smith",
-    email: "jane.smith@example.com",
-    total: 149.99,
-    status: "shipped",
-    items: 2,
-    createdAt: "2024-01-14",
-  },
-  {
-    id: "ORD-003",
-    customer: "Bob Johnson",
-    email: "bob.johnson@example.com",
-    total: 599.99,
-    status: "delivered",
-    items: 1,
-    createdAt: "2024-01-13",
-  },
-];
+import Link from "next/link";
 
 const getStatusColor = (status: string) => {
   switch (status) {
     case "pending":
       return "bg-yellow-100 text-yellow-800";
-    case "shipped":
+    case "confirmed":
       return "bg-blue-100 text-blue-800";
+    case "shipped":
+      return "bg-purple-100 text-purple-800";
     case "delivered":
       return "bg-green-100 text-green-800";
     case "cancelled":
@@ -78,6 +59,70 @@ export default function OrdersManagement({
 }: {
   params: { locale: string };
 }) {
+  const {
+    orders,
+    loading,
+    searchTerm,
+    statusFilter,
+    fetchOrders,
+    setSearchTerm,
+    setStatusFilter,
+    filteredOrders,
+    getOrderStats,
+    cancelOrder,
+  } = useOrderStore();
+
+  const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
+  const [selectedOrder, setSelectedOrder] = useState<any>(null);
+  const [detailsModalOpen, setDetailsModalOpen] = useState(false);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [statusModalOpen, setStatusModalOpen] = useState(false);
+  const [cancellingOrderId, setCancellingOrderId] = useState<string | null>(
+    null
+  );
+
+  const stats = getOrderStats();
+  const displayedOrders = filteredOrders();
+
+  useEffect(() => {
+    fetchOrders();
+  }, [fetchOrders]);
+
+  const handleViewDetails = (orderId: string) => {
+    setSelectedOrderId(orderId);
+    setDetailsModalOpen(true);
+  };
+
+  const handleEditOrder = (order: any) => {
+    setSelectedOrder(order);
+    setEditModalOpen(true);
+  };
+
+  const handleDeleteOrder = (order: any) => {
+    setSelectedOrder(order);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleChangeStatus = (order: any) => {
+    setSelectedOrder(order);
+    setStatusModalOpen(true);
+  };
+
+  const handleCancelOrder = async (orderId: string) => {
+    setCancellingOrderId(orderId);
+    await cancelOrder(orderId);
+    setCancellingOrderId(null);
+  };
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -88,32 +133,52 @@ export default function OrdersManagement({
           </h1>
           <p className="text-gray-600">Track and manage customer orders</p>
         </div>
+        <Link href={`/${params.locale}/admin/orders/create`}>
+          <Button>
+            <Plus className="mr-2 h-4 w-4" />
+            Create Order
+          </Button>
+        </Link>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
         <Card>
           <CardContent className="p-4">
-            <div className="text-2xl font-bold">789</div>
+            <div className="text-2xl font-bold">{stats.total}</div>
             <p className="text-sm text-gray-600">Total Orders</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4">
-            <div className="text-2xl font-bold text-yellow-600">45</div>
-            <p className="text-sm text-gray-600">Pending Orders</p>
+            <div className="text-2xl font-bold text-yellow-600">
+              {stats.pending}
+            </div>
+            <p className="text-sm text-gray-600">Pending</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4">
-            <div className="text-2xl font-bold text-blue-600">123</div>
-            <p className="text-sm text-gray-600">Shipped Orders</p>
+            <div className="text-2xl font-bold text-blue-600">
+              {stats.confirmed}
+            </div>
+            <p className="text-sm text-gray-600">Confirmed</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4">
-            <div className="text-2xl font-bold text-green-600">621</div>
-            <p className="text-sm text-gray-600">Delivered Orders</p>
+            <div className="text-2xl font-bold text-purple-600">
+              {stats.shipped}
+            </div>
+            <p className="text-sm text-gray-600">Shipped</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-4">
+            <div className="text-2xl font-bold text-green-600">
+              {stats.delivered}
+            </div>
+            <p className="text-sm text-gray-600">Delivered</p>
           </CardContent>
         </Card>
       </div>
@@ -128,98 +193,185 @@ export default function OrdersManagement({
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
               <Input
-                placeholder="Search orders by ID or customer..."
+                placeholder="Search by customer name, email, or order reference..."
                 className="pl-10"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
             <div className="flex gap-2">
-              <Button variant="outline" className="bg-transparent">
+              <Button
+                variant={statusFilter === "all" ? "default" : "outline"}
+                onClick={() => setStatusFilter("all")}
+              >
                 All
               </Button>
-              <Button variant="outline" className="bg-transparent">
+              <Button
+                variant={statusFilter === "pending" ? "default" : "outline"}
+                onClick={() => setStatusFilter("pending")}
+              >
                 Pending
               </Button>
-              <Button variant="outline" className="bg-transparent">
+              <Button
+                variant={statusFilter === "confirmed" ? "default" : "outline"}
+                onClick={() => setStatusFilter("confirmed")}
+              >
+                Confirmed
+              </Button>
+              <Button
+                variant={statusFilter === "shipped" ? "default" : "outline"}
+                onClick={() => setStatusFilter("shipped")}
+              >
                 Shipped
               </Button>
-              <Button variant="outline" className="bg-transparent">
+              <Button
+                variant={statusFilter === "delivered" ? "default" : "outline"}
+                onClick={() => setStatusFilter("delivered")}
+              >
                 Delivered
               </Button>
             </div>
           </div>
 
           {/* Orders Table */}
-          <div className="rounded-md border">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Order ID</TableHead>
-                  <TableHead>Customer</TableHead>
-                  <TableHead>Items</TableHead>
-                  <TableHead>Total</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Date</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {mockOrders.map((order) => (
-                  <TableRow key={order.id}>
-                    <TableCell className="font-medium">{order.id}</TableCell>
-                    <TableCell>
-                      <div>
-                        <div className="font-medium">{order.customer}</div>
-                        <div className="text-sm text-gray-500">
-                          {order.email}
-                        </div>
-                      </div>
-                    </TableCell>
-                    <TableCell>{order.items} items</TableCell>
-                    <TableCell>${order.total}</TableCell>
-                    <TableCell>
-                      <Badge className={getStatusColor(order.status)}>
-                        {order.status}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>{order.createdAt}</TableCell>
-                    <TableCell className="text-right">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" className="h-8 w-8 p-0">
-                            <MoreHorizontal className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem>
-                            <Eye className="mr-2 h-4 w-4" />
-                            View Details
-                          </DropdownMenuItem>
-                          {order.status === "pending" && (
-                            <DropdownMenuItem>
-                              <Truck className="mr-2 h-4 w-4" />
-                              Mark as Shipped
-                            </DropdownMenuItem>
-                          )}
-                          {order.status === "shipped" && (
-                            <DropdownMenuItem>
-                              <CheckCircle className="mr-2 h-4 w-4" />
-                              Mark as Delivered
-                            </DropdownMenuItem>
-                          )}
-                          <DropdownMenuItem className="text-red-600">
-                            <XCircle className="mr-2 h-4 w-4" />
-                            Cancel Order
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </TableCell>
+          {loading ? (
+            <div className="flex items-center justify-center py-8">
+              <Loader2 className="h-8 w-8 animate-spin" />
+            </div>
+          ) : (
+            <div className="rounded-md border">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Order Ref</TableHead>
+                    <TableHead>Customer</TableHead>
+                    <TableHead>Items</TableHead>
+                    <TableHead>Total</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Date</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
+                </TableHeader>
+                <TableBody>
+                  {displayedOrders.length === 0 ? (
+                    <TableRow>
+                      <TableCell
+                        colSpan={7}
+                        className="text-center py-8 text-gray-500"
+                      >
+                        No orders found
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    displayedOrders.map((order) => (
+                      <TableRow key={order._id}>
+                        <TableCell className="font-mono font-medium">
+                          {order.orderRef}
+                        </TableCell>
+                        <TableCell>
+                          <div>
+                            <div className="font-medium">
+                              {order.customerName}
+                            </div>
+                            <div className="text-sm text-gray-500">
+                              {order.email}
+                            </div>
+                          </div>
+                        </TableCell>
+                        <TableCell>{order.items.length} items</TableCell>
+                        <TableCell>${order.total.toFixed(2)}</TableCell>
+                        <TableCell>
+                          <Badge className={getStatusColor(order.status)}>
+                            {order.status}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>{formatDate(order.orderDate)}</TableCell>
+                        <TableCell className="text-right">
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" className="h-8 w-8 p-0">
+                                <MoreHorizontal className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem
+                                onClick={() => handleViewDetails(order._id)}
+                              >
+                                <Eye className="mr-2 h-4 w-4" />
+                                View Details
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                onClick={() => handleEditOrder(order)}
+                              >
+                                <Edit className="mr-2 h-4 w-4" />
+                                Edit Order
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                onClick={() => handleChangeStatus(order)}
+                              >
+                                <RefreshCw className="mr-2 h-4 w-4" />
+                                Change Status
+                              </DropdownMenuItem>
+                              {order.status !== "delivered" &&
+                                order.status !== "cancelled" && (
+                                  <DropdownMenuItem
+                                    onClick={() => handleCancelOrder(order._id)}
+                                    disabled={cancellingOrderId === order._id}
+                                  >
+                                    {cancellingOrderId === order._id ? (
+                                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                    ) : (
+                                      <XCircle className="mr-2 h-4 w-4" />
+                                    )}
+                                    Cancel Order
+                                  </DropdownMenuItem>
+                                )}
+                              <DropdownMenuItem
+                                onClick={() => handleDeleteOrder(order)}
+                                className="text-red-600"
+                              >
+                                <Trash2 className="mr-2 h-4 w-4" />
+                                Delete Order
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  )}
+                </TableBody>
+              </Table>
+            </div>
+          )}
         </CardContent>
       </Card>
+
+      {/* Modals and Dialogs */}
+      <OrderDetailsModal
+        orderId={selectedOrderId}
+        open={detailsModalOpen}
+        onOpenChange={setDetailsModalOpen}
+      />
+
+      <EditOrderModal
+        order={selectedOrder}
+        open={editModalOpen}
+        onOpenChange={setEditModalOpen}
+      />
+
+      <DeleteOrderDialog
+        orderId={selectedOrder?._id}
+        orderRef={selectedOrder?.orderRef}
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+      />
+
+      <ChangeOrderStatusModal
+        orderId={selectedOrder?._id}
+        currentStatus={selectedOrder?.status}
+        open={statusModalOpen}
+        onOpenChange={setStatusModalOpen}
+      />
     </div>
   );
 }
