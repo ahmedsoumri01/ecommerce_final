@@ -83,10 +83,10 @@ export function Sidebar({ items, locale, className }: SidebarProps) {
         <Button
           variant="ghost"
           size="sm"
-          className="fixed top-4 left-4 z-50 md:hidden"
+          className="fixed bottom-10 left-4 z-50 border-2 hover:bg-blue-500 hover:text-white md:hidden"
           onClick={toggleSidebar}
         >
-          {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}sss
+          {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </Button>
       )}
       {/* Sidebar */}
