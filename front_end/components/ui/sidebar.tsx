@@ -215,9 +215,9 @@ export function Sidebar({ items, locale, className }: SidebarProps) {
         </div>
       </aside>
       {/* Spacer for desktop layout */}
-      {!isMobile && (
+      {/* {!isMobile && (
         <div className={cn("transition-all duration-300", sidebarWidth)} />
-      )}
+      )} */}
     </>
   );
 }

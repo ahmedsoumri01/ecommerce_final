@@ -84,7 +84,7 @@ export default function AdminLayout({
       <Sidebar items={adminSidebarItems} locale={params.locale} />
 
       {/* Main content */}
-      <div className="flex-1 flex flex-col md:ml-16">
+      <div className="flex-1 flex flex-col">
         {/* Header */}
         <header className="bg-white shadow-sm border-b">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
