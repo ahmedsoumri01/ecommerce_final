@@ -151,8 +151,8 @@ export default function CartPage({ params }: { params: { locale: string } }) {
                         <p className="text-sm text-gray-500 mb-2">
                           {item.product.brand}
                         </p>
-                        <p className="text-lg font-bold text-primary mb-4">
-                          {item.product.price} DT
+                        <p className="text-lg font-bold flex rtl:flex-row-reverse text-primary mb-4">
+                          <span> {item.product.price}</span> <span>DT</span>
                         </p>
 
                         <div className="flex items-center justify-between">
@@ -207,9 +207,17 @@ export default function CartPage({ params }: { params: { locale: string } }) {
                         </div>
 
                         <div className="mt-3 pt-3 border-t">
-                          <p className="text-right font-semibold text-lg">
-                            {t("cart_page.total_item")}: $
-                            {(item.product.price * item.quantity).toFixed(2)}
+                          <p className="text-right flex items-center justify-between font-semibold text-lg">
+                            {t("cart_page.total_item")}:
+                            <div className="flex rtl:flex-row-reverse">
+                              <span>
+                                {" "}
+                                {(item.product.price * item.quantity).toFixed(
+                                  2
+                                )}
+                              </span>
+                              <span> DT</span>
+                            </div>
                           </p>
                         </div>
                       </div>
@@ -230,7 +238,10 @@ export default function CartPage({ params }: { params: { locale: string } }) {
                     <div className="flex justify-between">
                       <span>المنتجات ({getTotalItems()})</span>
 
-                      <span>{getTotalPrice().toFixed(2)} DT</span>
+                      <span className="flex rtl:flex-row-reverse">
+                        <span> {getTotalPrice().toFixed(2)}</span>{" "}
+                        <span>DT</span>
+                      </span>
                     </div>
                     <div className="flex justify-between">
                       <span>{t("cart_page.shipping")}</span>
@@ -238,16 +249,15 @@ export default function CartPage({ params }: { params: { locale: string } }) {
                         {t("cart_page.free")}
                       </span>
                     </div>
-                    <div className="flex justify-between">
-                      <span>{t("cart_page.tax")}</span>
-                      <span> {(getTotalPrice() * 0.15).toFixed(2)} DT</span>
-                    </div>
                   </div>
 
                   <div className="border-t pt-4">
                     <div className="flex justify-between text-lg font-bold">
                       <span>{t("cart_page.total")}</span>
-                      <span> {(getTotalPrice() * 1.15).toFixed(2)} DT</span>
+                      <span className="flex rtl:flex-row-reverse">
+                        <span> {(getTotalPrice() + 7).toFixed(2)} </span>{" "}
+                        <span>DT</span>{" "}
+                      </span>
                     </div>
                   </div>
 

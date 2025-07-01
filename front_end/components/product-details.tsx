@@ -85,13 +85,13 @@ export function ProductDetails({
 
       {/* Price */}
       <div className="flex items-center gap-4">
-        <span className="text-4xl font-bold text-primary">
-          {product.price} DT
+        <span className="text-4xl flex rtl:flex-row-reverse font-bold text-primary">
+          <span> {product.price}</span> <span>DT</span>
         </span>
         {hasDiscount && (
           <>
-            <span className="text-xl text-muted-foreground line-through">
-              {product.originalPrice} DT
+            <span className="text-xl text-red-500 text-muted-foreground flex rtl:flex-row-reverse line-through">
+              <span> {product.originalPrice}</span> <span> DT</span>
             </span>
             <Badge className="bg-red-500 hover:bg-red-600">
               {discountPercentage}% {t("product_detail_page.discount")}

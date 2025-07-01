@@ -163,7 +163,7 @@ export function HeroCarousel({
                     <Button
                       size="lg"
                       variant="outline"
-                      className="border-white text-white hover:bg-white hover:text-blue-600 text-lg px-8 py-3"
+                      className="bg-blue-500 text-lg px-8 py-3"
                     >
                       Browse All
                     </Button>
