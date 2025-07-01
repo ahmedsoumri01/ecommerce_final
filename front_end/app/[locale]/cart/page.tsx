@@ -66,7 +66,6 @@ export default function CartPage({ params }: { params: { locale: string } }) {
       </div>
     );
   }
-
   return (
     <div className={`min-h-screen bg-gray-50 ${isRTL ? "rtl" : "ltr"}`}>
       <div className="container mx-auto px-4 py-8">
@@ -124,14 +123,17 @@ export default function CartPage({ params }: { params: { locale: string } }) {
                 <CardContent className="space-y-4">
                   {items.map((item) => (
                     <div
-                      key={item.product.id}
+                      key={item.product._id}
                       className="flex gap-4 p-4 border rounded-lg bg-white"
                     >
                       <Link
-                        href={`/${params.locale}/products/${item.product.id}`}
+                        href={`/${params.locale}/products/${item.product._id}`}
                       >
                         <Image
-                          src={item.product.image || "/placeholder.svg"}
+                          src={
+                            process.env.NEXT_PUBLIC_ASSETS_URL +
+                              item.product?.images[0] || "/placeholder.svg"
+                          }
                           alt={getProductName(item)}
                           width={120}
                           height={120}
@@ -140,7 +142,7 @@ export default function CartPage({ params }: { params: { locale: string } }) {
                       </Link>
                       <div className="flex-1">
                         <Link
-                          href={`/${params.locale}/products/${item.product.id}`}
+                          href={`/${params.locale}/products/${item.product._id}`}
                         >
                           <h3 className="font-semibold text-lg mb-1 hover:text-primary cursor-pointer">
                             {getProductName(item)}
@@ -165,7 +167,7 @@ export default function CartPage({ params }: { params: { locale: string } }) {
                                 className="h-10 w-10"
                                 onClick={() =>
                                   updateQuantity(
-                                    item.product.id,
+                                    item.product._id,
                                     item.quantity - 1
                                   )
                                 }
@@ -181,7 +183,7 @@ export default function CartPage({ params }: { params: { locale: string } }) {
                                 className="h-10 w-10"
                                 onClick={() =>
                                   updateQuantity(
-                                    item.product.id,
+                                    item.product._id,
                                     item.quantity + 1
                                   )
                                 }
@@ -195,7 +197,7 @@ export default function CartPage({ params }: { params: { locale: string } }) {
                             variant="outline"
                             size="sm"
                             className="text-red-600 hover:text-red-700 mx-1 bg-transparent"
-                            onClick={() => removeItem(item.product.id)}
+                            onClick={() => removeItem(item.product._id)}
                           >
                             <Trash2 className="h-4 w-4 mr-2" />
                             <span className="hidden sm:block">

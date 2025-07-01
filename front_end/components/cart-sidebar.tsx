@@ -95,11 +95,14 @@ export function CartSidebar({ locale }: CartSidebarProps) {
               <div className="flex-1 overflow-y-auto py-4 space-y-4">
                 {items.slice(0, 3).map((item) => (
                   <div
-                    key={item.product.id}
+                    key={item.product._id}
                     className="flex gap-4 p-4 border rounded-lg"
                   >
                     <Image
-                      src={item.product.image || "/placeholder.svg"}
+                      src={
+                        process.env.NEXT_PUBLIC_ASSETS_URL +
+                          item.product.images[0] || "/placeholder.svg"
+                      }
                       alt={getProductName(item)}
                       width={80}
                       height={80}
@@ -119,7 +122,10 @@ export function CartSidebar({ locale }: CartSidebarProps) {
                             variant="outline"
                             className="h-8 w-8 bg-transparent"
                             onClick={() =>
-                              updateQuantity(item.product.id, item.quantity - 1)
+                              updateQuantity(
+                                item.product._id,
+                                item.quantity - 1
+                              )
                             }
                           >
                             <Minus className="h-3 w-3" />
@@ -132,7 +138,10 @@ export function CartSidebar({ locale }: CartSidebarProps) {
                             variant="outline"
                             className="h-8 w-8 bg-transparent"
                             onClick={() =>
-                              updateQuantity(item.product.id, item.quantity + 1)
+                              updateQuantity(
+                                item.product._id,
+                                item.quantity + 1
+                              )
                             }
                           >
                             <Plus className="h-3 w-3" />
@@ -142,7 +151,7 @@ export function CartSidebar({ locale }: CartSidebarProps) {
                           size="icon"
                           variant="ghost"
                           className="h-8 w-8 text-red-500 hover:text-red-700"
-                          onClick={() => removeItem(item.product.id)}
+                          onClick={() => removeItem(item.product._id)}
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>
