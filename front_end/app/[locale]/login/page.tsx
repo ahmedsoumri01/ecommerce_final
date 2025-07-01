@@ -193,7 +193,7 @@ export default function LoginPage({ params }: { params: { locale: string } }) {
             </p>
           </div>
 
-          <div className="mt-4 p-4 bg-blue-50 rounded-lg">
+          {/*  <div className="mt-4 p-4 bg-blue-50 rounded-lg">
             <p className="text-sm text-blue-800 font-medium">
               {t("login_page.demo_title")}:
             </p>
@@ -203,7 +203,7 @@ export default function LoginPage({ params }: { params: { locale: string } }) {
             <p className="text-sm text-blue-600">
               {t("login_page.demo_password")}: admin123
             </p>
-          </div>
+          </div> */}
         </CardContent>
       </Card>
     </div>

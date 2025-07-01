@@ -70,7 +70,45 @@ export default function ClientLayout({
       </div>
     );
   }
+  return (
+    <div className="min-h-screen bg-gray-50 flex">
+      {/* Main content */}
+      <div className="flex-1 flex flex-col md:ml-16">
+        {/* Header */}
+        <header className="bg-white shadow-sm border-b">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex justify-between items-center h-16">
+              <div className="flex items-center ml-12 md:ml-0">
+                <User className="h-8 w-8 text-blue-600 mr-3" />
+                <h1 className="text-xl font-semibold text-gray-900">
+                  My Dashboard
+                </h1>
+              </div>
+              <div className="flex items-center space-x-4">
+                <span className="text-sm text-gray-700">
+                  Welcome, {user?.firstName} {user?.lastName}
+                </span>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleLogout}
+                  className="flex items-center bg-transparent"
+                >
+                  <LogOut className="h-4 w-4 mr-2" />
+                  Logout
+                </Button>
+              </div>
+            </div>
+          </div>
+        </header>
 
+        {/* Page content */}
+        <div className="flex items-center justify-center text-4xl font-bold">
+          This page still under development
+        </div>
+      </div>
+    </div>
+  );
   return (
     <div className="min-h-screen bg-gray-50 flex">
       {/* Sidebar */}
