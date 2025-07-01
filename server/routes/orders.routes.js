@@ -52,5 +52,10 @@ router.put(
   adminMiddleware,
   ordersController.cancelOrder
 );
-
+router.put(
+  "/confirm-multiple",
+  authMiddleware,
+  adminMiddleware,
+  ordersController.confirmOrders
+);
 module.exports = router;

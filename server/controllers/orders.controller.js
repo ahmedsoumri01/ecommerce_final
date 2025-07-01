@@ -99,7 +99,36 @@ exports.createOrder = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+// Confirm multiple orders
+exports.confirmOrders = async (req, res) => {
+  const { orderIds } = req.body;
 
+  if (!Array.isArray(orderIds) || orderIds.length === 0) {
+    return res.status(400).json({ message: "No valid order IDs provided" });
+  }
+
+  try {
+    const result = await Order.updateMany(
+      { _id: { $in: orderIds }, status: { $ne: "delivered" } },
+      { $set: { status: "confirmed" } }
+    );
+
+    if (result.modifiedCount === 0) {
+      return res.status(400).json({
+        message:
+          "No orders were updated. They may already be delivered or invalid.",
+      });
+    }
+
+    res.json({
+      message: `${result.modifiedCount} order(s) confirmed successfully`,
+      updatedOrderCount: result.modifiedCount,
+    });
+  } catch (error) {
+    console.error("Error confirming orders:", error.message);
+    res.status(500).json({ message: "Server error" });
+  }
+};
 // Update an existing order
 exports.updateOrder = async (req, res) => {
   const { id } = req.params;
