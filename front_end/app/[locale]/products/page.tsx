@@ -1,5 +1,6 @@
 "use client";
-import { useEffect, useState } from "react";
+
+import { useEffect, useState, useMemo, useCallback } from "react";
 import { ProductCard } from "@/components/product-card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -7,11 +8,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { Checkbox } from "@/components/ui/checkbox";
-import { products, getProductsByCategory } from "@/lib/data/products";
-import { categories } from "@/lib/data/categories";
 import { SearchBar } from "@/components/search-bar";
 import { useSearchParams } from "next/navigation";
-import { Filter, X, SlidersHorizontal } from "lucide-react";
+import { Filter, X, SlidersHorizontal, Loader2 } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -20,6 +19,11 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { useClientDictionary } from "@/hooks/useClientDictionary";
+import { useProductStore } from "@/stores/product-store";
+import {
+  useCategoryStore,
+  useFilteredCategories,
+} from "@/stores/category-store";
 
 export default function ProductsPage({
   params,
@@ -30,8 +34,27 @@ export default function ProductsPage({
   const searchParams = useSearchParams();
   const selectedCategory = searchParams.get("category");
   const { t } = useClientDictionary(params.locale);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [filteredProducts, setFilteredProducts] = useState(products);
+
+  // Store hooks
+  const {
+    products,
+    isLoading: productsLoading,
+    error: productsError,
+    getAllProducts,
+    searchQuery,
+    setSearchQuery,
+  } = useProductStore();
+
+  const {
+    categories,
+    isLoading: categoriesLoading,
+    error: categoriesError,
+    getAllCategories,
+  } = useCategoryStore();
+
+  const filteredCategories = useFilteredCategories();
+
+  // Local state for filters
   const [priceRange, setPriceRange] = useState([0, 5000]);
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>(
@@ -40,18 +63,34 @@ export default function ProductsPage({
   const [sortBy, setSortBy] = useState("featured");
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
-  // Get unique brands
-  const brands = Array.from(new Set(products.map((p) => p.brand))).sort();
+  // Fetch data on component mount - using useCallback to prevent infinite loops
+  const fetchData = useCallback(() => {
+    getAllProducts();
+    getAllCategories();
+  }, [getAllProducts, getAllCategories]);
 
   useEffect(() => {
-    let result = products;
+    fetchData();
+  }, [fetchData]);
+
+  // Memoize brands to prevent recalculation
+  const brands = useMemo(() => {
+    return Array.from(new Set(products.map((p) => p.brand))).sort();
+  }, [products]);
+
+  // Memoize filtered products to prevent infinite re-renders
+  const localFilteredProducts = useMemo(() => {
+    let result = [...products]; // Create a copy to avoid mutations
 
     // Filter by category
     if (selectedCategories.length > 0) {
       result = result.filter((product) =>
-        selectedCategories.some(
-          (cat) => product.category.toLowerCase() === cat.toLowerCase()
-        )
+        selectedCategories.some((catName) => {
+          const category = filteredCategories.find(
+            (cat) => cat.name.toLowerCase() === catName.toLowerCase()
+          );
+          return category ? product.category._id === category._id : false;
+        })
       );
     }
 
@@ -60,9 +99,11 @@ export default function ProductsPage({
       result = result.filter(
         (product) =>
           product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          product.nameAr.includes(searchQuery) ||
-          product.nameFr.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          product.brand.toLowerCase().includes(searchQuery.toLowerCase())
+          (product.nameAr && product.nameAr.includes(searchQuery)) ||
+          (product.nameFr &&
+            product.nameFr.toLowerCase().includes(searchQuery.toLowerCase())) ||
+          product.brand.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          product.productRef.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
 
@@ -88,56 +129,118 @@ export default function ProductsPage({
         result.sort((a, b) => b.price - a.price);
         break;
       case "rating":
-        result.sort((a, b) => b.rating - a.rating);
+        result.sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
         break;
       case "newest":
-        result.sort((a, b) => b.id - a.id);
+        result.sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
         break;
       default:
         result.sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
     }
 
-    setFilteredProducts(result);
-  }, [selectedCategories, searchQuery, priceRange, selectedBrands, sortBy]);
+    return result;
+  }, [
+    products,
+    selectedCategories,
+    searchQuery,
+    priceRange,
+    selectedBrands,
+    sortBy,
+    filteredCategories,
+  ]);
 
-  const getCategoryName = (categoryName: string) => {
-    const category = categories.find(
-      (cat) => cat.name.toLowerCase() === categoryName.toLowerCase()
+  // Memoize category name function
+  const getCategoryName = useCallback(
+    (categoryName: string) => {
+      const category = filteredCategories.find(
+        (cat) => cat.name.toLowerCase() === categoryName.toLowerCase()
+      );
+      if (!category) return categoryName;
+
+      switch (params.locale) {
+        case "ar":
+          return category.nameAr || category.name;
+        case "fr":
+          return category.nameFr || category.name;
+        default:
+          return category.name;
+      }
+    },
+    [filteredCategories, params.locale]
+  );
+
+  // Memoize products by category function
+  const getProductsByCategory = useCallback(
+    (categoryName: string) => {
+      const category = filteredCategories.find(
+        (cat) => cat.name.toLowerCase() === categoryName.toLowerCase()
+      );
+      if (!category) return [];
+
+      return products.filter(
+        (product) => product.category._id === category._id
+      );
+    },
+    [filteredCategories, products]
+  );
+
+  // Event handlers with useCallback to prevent re-renders
+  const handleSearchChange = useCallback(
+    (query: string) => {
+      setSearchQuery(query);
+    },
+    [setSearchQuery]
+  );
+
+  const handleBrandChange = useCallback((brand: string, checked: boolean) => {
+    setSelectedBrands((prev) =>
+      checked ? [...prev, brand] : prev.filter((b) => b !== brand)
     );
-    if (!category) return categoryName;
-    switch (params.locale) {
-      case "ar":
-        return category.nameAr;
-      case "fr":
-        return category.nameFr;
-      default:
-        return category.name;
-    }
-  };
+  }, []);
 
-  const handleBrandChange = (brand: string, checked: boolean) => {
-    if (checked) {
-      setSelectedBrands([...selectedBrands, brand]);
-    } else {
-      setSelectedBrands(selectedBrands.filter((b) => b !== brand));
-    }
-  };
+  const handleCategoryChange = useCallback(
+    (category: string, checked: boolean) => {
+      setSelectedCategories((prev) =>
+        checked ? [...prev, category] : prev.filter((c) => c !== category)
+      );
+    },
+    []
+  );
 
-  const handleCategoryChange = (category: string, checked: boolean) => {
-    if (checked) {
-      setSelectedCategories([...selectedCategories, category]);
-    } else {
-      setSelectedCategories(selectedCategories.filter((c) => c !== category));
-    }
-  };
-
-  const clearFilters = () => {
+  const clearFilters = useCallback(() => {
     setSearchQuery("");
     setPriceRange([0, 5000]);
     setSelectedBrands([]);
     setSelectedCategories(selectedCategory ? [selectedCategory] : []);
     setSortBy("featured");
-  };
+  }, [setSearchQuery, selectedCategory]);
+
+  // Loading state
+  if (productsLoading || categoriesLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="flex items-center gap-2">
+          <Loader2 className="h-6 w-6 animate-spin" />
+          <span>جاري تحميل المنتجات...</span>
+        </div>
+      </div>
+    );
+  }
+
+  // Error state
+  if (productsError || categoriesError) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-500 mb-4">حدث خطأ في تحميل البيانات</p>
+          <Button onClick={fetchData}>إعادة المحاولة</Button>
+        </div>
+      </div>
+    );
+  }
 
   const FilterContent = () => (
     <div className="space-y-6">
@@ -156,8 +259,8 @@ export default function ProductsPage({
             className="mb-4"
           />
           <div className="flex justify-between text-sm text-gray-600">
-            <span> {priceRange[0]}</span> DT
-            <span> {priceRange[1]}</span> DT
+            <span>{priceRange[0]} DT</span>
+            <span>{priceRange[1]} DT</span>
           </div>
         </div>
       </div>
@@ -168,10 +271,10 @@ export default function ProductsPage({
           {t("all_products_page.categories")}
         </Label>
         <div className="space-y-3">
-          {categories.map((category) => (
-            <div key={category.id} className="flex items-center space-x-2">
+          {filteredCategories.map((category) => (
+            <div key={category._id} className="flex items-center space-x-2">
               <Checkbox
-                id={`category-${category.id}`}
+                id={`category-${category._id}`}
                 checked={selectedCategories.includes(
                   category.name.toLowerCase()
                 )}
@@ -183,11 +286,11 @@ export default function ProductsPage({
                 }
               />
               <Label
-                htmlFor={`category-${category.id}`}
+                htmlFor={`category-${category._id}`}
                 className="text-sm cursor-pointer"
               >
-                {category.nameAr} ({getProductsByCategory(category.name).length}
-                )
+                {getCategoryName(category.name)} (
+                {getProductsByCategory(category.name).length})
               </Label>
             </div>
           ))}
@@ -246,9 +349,7 @@ export default function ProductsPage({
           </h1>
           <p className="text-xl text-muted-foreground">
             {selectedCategories.length > 0
-              ? `${t("all_products_page.discover")} ${getCategoryName(
-                  selectedCategories[0]
-                )}`
+              ? `اكتشف مجموعة ${getCategoryName(selectedCategories[0])}`
               : t("all_products_page.header_subtitle")}
           </p>
         </div>
@@ -259,7 +360,7 @@ export default function ProductsPage({
         <div className="flex flex-col md:flex-row gap-4 mb-8">
           <div className="flex-1">
             <SearchBar
-              onSearch={setSearchQuery}
+              onSearch={handleSearchChange}
               placeholder={t("all_products_page.search_placeholder")}
             />
           </div>
@@ -369,17 +470,17 @@ export default function ProductsPage({
             {/* Results Count */}
             <div className="mb-6">
               <p className="text-gray-600">
-                عرض {filteredProducts.length} من أصل {products.length} منتج
+                عرض {localFilteredProducts.length} من أصل {products.length} منتج
               </p>
             </div>
 
             {/* Products */}
-            {filteredProducts.length > 0 ? (
+            {localFilteredProducts.length > 0 ? (
               <>
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {filteredProducts.map((product) => (
+                  {localFilteredProducts.map((product) => (
                     <ProductCard
-                      key={product.id}
+                      key={product._id}
                       product={product}
                       locale={params.locale}
                       isRTL={isRTL}

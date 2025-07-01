@@ -1,15 +1,14 @@
 "use client";
 
 import type React from "react";
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Heart, ShoppingCart, Star } from "lucide-react";
-import type { Product } from "@/lib/data/products";
 import Image from "next/image";
 import Link from "next/link";
 import { useCartStore } from "@/lib/store/cart-store";
+import type { Product } from "@/stores/product-store";
 
 interface ProductCardProps {
   product: Product;
@@ -27,9 +26,9 @@ export function ProductCard({
   const getProductName = () => {
     switch (locale) {
       case "ar":
-        return product.nameAr;
+        return product.nameAr || product.name;
       case "fr":
-        return product.nameFr;
+        return product.nameFr || product.name;
       default:
         return product.name;
     }
@@ -38,9 +37,9 @@ export function ProductCard({
   const getProductDescription = () => {
     switch (locale) {
       case "ar":
-        return product.descriptionAr;
+        return product.descriptionAr || product.description;
       case "fr":
-        return product.descriptionFr;
+        return product.descriptionFr || product.description;
       default:
         return product.description;
     }
@@ -55,21 +54,25 @@ export function ProductCard({
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+
     addItem(product, 1);
   };
 
   return (
-    <Link href={`/${locale}/products/${product.id}`}>
+    <Link href={`/${locale}/products/${product._id}`}>
       <Card className="group hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer">
         <div className="relative overflow-hidden">
           <Image
-            src={product.image || "/placeholder.svg"}
+            src={
+              process.env.NEXT_PUBLIC_ASSETS_URL + product.images?.[0] ||
+              "/placeholder.svg"
+            }
             alt={getProductName()}
             width={300}
             height={300}
             className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
           />
-          {product.originalPrice && (
+          {product.originalPrice && product.originalPrice > product.price && (
             <Badge className="absolute top-3 left-3 bg-red-500 hover:bg-red-600">
               {Math.round(
                 ((product.originalPrice - product.price) /
@@ -113,11 +116,12 @@ export function ProductCard({
               <p className="text-2xl font-bold text-primary">
                 {product.price} DT
               </p>
-              {product.originalPrice && (
-                <p className="text-sm text-muted-foreground line-through">
-                  {product.originalPrice} DT
-                </p>
-              )}
+              {product.originalPrice &&
+                product.originalPrice > product.price && (
+                  <p className="text-sm text-muted-foreground line-through">
+                    {product.originalPrice} DT
+                  </p>
+                )}
             </div>
           </div>
         </CardHeader>
@@ -133,7 +137,7 @@ export function ProductCard({
                 <Star
                   key={i}
                   className={`h-4 w-4 ${
-                    i < Math.floor(product.rating)
+                    i < 4 // Default rating of 4 since it's not in your API
                       ? "fill-yellow-400 text-yellow-400"
                       : "text-gray-300"
                   }`}
@@ -141,7 +145,7 @@ export function ProductCard({
               ))}
             </div>
             <span className="text-sm text-muted-foreground">
-              ({product.reviews})
+              (4.0) {/* Default rating display */}
             </span>
           </div>
 
