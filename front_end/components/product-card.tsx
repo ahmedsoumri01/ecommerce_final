@@ -127,13 +127,13 @@ export function ProductCard({
               </h3>
             </div>
             <div className={`text-right ${isRTL ? "text-left" : ""}`}>
-              <p className="text-2xl font-bold text-primary">
-                {product.price} DT
+              <p className="text-2xl flex rtl:flex-row-reverse font-bold text-primary">
+                <span> {product.price} </span> <span> DT</span>
               </p>
               {product.originalPrice &&
                 product.originalPrice > product.price && (
-                  <p className="text-sm text-muted-foreground line-through">
-                    {product.originalPrice} DT
+                  <p className="text-sm text-red-400 flex rtl:flex-row-reverse text-muted-foreground line-through">
+                    <span> {product.originalPrice} </span> <span> DT</span>
                   </p>
                 )}
             </div>

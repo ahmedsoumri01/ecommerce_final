@@ -34,8 +34,6 @@ export function Header({ locale }: HeaderProps) {
       href: `/${locale}/categories`,
       label: t("header.Categories"),
     },
-    { href: `/${locale}/about`, label: t("header.about") },
-    { href: `/${locale}/contact`, label: t("header.contact") },
   ];
 
   return (
