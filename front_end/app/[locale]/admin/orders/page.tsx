@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Table,
   TableBody,
@@ -24,6 +25,7 @@ import { OrderDetailsModal } from "@/components/modals/order-details-modal";
 import { EditOrderModal } from "@/components/modals/edit-order-modal";
 import { DeleteOrderDialog } from "@/components/dialogs/delete-order-dialog";
 import { ChangeOrderStatusModal } from "@/components/modals/change-order-status-modal";
+import { ExportOrdersModal } from "@/components/modals/export-orders-modal";
 import {
   Search,
   MoreHorizontal,
@@ -34,8 +36,15 @@ import {
   XCircle,
   Plus,
   Loader2,
+  Download,
+  ArrowUpDown,
+  ArrowUp,
+  ArrowDown,
 } from "lucide-react";
 import Link from "next/link";
+
+type SortField = "total" | "items" | "date";
+type SortDirection = "asc" | "desc";
 
 const getStatusColor = (status: string) => {
   switch (status) {
@@ -70,24 +79,112 @@ export default function OrdersManagement({
     filteredOrders,
     getOrderStats,
     cancelOrder,
+    confirmOrders,
+    confirmingOrders,
   } = useOrderStore();
 
+  // Selection state
+  const [selectedOrders, setSelectedOrders] = useState<string[]>([]);
+  const [selectAll, setSelectAll] = useState(false);
+
+  // Sorting state
+  const [sortField, setSortField] = useState<SortField>("date");
+  const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
+
+  // Modal states
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
   const [detailsModalOpen, setDetailsModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [statusModalOpen, setStatusModalOpen] = useState(false);
+  const [exportModalOpen, setExportModalOpen] = useState(false);
   const [cancellingOrderId, setCancellingOrderId] = useState<string | null>(
     null
   );
 
   const stats = getOrderStats();
-  const displayedOrders = filteredOrders();
+  const displayedOrders = getSortedOrders();
 
   useEffect(() => {
     fetchOrders();
   }, [fetchOrders]);
+
+  // Reset selection when filters change
+  useEffect(() => {
+    setSelectedOrders([]);
+    setSelectAll(false);
+  }, [statusFilter, searchTerm]);
+
+  function getSortedOrders() {
+    const filtered = filteredOrders();
+    return [...filtered].sort((a, b) => {
+      let aValue: any;
+      let bValue: any;
+
+      switch (sortField) {
+        case "total":
+          aValue = a.total;
+          bValue = b.total;
+          break;
+        case "items":
+          aValue = a.items.length;
+          bValue = b.items.length;
+          break;
+        case "date":
+          aValue = new Date(a.orderDate).getTime();
+          bValue = new Date(b.orderDate).getTime();
+          break;
+        default:
+          return 0;
+      }
+
+      if (sortDirection === "asc") {
+        return aValue > bValue ? 1 : -1;
+      } else {
+        return aValue < bValue ? 1 : -1;
+      }
+    });
+  }
+
+  const handleSort = (field: SortField) => {
+    if (sortField === field) {
+      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+    } else {
+      setSortField(field);
+      setSortDirection("desc");
+    }
+  };
+
+  const getSortIcon = (field: SortField) => {
+    if (sortField !== field) {
+      return <ArrowUpDown className="h-4 w-4" />;
+    }
+    return sortDirection === "asc" ? (
+      <ArrowUp className="h-4 w-4" />
+    ) : (
+      <ArrowDown className="h-4 w-4" />
+    );
+  };
+
+  const handleSelectOrder = (orderId: string, checked: boolean) => {
+    if (checked) {
+      setSelectedOrders((prev) => [...prev, orderId]);
+    } else {
+      setSelectedOrders((prev) => prev.filter((id) => id !== orderId));
+      setSelectAll(false);
+    }
+  };
+
+  const handleSelectAll = (checked: boolean) => {
+    if (checked) {
+      setSelectedOrders(displayedOrders.map((order) => order._id));
+      setSelectAll(true);
+    } else {
+      setSelectedOrders([]);
+      setSelectAll(false);
+    }
+  };
 
   const handleViewDetails = (orderId: string) => {
     setSelectedOrderId(orderId);
@@ -115,6 +212,14 @@ export default function OrdersManagement({
     setCancellingOrderId(null);
   };
 
+  const handleExportOrders = () => {
+    if (selectedOrders.length === 0) {
+      alert("Please select orders to export");
+      return;
+    }
+    setExportModalOpen(true);
+  };
+
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("en-US", {
       year: "numeric",
@@ -122,6 +227,10 @@ export default function OrdersManagement({
       day: "numeric",
     });
   };
+
+  const selectedOrdersData = displayedOrders.filter((order) =>
+    selectedOrders.includes(order._id)
+  );
 
   return (
     <div className="space-y-6">
@@ -186,7 +295,18 @@ export default function OrdersManagement({
       {/* Orders List */}
       <Card>
         <CardHeader>
-          <CardTitle>Orders List</CardTitle>
+          <div className="flex justify-between items-center">
+            <CardTitle>Orders List</CardTitle>
+            {selectedOrders.length > 0 && (
+              <Button
+                onClick={handleExportOrders}
+                className="bg-green-600 hover:bg-green-700"
+              >
+                <Download className="mr-2 h-4 w-4" />
+                Export Orders ({selectedOrders.length})
+              </Button>
+            )}
+          </div>
         </CardHeader>
         <CardContent>
           <div className="flex flex-col sm:flex-row gap-4 mb-6">
@@ -233,6 +353,26 @@ export default function OrdersManagement({
             </div>
           </div>
 
+          {/* Selection Info */}
+          {selectedOrders.length > 0 && (
+            <div className="mb-4 p-3 bg-blue-50 rounded-lg">
+              <p className="text-sm text-blue-800">
+                {selectedOrders.length} order(s) selected
+                <Button
+                  variant="link"
+                  size="sm"
+                  onClick={() => {
+                    setSelectedOrders([]);
+                    setSelectAll(false);
+                  }}
+                  className="ml-2 text-blue-600 p-0 h-auto"
+                >
+                  Clear selection
+                </Button>
+              </p>
+            </div>
+          )}
+
           {/* Orders Table */}
           {loading ? (
             <div className="flex items-center justify-center py-8">
@@ -243,12 +383,46 @@ export default function OrdersManagement({
               <Table>
                 <TableHeader>
                   <TableRow>
+                    <TableHead className="w-12">
+                      <Checkbox
+                        checked={selectAll}
+                        onCheckedChange={handleSelectAll}
+                        disabled={displayedOrders.length === 0}
+                      />
+                    </TableHead>
                     <TableHead>Order Ref</TableHead>
                     <TableHead>Customer</TableHead>
-                    <TableHead>Items</TableHead>
-                    <TableHead>Total</TableHead>
+                    <TableHead>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleSort("items")}
+                        className="h-auto p-0 font-semibold"
+                      >
+                        Items {getSortIcon("items")}
+                      </Button>
+                    </TableHead>
+                    <TableHead>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleSort("total")}
+                        className="h-auto p-0 font-semibold"
+                      >
+                        Total {getSortIcon("total")}
+                      </Button>
+                    </TableHead>
                     <TableHead>Status</TableHead>
-                    <TableHead>Date</TableHead>
+                    <TableHead>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleSort("date")}
+                        className="h-auto p-0 font-semibold"
+                      >
+                        Date {getSortIcon("date")}
+                      </Button>
+                    </TableHead>
                     <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -256,7 +430,7 @@ export default function OrdersManagement({
                   {displayedOrders.length === 0 ? (
                     <TableRow>
                       <TableCell
-                        colSpan={7}
+                        colSpan={8}
                         className="text-center py-8 text-gray-500"
                       >
                         No orders found
@@ -265,6 +439,14 @@ export default function OrdersManagement({
                   ) : (
                     displayedOrders.map((order) => (
                       <TableRow key={order._id}>
+                        <TableCell>
+                          <Checkbox
+                            checked={selectedOrders.includes(order._id)}
+                            onCheckedChange={(checked) =>
+                              handleSelectOrder(order._id, checked as boolean)
+                            }
+                          />
+                        </TableCell>
                         <TableCell className="font-mono font-medium">
                           {order.orderRef}
                         </TableCell>
@@ -352,25 +534,31 @@ export default function OrdersManagement({
         open={detailsModalOpen}
         onOpenChange={setDetailsModalOpen}
       />
-
       <EditOrderModal
         order={selectedOrder}
         open={editModalOpen}
         onOpenChange={setEditModalOpen}
       />
-
       <DeleteOrderDialog
         orderId={selectedOrder?._id}
         orderRef={selectedOrder?.orderRef}
         open={deleteDialogOpen}
         onOpenChange={setDeleteDialogOpen}
       />
-
       <ChangeOrderStatusModal
         orderId={selectedOrder?._id}
         currentStatus={selectedOrder?.status}
         open={statusModalOpen}
         onOpenChange={setStatusModalOpen}
+      />
+      <ExportOrdersModal
+        orders={selectedOrdersData}
+        open={exportModalOpen}
+        onOpenChange={setExportModalOpen}
+        onOrdersConfirmed={() => {
+          setSelectedOrders([]);
+          setSelectAll(false);
+        }}
       />
     </div>
   );

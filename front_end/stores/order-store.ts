@@ -62,6 +62,7 @@ interface OrderStore {
   statusFilter: string;
   confirmingOrders: boolean;
   confirmError: string | null;
+
   // Actions
   fetchOrders: () => Promise<void>;
   fetchOrderById: (id: string) => Promise<Order | null>;
@@ -97,6 +98,8 @@ export const useOrderStore = create<OrderStore>()(
       error: null,
       searchTerm: "",
       statusFilter: "all",
+      confirmingOrders: false,
+      confirmError: null,
 
       fetchOrders: async () => {
         set({ loading: true, error: null });
@@ -122,9 +125,9 @@ export const useOrderStore = create<OrderStore>()(
           return null;
         }
       },
+
       confirmOrders: async (orderIds) => {
         set({ confirmingOrders: true, confirmError: null });
-
         try {
           const response = await api.put("/orders/confirm-multiple", {
             orderIds,
@@ -135,7 +138,7 @@ export const useOrderStore = create<OrderStore>()(
           set((state) => ({
             orders: state.orders.map((order) =>
               orderIds.includes(order._id)
-                ? { ...order, status: "confirmed" }
+                ? { ...order, status: "confirmed" as const }
                 : order
             ),
             confirmingOrders: false,
@@ -151,6 +154,7 @@ export const useOrderStore = create<OrderStore>()(
           return false;
         }
       },
+
       fetchOrderByReference: async (orderRef: string) => {
         try {
           const response = await api.get(`/orders/reference/${orderRef}`);
@@ -168,10 +172,12 @@ export const useOrderStore = create<OrderStore>()(
         try {
           const response = await api.post("/orders/create", data);
           const newOrder = response.data.order;
+
           set((state) => ({
             orders: [newOrder, ...state.orders],
             loading: false,
           }));
+
           toast.success("Order created successfully");
           return true;
         } catch (error: any) {
@@ -188,12 +194,14 @@ export const useOrderStore = create<OrderStore>()(
         try {
           const response = await api.put(`/orders/${id}`, data);
           const updatedOrder = response.data.order;
+
           set((state) => ({
             orders: state.orders.map((order) =>
               order._id === id ? updatedOrder : order
             ),
             loading: false,
           }));
+
           toast.success("Order updated successfully");
           return true;
         } catch (error: any) {
@@ -209,10 +217,12 @@ export const useOrderStore = create<OrderStore>()(
         set({ loading: true, error: null });
         try {
           await api.delete(`/orders/${id}`);
+
           set((state) => ({
             orders: state.orders.filter((order) => order._id !== id),
             loading: false,
           }));
+
           toast.success("Order deleted successfully");
           return true;
         } catch (error: any) {
@@ -228,11 +238,13 @@ export const useOrderStore = create<OrderStore>()(
         try {
           const response = await api.put(`/orders/status/${id}`, { status });
           const updatedOrder = response.data.order;
+
           set((state) => ({
             orders: state.orders.map((order) =>
               order._id === id ? updatedOrder : order
             ),
           }));
+
           toast.success("Order status updated successfully");
           return true;
         } catch (error: any) {
@@ -247,11 +259,13 @@ export const useOrderStore = create<OrderStore>()(
         try {
           const response = await api.put(`/orders/cancel/${id}`);
           const updatedOrder = response.data.order;
+
           set((state) => ({
             orders: state.orders.map((order) =>
               order._id === id ? updatedOrder : order
             ),
           }));
+
           toast.success("Order cancelled successfully");
           return true;
         } catch (error: any) {
