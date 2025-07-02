@@ -90,13 +90,6 @@ export default function ProductsManagement({
     return new Date(dateString).toLocaleDateString();
   };
 
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-    }).format(price);
-  };
-
   const handleEdit = (product: Product) => {
     setEditProduct(product);
   };
@@ -322,13 +315,15 @@ export default function ProductsManagement({
                         </TableCell>
                         <TableCell>
                           <div>
-                            <div className="font-medium">
-                              {formatPrice(product.price)}
+                            <div className="font-medium flex rtl:flex-row-reverse">
+                              <span>{product.price}</span>
+                              <span>DT</span>
                             </div>
                             {product.originalPrice &&
                               product.originalPrice > product.price && (
-                                <div className="text-sm text-muted-foreground line-through">
-                                  {formatPrice(product.originalPrice)}
+                                <div className="text-sm text-red-400 text-muted-foreground line-through flex rtl:flex-row-reverse">
+                                  <span> {product.originalPrice} </span>
+                                  <span>DT</span>
                                 </div>
                               )}
                           </div>
@@ -379,7 +374,7 @@ export default function ProductsManagement({
                         </TableCell>
                         <TableCell>{formatDate(product.createdAt)}</TableCell>
                         <TableCell className="text-right">
-                          <div className="flex gap-2 justify-end">
+                          <div className="flex flex-wrap gap-2 justify-end">
                             <Button
                               variant="outline"
                               size="sm"

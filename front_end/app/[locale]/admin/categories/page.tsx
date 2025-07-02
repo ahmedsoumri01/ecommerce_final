@@ -208,7 +208,7 @@ export default function CategoriesManagement({
                     <TableHead>Image</TableHead>
                     <TableHead>Name</TableHead>
                     <TableHead>Translations</TableHead>
-                    <TableHead>Icon</TableHead>
+
                     <TableHead>Status</TableHead>
                     <TableHead>Created</TableHead>
                     <TableHead className="text-right">Actions</TableHead>
@@ -270,15 +270,7 @@ export default function CategoriesManagement({
                             )}
                           </div>
                         </TableCell>
-                        <TableCell>
-                          {category.icon ? (
-                            <Badge variant="secondary">{category.icon}</Badge>
-                          ) : (
-                            <span className="text-sm text-muted-foreground">
-                              No icon
-                            </span>
-                          )}
-                        </TableCell>
+
                         <TableCell>
                           <Badge
                             variant={
