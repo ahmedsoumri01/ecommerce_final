@@ -32,4 +32,7 @@ router.get("/visits/stats", kpiController.getVisitsStats);
 // Get top visited products
 router.get("/products/top-visited", kpiController.getTopVisitedProducts);
 
+// Get system status
+router.get("/system-status", kpiController.getSystemStatus);
+
 module.exports = router;

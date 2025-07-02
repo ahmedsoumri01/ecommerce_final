@@ -158,7 +158,7 @@ export const useOrderStore = create<OrderStore>()(
 
       fetchOrderByReference: async (orderRef: string) => {
         try {
-          const response = await api.get(`/orders/reference/${orderRef}`);
+          const response = await api.get(`/orders/track/${orderRef}`);
           return response.data;
         } catch (error: any) {
           const errorMessage =

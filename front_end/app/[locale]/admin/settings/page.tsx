@@ -8,17 +8,34 @@ import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
 import { Settings, Save, Bell, Shield, Mail, Globe } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { useState } from "react";
+import api from "@/app/api/axios";
 
 export default function AdminSettings({
   params,
 }: {
   params: { locale: string };
 }) {
-  return (
-    <div className="flex items-center justify-center text-4xl font-bold">
-      This page still under development
-    </div>
-  );
+  const { toast } = useToast();
+  const [backupLoading, setBackupLoading] = useState(false);
+
+  const handleBackup = async () => {
+    setBackupLoading(true);
+    try {
+      const res = await api.get("/settings/backup-database");
+      if (res.status !== 200) throw new Error("Backup failed");
+      toast({
+        title: "Backup started",
+        description: "Database backup has been triggered.",
+      });
+    } catch (err: any) {
+      toast({ title: "Backup failed", description: err.message });
+    } finally {
+      setBackupLoading(false);
+    }
+  };
+
   return (
     <>
       <div className="space-y-6">
@@ -238,6 +255,15 @@ export default function AdminSettings({
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600">Last Backup:</span>
                   <span className="font-medium">2 hours ago</span>
+                </div>
+                <div className="flex justify-end mb-4">
+                  <Button
+                    onClick={handleBackup}
+                    disabled={backupLoading}
+                    variant="outline"
+                  >
+                    {backupLoading ? "Backing up..." : "Backup Database"}
+                  </Button>
                 </div>
               </CardContent>
             </Card>

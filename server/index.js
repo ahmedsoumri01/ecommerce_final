@@ -10,6 +10,7 @@ const categoryRoutes = require("./routes/categories.routes");
 const orderRoutes = require("./routes/orders.routes");
 const userRoutes = require("./routes/users.routes");
 const kpiRoutes = require("./routes/kpi.routes.js");
+const pdfRoutes = require("./routes/pdf.routes.js");
 
 // Load environment variables from .env file
 dotenv.config();
@@ -51,6 +52,7 @@ app.use("/api/categories", categoryRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/kpi", kpiRoutes);
+app.use("/api/pdf", pdfRoutes);
 // Define a simple route for testing
 app.get("/", (req, res) => {
   res.send("API is running...");

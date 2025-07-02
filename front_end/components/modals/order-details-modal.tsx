@@ -20,6 +20,7 @@ import {
   Mail,
   Calendar,
   Hash,
+  Download,
 } from "lucide-react";
 
 interface OrderDetailsModalProps {
@@ -72,6 +73,14 @@ export function OrderDetailsModal({
       hour: "2-digit",
       minute: "2-digit",
     });
+  };
+
+  const handleDownloadInvoice = () => {
+    if (!order) return;
+    window.open(
+      process.env.NEXT_PUBLIC_ASSETS_URL + `/api/pdf/order/${order.orderRef}`,
+      "_blank"
+    );
   };
 
   return (
@@ -225,6 +234,16 @@ export function OrderDetailsModal({
                   <span className="font-medium">Updated:</span>{" "}
                   {formatDate(order.updatedAt)}
                 </div>
+              </div>
+              <div className="flex justify-end mt-4">
+                <button
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+                  onClick={handleDownloadInvoice}
+                  disabled={!order}
+                >
+                  <Download className="h-4 w-4" />
+                  Download Invoice (PDF)
+                </button>
               </div>
             </div>
           </ScrollArea>

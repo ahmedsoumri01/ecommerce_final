@@ -133,3 +133,15 @@ exports.getTopVisitedProducts = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+// System status endpoint
+exports.getSystemStatus = async (req, res) => {
+  let dbStatus = "disconnected";
+  try {
+    dbStatus = mongoose.connection.readyState === 1 ? "connected" : "disconnected";
+  } catch (e) {}
+  res.json({
+    database: dbStatus,
+    api: "operational"
+  });
+};

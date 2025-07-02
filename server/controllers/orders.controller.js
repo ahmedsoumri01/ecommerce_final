@@ -273,3 +273,36 @@ exports.cancelOrder = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+// Get order by reference (improved for user tracking)
+exports.trackOrderByReference = async (req, res) => {
+  const { orderRef } = req.params;
+  try {
+    const order = await Order.findOne({ orderRef })
+      .populate("items.product", "name price")
+      .select(
+        "orderRef status customerName email phoneNumberOne address city state comment total items createdAt updatedAt"
+      );
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+    res.json({
+      orderRef: order.orderRef,
+      status: order.status,
+      customerName: order.customerName,
+      email: order.email,
+      phoneNumberOne: order.phoneNumberOne,
+      address: order.address,
+      city: order.city,
+      state: order.state,
+      comment: order.comment,
+      total: order.total,
+      items: order.items,
+      createdAt: order.createdAt,
+      updatedAt: order.updatedAt,
+    });
+  } catch (error) {
+    console.error("Error tracking order by reference:", error.message);
+    res.status(500).json({ message: "Server error" });
+  }
+};

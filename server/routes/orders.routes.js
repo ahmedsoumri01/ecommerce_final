@@ -20,6 +20,7 @@ router.get(
   ordersController.getOrderById
 );
 router.get("/reference/:orderRef", ordersController.getOrderByReference); // Can be public or protected
+router.get("/track/:orderRef", ordersController.trackOrderByReference); // Public order tracking by reference (user-friendly)
 
 // Admin Protected Routes
 router.post(
