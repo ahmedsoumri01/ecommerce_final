@@ -14,12 +14,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { useOrderStore } from "@/stores/order-store";
 import { OrderDetailsModal } from "@/components/modals/order-details-modal";
 import { EditOrderModal } from "@/components/modals/edit-order-modal";
@@ -28,7 +22,6 @@ import { ChangeOrderStatusModal } from "@/components/modals/change-order-status-
 import { ExportOrdersModal } from "@/components/modals/export-orders-modal";
 import {
   Search,
-  MoreHorizontal,
   Eye,
   Edit,
   Trash2,
@@ -237,10 +230,10 @@ export default function OrdersManagement({
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">
-            Orders Management
-          </h1>
-          <p className="text-gray-600">Track and manage customer orders</p>
+          <h1 className="text-2xl font-bold">Orders Management</h1>
+          <p className="text-muted-foreground">
+            Track and manage customer orders
+          </p>
         </div>
         <Link href={`/${params.locale}/admin/orders/create`}>
           <Button>
@@ -255,7 +248,7 @@ export default function OrdersManagement({
         <Card>
           <CardContent className="p-4">
             <div className="text-2xl font-bold">{stats.total}</div>
-            <p className="text-sm text-gray-600">Total Orders</p>
+            <p className="text-sm text-muted-foreground">Total Orders</p>
           </CardContent>
         </Card>
         <Card>
@@ -263,7 +256,7 @@ export default function OrdersManagement({
             <div className="text-2xl font-bold text-yellow-600">
               {stats.pending}
             </div>
-            <p className="text-sm text-gray-600">Pending</p>
+            <p className="text-sm text-muted-foreground">Pending</p>
           </CardContent>
         </Card>
         <Card>
@@ -271,7 +264,7 @@ export default function OrdersManagement({
             <div className="text-2xl font-bold text-blue-600">
               {stats.confirmed}
             </div>
-            <p className="text-sm text-gray-600">Confirmed</p>
+            <p className="text-sm text-muted-foreground">Confirmed</p>
           </CardContent>
         </Card>
         <Card>
@@ -279,7 +272,7 @@ export default function OrdersManagement({
             <div className="text-2xl font-bold text-purple-600">
               {stats.shipped}
             </div>
-            <p className="text-sm text-gray-600">Shipped</p>
+            <p className="text-sm text-muted-foreground">Shipped</p>
           </CardContent>
         </Card>
         <Card>
@@ -287,7 +280,7 @@ export default function OrdersManagement({
             <div className="text-2xl font-bold text-green-600">
               {stats.delivered}
             </div>
-            <p className="text-sm text-gray-600">Delivered</p>
+            <p className="text-sm text-muted-foreground">Delivered</p>
           </CardContent>
         </Card>
       </div>
@@ -311,7 +304,7 @@ export default function OrdersManagement({
         <CardContent>
           <div className="flex flex-col sm:flex-row gap-4 mb-6">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
               <Input
                 placeholder="Search by customer name, email, or order reference..."
                 className="pl-10"
@@ -323,30 +316,35 @@ export default function OrdersManagement({
               <Button
                 variant={statusFilter === "all" ? "default" : "outline"}
                 onClick={() => setStatusFilter("all")}
+                className={statusFilter !== "all" ? "bg-transparent" : ""}
               >
                 All
               </Button>
               <Button
                 variant={statusFilter === "pending" ? "default" : "outline"}
                 onClick={() => setStatusFilter("pending")}
+                className={statusFilter !== "pending" ? "bg-transparent" : ""}
               >
                 Pending
               </Button>
               <Button
                 variant={statusFilter === "confirmed" ? "default" : "outline"}
                 onClick={() => setStatusFilter("confirmed")}
+                className={statusFilter !== "confirmed" ? "bg-transparent" : ""}
               >
                 Confirmed
               </Button>
               <Button
                 variant={statusFilter === "shipped" ? "default" : "outline"}
                 onClick={() => setStatusFilter("shipped")}
+                className={statusFilter !== "shipped" ? "bg-transparent" : ""}
               >
                 Shipped
               </Button>
               <Button
                 variant={statusFilter === "delivered" ? "default" : "outline"}
                 onClick={() => setStatusFilter("delivered")}
+                className={statusFilter !== "delivered" ? "bg-transparent" : ""}
               >
                 Delivered
               </Button>
@@ -379,7 +377,7 @@ export default function OrdersManagement({
               <Loader2 className="h-8 w-8 animate-spin" />
             </div>
           ) : (
-            <div className="rounded-md border">
+            <div className="rounded-md border overflow-x-auto">
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -431,7 +429,7 @@ export default function OrdersManagement({
                     <TableRow>
                       <TableCell
                         colSpan={8}
-                        className="text-center py-8 text-gray-500"
+                        className="text-center py-8 text-muted-foreground"
                       >
                         No orders found
                       </TableCell>
@@ -455,7 +453,7 @@ export default function OrdersManagement({
                             <div className="font-medium">
                               {order.customerName}
                             </div>
-                            <div className="text-sm text-gray-500">
+                            <div className="text-sm text-muted-foreground">
                               {order.email}
                             </div>
                           </div>
@@ -469,96 +467,56 @@ export default function OrdersManagement({
                         </TableCell>
                         <TableCell>{formatDate(order.orderDate)}</TableCell>
                         <TableCell className="text-right">
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" className="h-8 w-8 p-0">
-                                <MoreHorizontal className="h-4 w-4" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuItem
-                                onClick={() => handleViewDetails(order._id)}
-                              >
-                                <Eye className="mr-2 h-4 w-4" />
-                                View Details
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                onSelect={(event) => {
-                                  event.preventDefault();
-                                  handleEditOrder(order);
-                                }}
-                              >
-                                <Edit className="mr-2 h-4 w-4" />
-                                Edit Order
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                onSelect={(event) => {
-                                  event.preventDefault();
-                                  handleChangeStatus(order);
-                                }}
-                              >
-                                <RefreshCw className="mr-2 h-4 w-4" />
-                                Change Status
-                              </DropdownMenuItem>
-                              {order.status !== "delivered" &&
-                                order.status !== "cancelled" && (
-                                  <DropdownMenuItem
-                                    onSelect={(event) => {
-                                      event.preventDefault();
-                                      handleCancelOrder(order._id);
-                                    }}
-                                    disabled={cancellingOrderId === order._id}
-                                  >
-                                    {cancellingOrderId === order._id ? (
-                                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                    ) : (
-                                      <XCircle className="mr-2 h-4 w-4" />
-                                    )}
-                                    Cancel Order
-                                  </DropdownMenuItem>
-                                )}
-                              <DropdownMenuItem
-                                onSelect={(event) => {
-                                  event.preventDefault();
-                                  handleDeleteOrder(order);
-                                }}
-                                className="text-red-600"
-                              >
-                                <Trash2 className="mr-2 h-4 w-4" />
-                                Delete Order
-                              </DropdownMenuItem>
-                              {/* Modals inside DropdownMenuContent for correct Radix behavior */}
-                              {editModalOpen &&
-                                selectedOrder?._id === order._id && (
-                                  <EditOrderModal
-                                    key={order._id}
-                                    order={selectedOrder}
-                                    open={editModalOpen}
-                                    onOpenChange={setEditModalOpen}
-                                  />
-                                )}
-                              {deleteDialogOpen &&
-                                selectedOrder?._id === order._id && (
-                                  <DeleteOrderDialog
-                                    key={order._id}
-                                    orderId={selectedOrder._id}
-                                    orderRef={selectedOrder.orderRef}
-                                    open={deleteDialogOpen}
-                                    onOpenChange={setDeleteDialogOpen}
-                                  />
-                                )}
-                              {statusModalOpen &&
-                                selectedOrder?._id === order._id && (
-                                  <ChangeOrderStatusModal
-                                    key={order._id}
-                                    orderId={selectedOrder._id}
-                                    currentStatus={selectedOrder.status}
-                                    open={statusModalOpen}
-                                    onOpenChange={setStatusModalOpen}
-                                  />
-                                )}
-                            </DropdownMenuContent>
-                          </DropdownMenu>
+                          <div className="flex gap-1 justify-end">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleViewDetails(order._id)}
+                              className="bg-transparent"
+                            >
+                              <Eye className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleEditOrder(order)}
+                              className="bg-transparent"
+                            >
+                              <Edit className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleChangeStatus(order)}
+                              className="bg-transparent"
+                            >
+                              <RefreshCw className="h-4 w-4" />
+                            </Button>
+                            {order.status !== "delivered" &&
+                              order.status !== "cancelled" && (
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => handleCancelOrder(order._id)}
+                                  disabled={cancellingOrderId === order._id}
+                                  className="bg-transparent text-orange-600 hover:text-orange-700 hover:bg-orange-50"
+                                >
+                                  {cancellingOrderId === order._id ? (
+                                    <Loader2 className="h-4 w-4 animate-spin" />
+                                  ) : (
+                                    <XCircle className="h-4 w-4" />
+                                  )}
+                                </Button>
+                              )}
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleDeleteOrder(order)}
+                              className="bg-transparent text-red-600 hover:text-red-700 hover:bg-red-50"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
                         </TableCell>
                       </TableRow>
                     ))
@@ -570,21 +528,52 @@ export default function OrdersManagement({
         </CardContent>
       </Card>
 
-      {/* Modals and Dialogs */}
-      <OrderDetailsModal
-        orderId={selectedOrderId}
-        open={detailsModalOpen}
-        onOpenChange={setDetailsModalOpen}
-      />
-      <ExportOrdersModal
-        orders={selectedOrdersData}
-        open={exportModalOpen}
-        onOpenChange={setExportModalOpen}
-        onOrdersConfirmed={() => {
-          setSelectedOrders([]);
-          setSelectAll(false);
-        }}
-      />
+      {/* Modals and Dialogs - Rendered outside of table to prevent conflicts */}
+      {detailsModalOpen && (
+        <OrderDetailsModal
+          orderId={selectedOrderId}
+          open={detailsModalOpen}
+          onOpenChange={setDetailsModalOpen}
+        />
+      )}
+
+      {editModalOpen && selectedOrder && (
+        <EditOrderModal
+          order={selectedOrder}
+          open={editModalOpen}
+          onOpenChange={setEditModalOpen}
+        />
+      )}
+
+      {deleteDialogOpen && selectedOrder && (
+        <DeleteOrderDialog
+          orderId={selectedOrder._id}
+          orderRef={selectedOrder.orderRef}
+          open={deleteDialogOpen}
+          onOpenChange={setDeleteDialogOpen}
+        />
+      )}
+
+      {statusModalOpen && selectedOrder && (
+        <ChangeOrderStatusModal
+          orderId={selectedOrder._id}
+          currentStatus={selectedOrder.status}
+          open={statusModalOpen}
+          onOpenChange={setStatusModalOpen}
+        />
+      )}
+
+      {exportModalOpen && (
+        <ExportOrdersModal
+          orders={selectedOrdersData}
+          open={exportModalOpen}
+          onOpenChange={setExportModalOpen}
+          onOrdersConfirmed={() => {
+            setSelectedOrders([]);
+            setSelectAll(false);
+          }}
+        />
+      )}
     </div>
   );
 }

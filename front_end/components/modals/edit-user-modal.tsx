@@ -73,7 +73,6 @@ export function EditUserModal({
     if (!user) return;
 
     const success = await updateUser(user._id, data);
-
     if (success) {
       onOpenChange(false);
       form.reset();
@@ -94,7 +93,6 @@ export function EditUserModal({
             Edit User
           </DialogTitle>
         </DialogHeader>
-
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
@@ -115,7 +113,6 @@ export function EditUserModal({
                   </FormItem>
                 )}
               />
-
               <FormField
                 control={form.control}
                 name="lastName"
@@ -134,7 +131,6 @@ export function EditUserModal({
                 )}
               />
             </div>
-
             <FormField
               control={form.control}
               name="email"
@@ -143,7 +139,7 @@ export function EditUserModal({
                   <FormLabel>Email Address</FormLabel>
                   <FormControl>
                     <div className="relative">
-                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                       <Input
                         {...field}
                         type="email"
@@ -157,7 +153,6 @@ export function EditUserModal({
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="role"
@@ -166,7 +161,7 @@ export function EditUserModal({
                   <FormLabel>Role</FormLabel>
                   <FormControl>
                     <div className="relative">
-                      <Shield className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 z-10" />
+                      <Shield className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground z-10" />
                       <Select
                         onValueChange={field.onChange}
                         value={field.value}
@@ -186,7 +181,6 @@ export function EditUserModal({
                 </FormItem>
               )}
             />
-
             <DialogFooter>
               <Button
                 type="button"
