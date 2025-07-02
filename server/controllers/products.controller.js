@@ -59,11 +59,11 @@ exports.createProduct = async (req, res) => {
     featured,
     productRef,
     audience,
+    inStock,
   } = req.body;
 
   const imagePaths =
     req.files?.map((file) => `/uploads/products/${file.filename}`) || [];
-
   try {
     const product = new Product({
       name,
@@ -77,6 +77,7 @@ exports.createProduct = async (req, res) => {
       description,
       descriptionAr,
       descriptionFr,
+      inStock,
       featured: featured === "true",
       productRef,
       audience: audience || "public",
@@ -106,6 +107,7 @@ exports.updateProduct = async (req, res) => {
     descriptionFr,
     featured,
     productRef,
+    inStock,
     audience,
   } = req.body;
 
@@ -144,7 +146,8 @@ exports.updateProduct = async (req, res) => {
       featured !== undefined ? featured === "true" : product.featured;
     product.productRef = productRef || product.productRef;
     product.audience = audience || product.audience;
-
+    product.inStock =
+      inStock !== undefined ? inStock === "true" : product.inStock;
     await product.save();
 
     res.json({ message: "Product updated", product });

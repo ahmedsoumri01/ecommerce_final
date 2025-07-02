@@ -444,7 +444,9 @@ export function EditProductModal({
                       <FormControl>
                         <Switch
                           checked={field.value}
-                          onCheckedChange={field.onChange}
+                          onCheckedChange={(checked) =>
+                            field.onChange(!!checked)
+                          }
                           disabled={isLoading}
                         />
                       </FormControl>
