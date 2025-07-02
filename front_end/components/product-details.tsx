@@ -3,9 +3,11 @@
 import { Badge } from "@/components/ui/badge";
 import { Star } from "lucide-react";
 import type { Product } from "@/stores/product-store";
+import { useEffect } from "react";
 
 import { useClientDictionary } from "@/hooks/useClientDictionary";
 import { QuickOrderForm } from "./quick-order-form";
+import { useKpi } from "@/stores/kpi-store";
 
 interface ProductDetailsProps {
   product: Product;
@@ -19,6 +21,13 @@ export function ProductDetails({
   isRTL = false,
 }: ProductDetailsProps) {
   const { t } = useClientDictionary(locale);
+  const { visits, incrementProductVisit } = useKpi();
+
+  useEffect(() => {
+    if (product._id) {
+      incrementProductVisit(product._id);
+    }
+  }, [product._id]);
 
   const getProductName = () => {
     switch (locale) {
@@ -104,6 +113,9 @@ export function ProductDetails({
         <p className="text-gray-600 leading-relaxed">
           {getProductDescription()}
         </p>
+        {visits !== null && (
+          <div className="mt-2 text-xs text-gray-500">Visits: {visits}</div>
+        )}
       </div>
       <div className="block lg:hidden">
         <QuickOrderForm product={product} locale={locale} isRTL={isRTL} />
