@@ -61,6 +61,7 @@ exports.createProduct = async (req, res) => {
     audience,
     inStock,
   } = req.body;
+  const deliveryFee = req.body.deliveryFee !== undefined ? Number(req.body.deliveryFee) : 0;
 
   const imagePaths =
     req.files?.map((file) => `/uploads/products/${file.filename}`) || [];
@@ -81,6 +82,7 @@ exports.createProduct = async (req, res) => {
       featured: featured === "true",
       productRef,
       audience: audience || "public",
+      deliveryFee,
     });
 
     await product.save();
@@ -110,6 +112,7 @@ exports.updateProduct = async (req, res) => {
     inStock,
     audience,
   } = req.body;
+  const deliveryFee = req.body.deliveryFee !== undefined ? Number(req.body.deliveryFee) : undefined;
 
   const product = await Product.findById(id);
   if (!product) {
@@ -153,6 +156,7 @@ exports.updateProduct = async (req, res) => {
     product.audience = audience || product.audience;
     product.inStock =
       inStock !== undefined ? inStock === "true" : product.inStock;
+    product.deliveryFee = deliveryFee !== undefined ? deliveryFee : product.deliveryFee;
     await product.save();
 
     res.json({ message: "Product updated", product });
