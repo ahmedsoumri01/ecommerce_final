@@ -151,7 +151,7 @@ export function ProductCard({
                 <Star
                   key={i}
                   className={`h-4 w-4 ${
-                    i < 4 // Default rating of 4 since it's not in your API
+                    i < 5 // Default rating of 4 since it's not in your API
                       ? "fill-yellow-400 text-yellow-400"
                       : "text-gray-300"
                   }`}
@@ -159,7 +159,7 @@ export function ProductCard({
               ))}
             </div>
             <span className="text-sm text-muted-foreground">
-              (4.0) {/* Default rating display */}
+              (5.0) {/* Default rating display */}
             </span>
           </div>
 

@@ -13,6 +13,16 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import {
   Plus,
   Minus,
   ShoppingCart,
@@ -20,6 +30,11 @@ import {
   Phone,
   MapPin,
   User,
+  Package,
+  CreditCard,
+  Truck,
+  CheckCircle,
+  AlertCircle,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useOrderStore } from "@/stores/order-store";
@@ -35,25 +50,32 @@ interface QuickOrderFormProps {
   isRTL?: boolean;
 }
 
-interface QuickOrderData {
-  customerName: string;
-  phoneNumber: string;
-  address: string;
-  city: string;
-  state: string;
-  comment: string;
-  quantity: number;
-}
-
 const quickOrderSchema = z.object({
-  customerName: z.string().min(1, "الاسم مطلوب"),
-  phoneNumber: z.string().regex(/^\d{8}$/, "رقم الهاتف يجب أن يكون 8 أرقام"),
-  address: z.string().min(1, "العنوان مطلوب"),
+  customerName: z
+    .string()
+    .min(2, "الاسم يجب أن يكون على الأقل حرفين")
+    .max(50, "الاسم طويل جداً")
+    .regex(
+      /^[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF\s]+$/,
+      "يرجى إدخال الاسم بالعربية فقط"
+    ),
+  phoneNumber: z
+    .string()
+    .regex(/^[2-9]\d{7}$/, "رقم الهاتف يجب أن يكون 8 أرقام ويبدأ بـ 2-9")
+    .length(8, "رقم الهاتف يجب أن يكون 8 أرقام بالضبط"),
+  address: z
+    .string()
+    .min(10, "العنوان يجب أن يكون مفصلاً أكثر (10 أحرف على الأقل)")
+    .max(200, "العنوان طويل جداً"),
   city: z.string().min(1, "المدينة مطلوبة"),
   state: z.string().min(1, "الولاية مطلوبة"),
-  comment: z.string().optional(),
-  quantity: z.number().min(1, "الكمية مطلوبة"),
+  comment: z.string().max(500, "الملاحظات طويلة جداً").optional(),
+  quantity: z
+    .number()
+    .min(1, "الكمية يجب أن تكون على الأقل 1")
+    .max(10, "الكمية القصوى هي 10 قطع"),
 });
+
 type QuickOrderFormType = z.infer<typeof quickOrderSchema>;
 
 export function QuickOrderForm({
@@ -65,14 +87,7 @@ export function QuickOrderForm({
   const { createOrder } = useOrderStore();
   const [selectedState, setSelectedState] = useState("");
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-    setValue,
-    watch,
-    reset,
-  } = useForm<QuickOrderFormType>({
+  const form = useForm<QuickOrderFormType>({
     resolver: zodResolver(quickOrderSchema),
     defaultValues: {
       customerName: "",
@@ -84,6 +99,15 @@ export function QuickOrderForm({
       quantity: 1,
     },
   });
+
+  const {
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    setValue,
+    watch,
+    reset,
+  } = form;
+
   const stateWatch = watch("state");
   const quantityWatch = watch("quantity");
 
@@ -108,14 +132,14 @@ export function QuickOrderForm({
     try {
       const orderData = {
         customerName: data.customerName,
-        email: "", // Optional for quick order
+        email: "",
         phoneNumberOne: data.phoneNumber,
         address: data.address,
         city: data.city,
         state: data.state,
         comment: data.comment,
         orderRef: generateOrderRef(),
-        total: product.price * data.quantity * 1.15, // Including tax
+        total: calculateTotal(),
         status: "pending",
         items: [
           {
@@ -125,239 +149,389 @@ export function QuickOrderForm({
           },
         ],
       };
+
       const success = await createOrder(orderData);
+
       if (success) {
         toast({
-          title: "تم إرسال الطلب بنجاح!",
-          description: "سيتم التواصل معك قريباً لتأكيد الطلب",
+          title: "✅ تم إرسال الطلب بنجاح!",
+          description: "سيتم التواصل معك خلال 15 دقيقة لتأكيد الطلب",
           duration: 5000,
         });
         reset();
         setSelectedState("");
       } else {
         toast({
-          title: "تم حظرك مؤقتاً",
+          title: "⚠️ تم حظرك مؤقتاً",
           description: "لقد قمت بعدد كبير من الطلبات. أنت محظور لمدة 24 ساعة.",
+
           duration: 7000,
         });
       }
     } catch (error) {
       toast({
-        title: "خطأ في الطلب",
+        title: "❌ خطأ في الطلب",
         description: "حدث خطأ أثناء إرسال الطلب. يرجى المحاولة مرة أخرى.",
       });
     }
   };
 
-  const availableCities = selectedState
-    ? tunisiaCities[selectedState] || []
-    : [];
-  const subtotal = product.price * quantityWatch;
-  const total = subtotal + 7;
+  const adjustQuantity = (delta: number) => {
+    const currentQuantity = quantityWatch;
+    const newQuantity = Math.max(1, Math.min(10, currentQuantity + delta));
+    setValue("quantity", newQuantity);
+  };
+
+  const calculateSubtotal = () => product.price * quantityWatch;
+  const calculateDelivery = () => 7;
+  const calculateTotal = () => calculateSubtotal() + calculateDelivery();
+
+  const formatPhoneNumber = (value: string) => {
+    // Remove all non-digits
+    const digits = value.replace(/\D/g, "");
+    // Limit to 8 digits
+    return digits.slice(0, 8);
+  };
 
   return (
-    <Card className="w-full">
-      <CardHeader className="bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-t-lg">
-        <CardTitle className="text-center">
-          <div className="flex items-center justify-center gap-2 mb-2">
-            <ShoppingCart className="h-5 w-5" />
-            طلب سريع
+    <Card className="w-full max-w-md mx-auto shadow-lg border-0 overflow-hidden">
+      {/* Header */}
+      <CardHeader className="bg-gradient-to-r from-emerald-500 via-green-500 to-teal-500 text-white p-4">
+        <CardTitle className="text-center space-y-2">
+          <div className="flex items-center justify-center gap-2">
+            <ShoppingCart className="h-6 w-6" />
+            <span className="text-lg font-bold">طلب سريع</span>
           </div>
-          <div className="text-sm font-normal opacity-90">
-            📞 أو اتصل بنا على: 52573273
+          <div className="flex items-center justify-center gap-2 text-sm font-normal opacity-90 bg-white/10 rounded-full px-3 py-1">
+            <Phone className="h-4 w-4" />
+            <span>أو اتصل: 52573273</span>
           </div>
         </CardTitle>
       </CardHeader>
 
-      <CardContent className="p-4 space-y-4">
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          {/* Customer Name */}
-          <div>
-            <label className="block text-sm font-medium mb-1 flex items-center gap-2">
-              <User className="h-4 w-4" />
-              الاسم *
-            </label>
-            <Input
-              {...register("customerName")}
-              placeholder="أدخل اسمك"
-              required
-              className="text-right"
-            />
-            {errors.customerName && (
-              <div className="text-red-500 text-xs mt-1">
-                {errors.customerName.message}
+      <CardContent className="p-6 space-y-6">
+        {/* Product Info */}
+        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-lg border border-blue-100">
+          <div className="flex items-center gap-3">
+            <Package className="h-5 w-5 text-blue-600" />
+            <div>
+              <h3 className="font-semibold text-gray-900">
+                {getProductName()}
+              </h3>
+              <div className="flex items-center gap-2 mt-1">
+                <Badge
+                  variant={product.inStock ? "default" : "destructive"}
+                  className="text-xs"
+                >
+                  {product.inStock ? "متوفر" : "غير متوفر"}
+                </Badge>
+                <span className="text-lg font-bold text-green-600">
+                  {product.price.toFixed(2)} DT
+                </span>
               </div>
-            )}
+            </div>
           </div>
+        </div>
 
-          {/* Phone Number */}
-          <div>
-            <label className="block text-sm font-medium mb-1 flex items-center gap-2">
-              <Phone className="h-4 w-4" />
-              رقم الهاتف *
-            </label>
-            <Input
-              {...register("phoneNumber")}
-              type="text"
-              placeholder="أدخل رقم هاتفك"
-              required
-              className="text-right"
-              maxLength={8}
+        <Form {...form}>
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            {/* Customer Name */}
+            <FormField
+              control={form.control}
+              name="customerName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="flex items-center gap-2 text-sm font-medium">
+                    <User className="h-4 w-4 text-gray-600" />
+                    الاسم الكامل *
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      placeholder="أدخل اسمك الكامل"
+                      className="text-right h-11 border-gray-300 focus:border-green-500 focus:ring-green-500"
+                      dir="rtl"
+                    />
+                  </FormControl>
+                  <FormMessage className="text-xs" />
+                </FormItem>
+              )}
             />
-            {errors.phoneNumber && (
-              <div className="text-red-500 text-xs mt-1">
-                {errors.phoneNumber.message}
-              </div>
-            )}
-          </div>
 
-          {/* State */}
-          <div>
-            <label className="block text-sm font-medium mb-1">الولاية</label>
-            <Select
-              value={watch("state")}
-              onValueChange={(value) => {
-                setValue("state", value);
-                setSelectedState(value);
-                setValue("city", "");
-              }}
+            {/* Phone Number */}
+            <FormField
+              control={form.control}
+              name="phoneNumber"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="flex items-center gap-2 text-sm font-medium">
+                    <Phone className="h-4 w-4 text-gray-600" />
+                    رقم الهاتف * (8 أرقام)
+                  </FormLabel>
+                  <FormControl>
+                    <div className="relative">
+                      <Input
+                        {...field}
+                        type="tel"
+                        placeholder="مثال: 20123456"
+                        className="text-right h-11 border-gray-300 focus:border-green-500 focus:ring-green-500 pl-12"
+                        dir="rtl"
+                        maxLength={8}
+                        onChange={(e) => {
+                          const formatted = formatPhoneNumber(e.target.value);
+                          field.onChange(formatted);
+                        }}
+                      />
+                      <div className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-500 font-mono">
+                        +216
+                      </div>
+                    </div>
+                  </FormControl>
+                  <FormMessage className="text-xs" />
+                  <div className="text-xs text-gray-500 mt-1">
+                    <CheckCircle className="h-3 w-3 inline mr-1" />
+                    يجب أن يبدأ بـ 2، 3، 4، 5، 7، 9
+                  </div>
+                </FormItem>
+              )}
+            />
+
+            {/* State & City */}
+            <div className="grid grid-cols-2 gap-3">
+              <FormField
+                control={form.control}
+                name="state"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-sm font-medium">
+                      الولاية *
+                    </FormLabel>
+                    <FormControl>
+                      <Select
+                        value={field.value}
+                        onValueChange={(value) => {
+                          field.onChange(value);
+                          setSelectedState(value);
+                          setValue("city", "");
+                        }}
+                      >
+                        <SelectTrigger className="text-right h-11 border-gray-300">
+                          <SelectValue placeholder="اختر الولاية" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {tunisiaStates.map((state) => (
+                            <SelectItem key={state.value} value={state.value}>
+                              {state.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage className="text-xs" />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="city"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-sm font-medium">
+                      المدينة *
+                    </FormLabel>
+                    <FormControl>
+                      <Select
+                        value={field.value}
+                        onValueChange={field.onChange}
+                        disabled={!selectedState}
+                      >
+                        <SelectTrigger className="text-right h-11 border-gray-300">
+                          <SelectValue placeholder="اختر المدينة" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {(tunisiaCities[selectedState] || []).map((city) => (
+                            <SelectItem key={city.value} value={city.value}>
+                              {city.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage className="text-xs" />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            {/* Address */}
+            <FormField
+              control={form.control}
+              name="address"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="flex items-center gap-2 text-sm font-medium">
+                    <MapPin className="h-4 w-4 text-gray-600" />
+                    العنوان التفصيلي *
+                  </FormLabel>
+                  <FormControl>
+                    <Textarea
+                      {...field}
+                      placeholder="مثال: شارع الحبيب بورقيبة، عمارة رقم 15، الطابق الثالث"
+                      className="text-right min-h-[80px] border-gray-300 focus:border-green-500 focus:ring-green-500 resize-none"
+                      dir="rtl"
+                    />
+                  </FormControl>
+                  <FormMessage className="text-xs" />
+                </FormItem>
+              )}
+            />
+
+            {/* Quantity */}
+            <FormField
+              control={form.control}
+              name="quantity"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-sm font-medium">الكمية</FormLabel>
+                  <FormControl>
+                    <div className="flex items-center gap-3">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => adjustQuantity(-1)}
+                        disabled={quantityWatch <= 1}
+                        className="h-10 w-10 p-0"
+                      >
+                        <Minus className="h-4 w-4" />
+                      </Button>
+                      <Input
+                        {...field}
+                        type="number"
+                        min={1}
+                        max={10}
+                        className="text-center h-10 w-20 border-gray-300"
+                        onChange={(e) => field.onChange(Number(e.target.value))}
+                      />
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => adjustQuantity(1)}
+                        disabled={quantityWatch >= 10}
+                        className="h-10 w-10 p-0"
+                      >
+                        <Plus className="h-4 w-4" />
+                      </Button>
+                      <span className="text-sm text-gray-500">
+                        (الحد الأقصى: 10)
+                      </span>
+                    </div>
+                  </FormControl>
+                  <FormMessage className="text-xs" />
+                </FormItem>
+              )}
+            />
+
+            {/* Comment */}
+            <FormField
+              control={form.control}
+              name="comment"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-sm font-medium">
+                    ملاحظات إضافية
+                  </FormLabel>
+                  <FormControl>
+                    <Textarea
+                      {...field}
+                      rows={2}
+                      placeholder="أي ملاحظات أو تعليمات خاصة للتوصيل (اختياري)"
+                      className="text-right border-gray-300 focus:border-green-500 focus:ring-green-500 resize-none"
+                      dir="rtl"
+                    />
+                  </FormControl>
+                  <FormMessage className="text-xs" />
+                </FormItem>
+              )}
+            />
+
+            {/* Order Summary */}
+            <div className="bg-gradient-to-r from-gray-50 to-gray-100 p-4 rounded-lg border border-gray-200">
+              <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                <CreditCard className="h-4 w-4" />
+                ملخص الطلب
+              </h3>
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-600">
+                    المجموع الفرعي ({quantityWatch} قطعة)
+                  </span>
+                  <span className="font-medium">
+                    {calculateSubtotal().toFixed(2)} DT
+                  </span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-600 flex items-center gap-1">
+                    <Truck className="h-3 w-3" />
+                    التوصيل
+                  </span>
+                  <span className="font-medium text-green-600">7.00 DT</span>
+                </div>
+                <Separator />
+                <div className="flex justify-between items-center text-lg font-bold">
+                  <span>المجموع الإجمالي</span>
+                  <span className="text-green-600">
+                    {calculateTotal().toFixed(2)} DT
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Submit Button */}
+            <Button
+              type="submit"
+              className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-bold py-3 h-12 text-base shadow-lg"
+              disabled={isSubmitting || !product.inStock}
             >
-              <SelectTrigger className="text-right">
-                <SelectValue placeholder="أختر مدينتك" />
-              </SelectTrigger>
-              <SelectContent>
-                {tunisiaStates.map((state) => (
-                  <SelectItem key={state.value} value={state.value}>
-                    {state.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            {errors.state && (
-              <div className="text-red-500 text-xs mt-1">
-                {errors.state.message}
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="animate-spin h-5 w-5 mr-2" />
+                  جاري الإرسال...
+                </>
+              ) : (
+                <>
+                  <ShoppingCart className="h-5 w-5 mr-2" />
+                  اشتري الآن - {calculateTotal().toFixed(2)} DT
+                </>
+              )}
+            </Button>
+
+            {!product.inStock && (
+              <div className="flex items-center gap-2 text-red-600 text-sm bg-red-50 p-3 rounded-lg">
+                <AlertCircle className="h-4 w-4" />
+                <span>عذراً، هذا المنتج غير متوفر حالياً</span>
               </div>
             )}
-          </div>
+          </form>
+        </Form>
 
-          {/* City */}
-          <div>
-            <label className="block text-sm font-medium mb-1">المدينة</label>
-            <Select
-              value={watch("city")}
-              onValueChange={(value) => setValue("city", value)}
-              disabled={!selectedState}
-            >
-              <SelectTrigger className="text-right">
-                <SelectValue placeholder="أختر المدينة" />
-              </SelectTrigger>
-              <SelectContent>
-                {(tunisiaCities[selectedState] || []).map((city) => (
-                  <SelectItem key={city.value} value={city.value}>
-                    {city.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            {errors.city && (
-              <div className="text-red-500 text-xs mt-1">
-                {errors.city.message}
-              </div>
-            )}
-          </div>
-
-          {/* Address */}
-          <div>
-            <label className="block text-sm font-medium mb-1 flex items-center gap-2">
-              <MapPin className="h-4 w-4" />
-              العنوان *
-            </label>
-            <Input
-              {...register("address")}
-              placeholder="أدخل عنوانك"
-              required
-              className="text-right"
-            />
-            {errors.address && (
-              <div className="text-red-500 text-xs mt-1">
-                {errors.address.message}
-              </div>
-            )}
-          </div>
-
-          {/* Quantity */}
-          <div>
-            <label className="block text-sm font-medium mb-1">الكمية</label>
-            <Input
-              {...register("quantity", { valueAsNumber: true })}
-              type="number"
-              min={1}
-              value={quantityWatch}
-              onChange={(e) => setValue("quantity", Number(e.target.value))}
-              className="text-right"
-            />
-            {errors.quantity && (
-              <div className="text-red-500 text-xs mt-1">
-                {errors.quantity.message}
-              </div>
-            )}
-          </div>
-
-          {/* Comment */}
-          <div>
-            <label className="block text-sm font-medium mb-1">
-              ملاحظات إضافية
-            </label>
-            <Textarea
-              {...register("comment")}
-              rows={2}
-              placeholder="أي ملاحظات أو تعليمات خاصة للتوصيل"
-            />
-          </div>
-
-          {/* Order Summary */}
-          <div className="bg-gray-50 p-3 rounded-lg space-y-2 text-sm">
-            <div className="flex justify-between">
-              <span>المجموع الفرعي</span>
-              <span className="flex rtl:flex-row-reverse">
-                <span> {subtotal.toFixed(2)}</span> <span> DT</span>
-              </span>
-            </div>
-            <div className="flex justify-between">
-              <span>التوصيل</span>
-              <span className="text-green-600 flex rtl:flex-row-reverse">
-                <span> 7 </span> <span> DT</span>
-              </span>
-            </div>
-
-            <div className="border-t pt-2 flex justify-between font-bold">
-              <span>المجموع</span>
-              <span className="flex rtl:flex-row-reverse">
-                <span> {total.toFixed(2)} </span> <span>DT</span>
-              </span>
+        {/* Payment & Delivery Info */}
+        <div className="space-y-3">
+          <div className="text-center text-sm bg-blue-50 p-3 rounded-lg border border-blue-200">
+            <div className="flex items-center justify-center gap-2 text-blue-700 font-medium">
+              <CreditCard className="h-4 w-4" />
+              💳 الدفع عند الاستلام متاح
             </div>
           </div>
 
-          {/* Submit Button */}
-          <Button
-            type="submit"
-            className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3"
-            disabled={isSubmitting || !product.inStock}
-          >
-            {isSubmitting ? (
-              <>
-                <Loader2 className="animate-spin h-4 w-4 mr-2" />
-                جاري الإرسال...
-              </>
-            ) : (
-              "اشتري الآن"
-            )}
-          </Button>
-        </form>
-
-        {/* Payment Method Info */}
-        <div className="text-center text-xs text-gray-500 mt-4 p-2 bg-blue-50 rounded">
-          💳 الدفع عند الاستلام متاح
+          <div className="text-center text-xs text-gray-500 bg-green-50 p-2 rounded border border-green-200">
+            <div className="flex items-center justify-center gap-1">
+              <CheckCircle className="h-3 w-3 text-green-600" />
+              <span>✅ توصيل مجاني للطلبات فوق 100 DT</span>
+            </div>
+          </div>
         </div>
       </CardContent>
     </Card>
