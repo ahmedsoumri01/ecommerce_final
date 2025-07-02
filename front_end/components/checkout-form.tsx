@@ -33,7 +33,7 @@ interface CheckoutFormProps {
 
 const checkoutSchema = z.object({
   customerName: z.string().min(1, "الاسم مطلوب"),
-  email: z.string().email("البريد الإلكتروني غير صالح"),
+  email: z.string(),
   phoneNumberOne: z.string().regex(/^\d{8}$/, "رقم الهاتف يجب أن يكون 8 أرقام"),
   phoneNumbertwo: z.string().optional(),
   address: z.string().min(1, "العنوان مطلوب"),
@@ -177,11 +177,11 @@ export function CheckoutForm({
                   <div>
                     <label className="block text-sm font-medium mb-1 flex items-center gap-2">
                       <User className="h-4 w-4" />
-                      {t("checkout_form.name_label")} *
+                      {t("name")} *
                     </label>
                     <Input
                       {...register("customerName")}
-                      placeholder={t("checkout_form.name_placeholder")}
+                      placeholder={t("name")}
                       required
                       className="text-right"
                     />
@@ -195,13 +195,12 @@ export function CheckoutForm({
                   <div>
                     <label className="block text-sm font-medium mb-1 flex items-center gap-2">
                       <User className="h-4 w-4" />
-                      {t("checkout_form.email_label")} *
+                      {t("email")}
                     </label>
                     <Input
                       {...register("email")}
                       type="email"
-                      placeholder={t("checkout_form.email_placeholder")}
-                      required
+                      placeholder={t("email")}
                       className="text-right"
                     />
                     {errors.email && (
