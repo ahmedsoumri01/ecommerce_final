@@ -116,19 +116,25 @@ exports.updateProduct = async (req, res) => {
     return res.status(404).json({ message: "Product not found" });
   }
 
-  const imagePaths = req.files
-    ? req.files.map((file) => `/uploads/products/${file.filename}`)
-    : product.images;
-
-  // Delete old images if new ones are uploaded
-  if (req.files) {
+  // Handle images update logic
+  if (req.files && req.files.length > 0) {
+    // New images uploaded
+    const imagePaths = req.files.map(
+      (file) => `/uploads/products/${file.filename}`
+    );
+    // Delete old images
     product.images.forEach((img) => {
       const fullPath = path.join(__dirname, "..", img);
       if (fs.existsSync(fullPath)) {
         fs.unlinkSync(fullPath);
       }
     });
+    product.images = imagePaths;
+  } else if (Array.isArray(req.body.images)) {
+    // Images explicitly set (e.g., removed or replaced)
+    product.images = req.body.images;
   }
+  // If neither, do not touch product.images
 
   try {
     product.name = name || product.name;
@@ -137,7 +143,6 @@ exports.updateProduct = async (req, res) => {
     product.brand = brand || product.brand;
     product.price = price || product.price;
     product.originalPrice = originalPrice || product.originalPrice;
-    product.images = imagePaths;
     product.category = category || product.category;
     product.description = description || product.description;
     product.descriptionAr = descriptionAr || product.descriptionAr;

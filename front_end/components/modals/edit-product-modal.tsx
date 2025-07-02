@@ -104,7 +104,20 @@ export function EditProductModal({
   const onSubmit = async (data: UpdateProductFormData) => {
     if (!product) return;
 
-    const success = await updateProduct(product._id, data);
+    // Only include images if they have changed
+    let updateData = { ...data };
+    const originalImages = product.images || [];
+    const newImages = data.images || [];
+    const imagesChanged =
+      originalImages.length !== newImages.length ||
+      originalImages.some((img, idx) => img !== newImages[idx]);
+
+    if (!imagesChanged) {
+      // Remove images from update payload if unchanged
+      delete updateData.images;
+    }
+
+    const success = await updateProduct(product._id, updateData);
 
     if (success) {
       onOpenChange(false);
