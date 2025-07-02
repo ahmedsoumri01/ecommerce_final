@@ -2,10 +2,12 @@ import type React from "react";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import ClientLayout from "./ClientLayout";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://tuni-kado.vercel.app/"), // Change to your actual domain
   title: "TuniKado",
   description:
     "TuniKado - Boutique en ligne d’accessoires et vêtements tendance en Tunisie.",
@@ -64,9 +66,7 @@ export default function RootLayout({
         <meta name="msapplication-TileColor" content="#3b82f6" />
         <meta name="msapplication-tap-highlight" content="no" />
         <meta name="theme-color" content="#3b82f6" />
-
         <link rel="apple-touch-icon" href="/icons/icon-152x152.png" />
-
         <link
           rel="icon"
           type="image/png"
@@ -83,7 +83,9 @@ export default function RootLayout({
         <link rel="mask-icon" href="/icons/icon-512x512.png" color="#3b82f6" />
         <link rel="shortcut icon" href="/favicon.ico" />
       </head>
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <ClientLayout>{children}</ClientLayout>
+      </body>
     </html>
   );
 }

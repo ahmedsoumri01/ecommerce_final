@@ -483,13 +483,19 @@ export default function OrdersManagement({
                                 View Details
                               </DropdownMenuItem>
                               <DropdownMenuItem
-                                onClick={() => handleEditOrder(order)}
+                                onSelect={(event) => {
+                                  event.preventDefault();
+                                  handleEditOrder(order);
+                                }}
                               >
                                 <Edit className="mr-2 h-4 w-4" />
                                 Edit Order
                               </DropdownMenuItem>
                               <DropdownMenuItem
-                                onClick={() => handleChangeStatus(order)}
+                                onSelect={(event) => {
+                                  event.preventDefault();
+                                  handleChangeStatus(order);
+                                }}
                               >
                                 <RefreshCw className="mr-2 h-4 w-4" />
                                 Change Status
@@ -497,7 +503,10 @@ export default function OrdersManagement({
                               {order.status !== "delivered" &&
                                 order.status !== "cancelled" && (
                                   <DropdownMenuItem
-                                    onClick={() => handleCancelOrder(order._id)}
+                                    onSelect={(event) => {
+                                      event.preventDefault();
+                                      handleCancelOrder(order._id);
+                                    }}
                                     disabled={cancellingOrderId === order._id}
                                   >
                                     {cancellingOrderId === order._id ? (
@@ -509,12 +518,45 @@ export default function OrdersManagement({
                                   </DropdownMenuItem>
                                 )}
                               <DropdownMenuItem
-                                onClick={() => handleDeleteOrder(order)}
+                                onSelect={(event) => {
+                                  event.preventDefault();
+                                  handleDeleteOrder(order);
+                                }}
                                 className="text-red-600"
                               >
                                 <Trash2 className="mr-2 h-4 w-4" />
                                 Delete Order
                               </DropdownMenuItem>
+                              {/* Modals inside DropdownMenuContent for correct Radix behavior */}
+                              {editModalOpen &&
+                                selectedOrder?._id === order._id && (
+                                  <EditOrderModal
+                                    key={order._id}
+                                    order={selectedOrder}
+                                    open={editModalOpen}
+                                    onOpenChange={setEditModalOpen}
+                                  />
+                                )}
+                              {deleteDialogOpen &&
+                                selectedOrder?._id === order._id && (
+                                  <DeleteOrderDialog
+                                    key={order._id}
+                                    orderId={selectedOrder._id}
+                                    orderRef={selectedOrder.orderRef}
+                                    open={deleteDialogOpen}
+                                    onOpenChange={setDeleteDialogOpen}
+                                  />
+                                )}
+                              {statusModalOpen &&
+                                selectedOrder?._id === order._id && (
+                                  <ChangeOrderStatusModal
+                                    key={order._id}
+                                    orderId={selectedOrder._id}
+                                    currentStatus={selectedOrder.status}
+                                    open={statusModalOpen}
+                                    onOpenChange={setStatusModalOpen}
+                                  />
+                                )}
                             </DropdownMenuContent>
                           </DropdownMenu>
                         </TableCell>
@@ -533,23 +575,6 @@ export default function OrdersManagement({
         orderId={selectedOrderId}
         open={detailsModalOpen}
         onOpenChange={setDetailsModalOpen}
-      />
-      <EditOrderModal
-        order={selectedOrder}
-        open={editModalOpen}
-        onOpenChange={setEditModalOpen}
-      />
-      <DeleteOrderDialog
-        orderId={selectedOrder?._id}
-        orderRef={selectedOrder?.orderRef}
-        open={deleteDialogOpen}
-        onOpenChange={setDeleteDialogOpen}
-      />
-      <ChangeOrderStatusModal
-        orderId={selectedOrder?._id}
-        currentStatus={selectedOrder?.status}
-        open={statusModalOpen}
-        onOpenChange={setStatusModalOpen}
       />
       <ExportOrdersModal
         orders={selectedOrdersData}

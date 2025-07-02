@@ -264,20 +264,24 @@ export default function UsersManagement({
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
                               <DropdownMenuItem
-                                onClick={() => handleEdit(user)}
+                                onSelect={(event) => {
+                                  event.preventDefault();
+                                  handleEdit(user);
+                                }}
                               >
                                 <Edit className="mr-2 h-4 w-4" />
                                 Edit
                               </DropdownMenuItem>
                               <DropdownMenuItem
-                                onClick={() =>
+                                onSelect={(event) => {
+                                  event.preventDefault();
                                   handleBlock(
                                     user,
                                     user.accountStatus === "active"
                                       ? "block"
                                       : "unblock"
-                                  )
-                                }
+                                  );
+                                }}
                               >
                                 {user.accountStatus === "active" ? (
                                   <>
@@ -293,11 +297,40 @@ export default function UsersManagement({
                               </DropdownMenuItem>
                               <DropdownMenuItem
                                 className="text-red-600"
-                                onClick={() => handleDelete(user)}
+                                onSelect={(event) => {
+                                  event.preventDefault();
+                                  handleDelete(user);
+                                }}
                               >
                                 <Trash2 className="mr-2 h-4 w-4" />
                                 Delete
                               </DropdownMenuItem>
+                              {/* Modals inside DropdownMenuContent for correct Radix behavior */}
+                              {editUser && editUser._id === user._id && (
+                                <EditUserModal
+                                  key={editUser._id}
+                                  user={editUser}
+                                  open={!!editUser}
+                                  onOpenChange={(open) => !open && setEditUser(null)}
+                                />
+                              )}
+                              {deleteUser && deleteUser._id === user._id && (
+                                <DeleteUserDialog
+                                  key={deleteUser._id}
+                                  user={deleteUser}
+                                  open={!!deleteUser}
+                                  onOpenChange={(open) => !open && setDeleteUser(null)}
+                                />
+                              )}
+                              {blockUser && blockUser.user._id === user._id && (
+                                <BlockUserDialog
+                                  key={blockUser.user._id}
+                                  user={blockUser.user}
+                                  action={blockUser.action}
+                                  open={!!blockUser}
+                                  onOpenChange={(open) => !open && setBlockUser(null)}
+                                />
+                              )}
                             </DropdownMenuContent>
                           </DropdownMenu>
                         </TableCell>
@@ -310,26 +343,6 @@ export default function UsersManagement({
           </div>
         </CardContent>
       </Card>
-
-      {/* Modals and Dialogs */}
-      <EditUserModal
-        user={editUser}
-        open={!!editUser}
-        onOpenChange={(open) => !open && setEditUser(null)}
-      />
-
-      <DeleteUserDialog
-        user={deleteUser}
-        open={!!deleteUser}
-        onOpenChange={(open) => !open && setDeleteUser(null)}
-      />
-
-      <BlockUserDialog
-        user={blockUser?.user || null}
-        action={blockUser?.action || "block"}
-        open={!!blockUser}
-        onOpenChange={(open) => !open && setBlockUser(null)}
-      />
     </div>
   );
 }

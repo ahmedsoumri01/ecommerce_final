@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import api from "@/app/api/axios";
 import type { AxiosError } from "axios";
 import { subscribeToReset } from "@/lib/store-reset";
+import { useMemo } from "react";
 
 export interface Category {
   _id: string;
@@ -364,16 +365,18 @@ export const useCategoryStore = create<CategoryState & CategoryActions>()(
 export const useFilteredCategories = () => {
   const { categories, searchQuery, featuredFilter } = useCategoryStore();
 
-  return categories.filter((category) => {
-    const matchesSearch = category.name
-      .toLowerCase()
-      .includes(searchQuery.toLowerCase());
+  return useMemo(() => {
+    return categories.filter((category) => {
+      const matchesSearch = category.name
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase());
 
-    const matchesFeatured =
-      featuredFilter === "all" ||
-      (featuredFilter === "featured" && category.featured) ||
-      (featuredFilter === "not-featured" && !category.featured);
+      const matchesFeatured =
+        featuredFilter === "all" ||
+        (featuredFilter === "featured" && category.featured) ||
+        (featuredFilter === "not-featured" && !category.featured);
 
-    return matchesSearch && matchesFeatured;
-  });
+      return matchesSearch && matchesFeatured;
+    });
+  }, [categories, searchQuery, featuredFilter]);
 };

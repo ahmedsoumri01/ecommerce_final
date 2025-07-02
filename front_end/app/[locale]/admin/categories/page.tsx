@@ -317,18 +317,47 @@ export default function CategoriesManagement({
                                 View Products
                               </DropdownMenuItem>
                               <DropdownMenuItem
-                                onClick={() => handleEdit(category)}
+                                onSelect={(event) => {
+                                  event.preventDefault();
+                                  handleEdit(category);
+                                }}
                               >
                                 <Edit className="mr-2 h-4 w-4" />
                                 Edit
                               </DropdownMenuItem>
                               <DropdownMenuItem
                                 className="text-red-600"
-                                onClick={() => handleDelete(category)}
+                                onSelect={(event) => {
+                                  event.preventDefault();
+                                  handleDelete(category);
+                                }}
                               >
                                 <Trash2 className="mr-2 h-4 w-4" />
                                 Delete
                               </DropdownMenuItem>
+                              {/* Modals inside DropdownMenuContent for correct Radix behavior */}
+                              {editCategory &&
+                                editCategory._id === category._id && (
+                                  <EditCategoryModal
+                                    key={editCategory._id}
+                                    category={editCategory}
+                                    open={!!editCategory}
+                                    onOpenChange={(open) =>
+                                      !open && setEditCategory(null)
+                                    }
+                                  />
+                                )}
+                              {deleteCategory &&
+                                deleteCategory._id === category._id && (
+                                  <DeleteCategoryDialog
+                                    key={deleteCategory._id}
+                                    category={deleteCategory}
+                                    open={!!deleteCategory}
+                                    onOpenChange={(open) =>
+                                      !open && setDeleteCategory(null)
+                                    }
+                                  />
+                                )}
                             </DropdownMenuContent>
                           </DropdownMenu>
                         </TableCell>
@@ -341,19 +370,6 @@ export default function CategoriesManagement({
           </div>
         </CardContent>
       </Card>
-
-      {/* Modals and Dialogs */}
-      <EditCategoryModal
-        category={editCategory}
-        open={!!editCategory}
-        onOpenChange={(open) => !open && setEditCategory(null)}
-      />
-
-      <DeleteCategoryDialog
-        category={deleteCategory}
-        open={!!deleteCategory}
-        onOpenChange={(open) => !open && setDeleteCategory(null)}
-      />
     </div>
   );
 }

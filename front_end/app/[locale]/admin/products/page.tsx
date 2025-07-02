@@ -402,18 +402,47 @@ export default function ProductsManagement({
                                 View Details
                               </DropdownMenuItem>
                               <DropdownMenuItem
-                                onClick={() => handleEdit(product)}
+                                onSelect={(event) => {
+                                  event.preventDefault();
+                                  handleEdit(product);
+                                }}
                               >
                                 <Edit className="mr-2 h-4 w-4" />
                                 Edit
                               </DropdownMenuItem>
                               <DropdownMenuItem
                                 className="text-red-600"
-                                onClick={() => handleDelete(product)}
+                                onSelect={(event) => {
+                                  event.preventDefault();
+                                  handleDelete(product);
+                                }}
                               >
                                 <Trash2 className="mr-2 h-4 w-4" />
                                 Delete
                               </DropdownMenuItem>
+                              {/* Modals inside DropdownMenuContent for correct Radix behavior */}
+                              {editProduct &&
+                                editProduct._id === product._id && (
+                                  <EditProductModal
+                                    key={editProduct._id}
+                                    product={editProduct}
+                                    open={!!editProduct}
+                                    onOpenChange={(open) =>
+                                      !open && setEditProduct(null)
+                                    }
+                                  />
+                                )}
+                              {deleteProduct &&
+                                deleteProduct._id === product._id && (
+                                  <DeleteProductDialog
+                                    key={deleteProduct._id}
+                                    product={deleteProduct}
+                                    open={!!deleteProduct}
+                                    onOpenChange={(open) =>
+                                      !open && setDeleteProduct(null)
+                                    }
+                                  />
+                                )}
                             </DropdownMenuContent>
                           </DropdownMenu>
                         </TableCell>
@@ -426,19 +455,6 @@ export default function ProductsManagement({
           </div>
         </CardContent>
       </Card>
-
-      {/* Modals and Dialogs */}
-      <EditProductModal
-        product={editProduct}
-        open={!!editProduct}
-        onOpenChange={(open) => !open && setEditProduct(null)}
-      />
-
-      <DeleteProductDialog
-        product={deleteProduct}
-        open={!!deleteProduct}
-        onOpenChange={(open) => !open && setDeleteProduct(null)}
-      />
     </div>
   );
 }
