@@ -78,7 +78,7 @@ export function HeroCarousel({
   if (displayProducts.length === 0) {
     return (
       <div className="relative h-[700px] md:h-[600px] overflow-hidden bg-gradient-to-r from-blue-600 to-purple-600 flex items-center justify-center">
-        <div className="text-white text-xl">Loading products...</div>
+        <div className="text-white text-xl">Products Not Available</div>
       </div>
     );
   }

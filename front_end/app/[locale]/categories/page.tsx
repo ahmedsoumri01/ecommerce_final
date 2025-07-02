@@ -82,7 +82,7 @@ export default function CategoriesPage({
       </div>
     );
   }
-  console.log(filteredCategories);
+
   return (
     <div className={`${isRTL ? "rtl" : "ltr"}`}>
       {/* Header Section */}
@@ -96,7 +96,11 @@ export default function CategoriesPage({
           </p>
         </div>
       </section>
-
+      {filteredCategories.length === 0 && (
+        <div className="w-full flex justify-center items-center py-8">
+          <div className="text-muted-foreground">لا توجد فئات متاحة</div>
+        </div>
+      )}
       {/* Categories Grid */}
       <section className="py-16">
         <div className="container mx-auto px-4">
@@ -165,7 +169,11 @@ export default function CategoriesPage({
               {t("all_categories_page.featured_subtitle")}
             </p>
           </div>
-
+          {filteredCategories.length === 0 && (
+            <div className="w-full flex justify-center items-center py-8">
+              <div className="text-muted-foreground">لا توجد فئات متاحة</div>
+            </div>
+          )}
           {isLoading ? (
             <div className="grid md:grid-cols-3 gap-8">
               {Array.from({ length: 3 }).map((_, index) => (
