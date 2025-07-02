@@ -3,7 +3,7 @@ const Order = require("../models/order.model");
 
 const rateLimitMap = new Map(); // { ip: { count, firstRequest, blockedUntil } }
 
-const ORDER_LIMIT = 1; // max orders per minute
+const ORDER_LIMIT = 10; // max orders per minute
 const BLOCK_DURATION = 24 * 60 * 60 * 1000; // 24 hours in ms
 
 // Get all orders

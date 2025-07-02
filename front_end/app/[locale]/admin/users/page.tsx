@@ -193,7 +193,7 @@ export default function UsersManagement({
             </div>
           </div>
 
-          <div className="overflow-auto w-[270px] sm:w-[600px] md:w-[700px] xl:w-[900px] 2xl:w-[700px]">
+          <div className="overflow-x-auto w-[300px] sm:w-[550px] md:w-[700px]   xl:w-[1000px] ">
             {/* Users Table */}
             <div className="rounded-md border">
               {isLoading ? (
@@ -257,12 +257,12 @@ export default function UsersManagement({
                           </TableCell>
                           <TableCell>{formatDate(user.createdAt)}</TableCell>
                           <TableCell className="text-right">
-                            <div className="flex justify-end items-center space-x-2">
+                            <div className="block gap-2">
                               <Button
                                 onClick={() => handleEdit(user)}
-                                className="cursor-pointer bg-orange-500"
+                                className="cursor-pointer bg-orange-500 m-1.5"
                               >
-                                <Edit className="h-4 w-4" />
+                                <Edit className="h-4 w-4" /> update
                               </Button>
                               <Button
                                 onClick={() =>
@@ -273,23 +273,23 @@ export default function UsersManagement({
                                       : "unblock"
                                   )
                                 }
-                                className="cursor-pointer"
+                                className="cursor-pointer  m-1.5"
                               >
                                 {user.accountStatus === "active" ? (
                                   <>
-                                    <Ban className=" h-4 w-4" />
+                                    <Ban className=" h-4 w-4" /> block
                                   </>
                                 ) : (
                                   <>
-                                    <CheckCircle className="h-4 w-4" />
+                                    <CheckCircle className="h-4 w-4" /> activate
                                   </>
                                 )}
                               </Button>
                               <Button
                                 onClick={() => handleDelete(user)}
-                                className="text-white bg-red-600 cursor-pointer focus:text-red-600"
+                                className="text-white bg-red-600 cursor-pointer  m-1.5 focus:text-red-600"
                               >
-                                <Trash2 className="h-4 w-4" />
+                                <Trash2 className="h-4 w-4" /> delete
                               </Button>
                             </div>
                           </TableCell>

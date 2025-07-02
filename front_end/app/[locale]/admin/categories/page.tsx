@@ -250,24 +250,35 @@ export default function CategoriesManagement({
                         </TableCell>
                         <TableCell>
                           <div className="space-y-1">
-                            {category.nameAr && (
-                              <div
-                                className="text-sm text-muted-foreground"
-                                dir="rtl"
-                              >
-                                AR: {category.nameAr}
-                              </div>
-                            )}
-                            {category.nameFr && (
-                              <div className="text-sm text-muted-foreground">
-                                FR: {category.nameFr}
-                              </div>
-                            )}
-                            {!category.nameAr && !category.nameFr && (
-                              <span className="text-sm text-muted-foreground">
-                                No translations
-                              </span>
-                            )}
+                            <table className="border-2">
+                              <tbody>
+                                {category.nameAr && (
+                                  <tr>
+                                    <td className="text-sm text-muted-foreground border-2">
+                                      AR:
+                                    </td>
+                                    <td className="border-2">
+                                      {category.nameAr}
+                                    </td>
+                                  </tr>
+                                )}
+                                {category.nameFr && (
+                                  <tr>
+                                    <td className="text-sm text-muted-foreground border-2">
+                                      FR:
+                                    </td>
+                                    <td className="border-2">
+                                      {category.nameFr}
+                                    </td>
+                                  </tr>
+                                )}
+                                {!category.nameAr && !category.nameFr && (
+                                  <tr>
+                                    <td> No translations</td>
+                                  </tr>
+                                )}
+                              </tbody>
+                            </table>
                           </div>
                         </TableCell>
 

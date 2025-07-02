@@ -4,10 +4,10 @@ import { Badge } from "@/components/ui/badge";
 import { Star } from "lucide-react";
 import type { Product } from "@/stores/product-store";
 import { useEffect } from "react";
-
 import { useClientDictionary } from "@/hooks/useClientDictionary";
 import { QuickOrderForm } from "./quick-order-form";
 import { useKpi } from "@/stores/kpi-store";
+import { HtmlContent } from "@/components/ui/html-content";
 
 interface ProductDetailsProps {
   product: Product;
@@ -51,6 +51,11 @@ export function ProductDetails({
     }
   };
 
+  // Check if description contains HTML tags
+  const isHtmlDescription = (description: string) => {
+    return /<[^>]*>/g.test(description);
+  };
+
   // Calculate discount percentage
   const hasDiscount =
     product.originalPrice && product.originalPrice > product.price;
@@ -60,6 +65,8 @@ export function ProductDetails({
           100
       )
     : 0;
+
+  const description = getProductDescription();
 
   return (
     <div className="space-y-6">
@@ -75,7 +82,7 @@ export function ProductDetails({
       </div>
 
       {/* Price */}
-      <div className="hidden items-center gap-4  lg:flex">
+      <div className="hidden items-center gap-4 lg:flex">
         <span className="text-4xl flex rtl:flex-row-reverse font-bold text-primary">
           <span> {product.price}</span> <span>DT</span>
         </span>
@@ -110,16 +117,24 @@ export function ProductDetails({
 
       {/* Description */}
       <div>
-        <p className="text-gray-600 leading-relaxed">
-          {getProductDescription()}
-        </p>
+        {description && isHtmlDescription(description) ? (
+          <HtmlContent
+            content={description}
+            className={isRTL ? "rtl:text-right" : ""}
+          />
+        ) : (
+          <p className="text-gray-600 leading-relaxed">{description}</p>
+        )}
+
         {visits !== null && (
           <div className="mt-2 text-xs text-gray-500">Visits: {visits}</div>
         )}
       </div>
+
       <div className="block lg:hidden">
         <QuickOrderForm product={product} locale={locale} isRTL={isRTL} />
       </div>
+
       <div className="hidden lg:block">
         <QuickOrderForm product={product} locale={locale} isRTL={isRTL} />
       </div>

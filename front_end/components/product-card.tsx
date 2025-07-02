@@ -10,6 +10,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useCartStore } from "@/lib/store/cart-store";
 import type { Product } from "@/stores/product-store";
+import { HtmlContent } from "./ui/html-content";
 
 interface ProductCardProps {
   product: Product;
@@ -45,7 +46,10 @@ export function ProductCard({
         return product.description;
     }
   };
-
+  const description = getProductDescription();
+  const isHtmlDescription = (description: string) => {
+    return /<[^>]*>/g.test(description);
+  };
   const addToCartText = {
     ar: "إضافة إلى السلة",
     en: "Add to Cart",
@@ -141,10 +145,20 @@ export function ProductCard({
         </CardHeader>
 
         <CardContent className="pt-0">
-          <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
-            {getProductDescription()}
-          </p>
-
+          {/* Description */}
+          <div>
+            {description && isHtmlDescription(description) ? (
+              <HtmlContent
+                content={description.slice(0, 30)}
+                className={isRTL ? "rtl:text-right" : ""}
+              />
+            ) : (
+              <p className="text-gray-600 leading-relaxed">
+                {description?.slice(0, 50)}
+                {description && description.length > 30 ? "..." : ""}
+              </p>
+            )}
+          </div>
           <div className="flex items-center gap-2 mb-4">
             <div className="flex items-center">
               {[...Array(5)].map((_, i) => (

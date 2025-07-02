@@ -47,6 +47,7 @@
     "embla-carousel-react": "8.5.1",
     "immer": "latest",
     "input-otp": "1.4.1",
+    "isomorphic-dompurify": "^2.25.0",
     "lucide-react": "^0.454.0",
     "next": "14.2.16",
     "next-pwa": "latest",
@@ -68,6 +69,7 @@
     "zustand": "latest"
   },
   "devDependencies": {
+    "@types/dompurify": "^3.0.5",
     "@types/node": "^22",
     "@types/react": "^18",
     "@types/react-dom": "^18",
