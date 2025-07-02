@@ -1,5 +1,6 @@
 // controllers/orders.controller.js
 const Order = require("../models/order.model");
+const mongoose = require("mongoose");
 
 const rateLimitMap = new Map(); // { ip: { count, firstRequest, blockedUntil } }
 
@@ -150,6 +151,17 @@ exports.confirmOrders = async (req, res) => {
     return res.status(400).json({ message: "No valid order IDs provided" });
   }
 
+  // Validate all IDs before converting
+  const invalidIds = orderIds.filter(
+    (id) => !id || typeof id !== "string" || !id.match(/^[0-9a-fA-F]{24}$/)
+  );
+  if (invalidIds.length > 0) {
+    return res.status(400).json({
+      message: `Invalid order ID(s): ${invalidIds.join(", ")}`,
+      invalidIds,
+    });
+  }
+
   try {
     // Convert string IDs to ObjectId
     const objectIds = orderIds.map((id) => new mongoose.Types.ObjectId(id));
@@ -177,7 +189,10 @@ exports.confirmOrders = async (req, res) => {
     });
   } catch (error) {
     console.error("Error confirming orders:", error.message);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({
+      message: "Failed to confirm orders.",
+      error: error.message,
+    });
   }
 };
 // Update an existing order

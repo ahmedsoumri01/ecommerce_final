@@ -22,6 +22,12 @@ router.get(
 router.get("/reference/:orderRef", ordersController.getOrderByReference); // Can be public or protected
 
 // Admin Protected Routes
+router.put(
+  "/confirm-multiple",
+  authMiddleware,
+  adminMiddleware,
+  ordersController.confirmOrders
+);
 router.post(
   "/create",
   authMiddleware,
@@ -51,11 +57,5 @@ router.put(
   authMiddleware,
   adminMiddleware,
   ordersController.cancelOrder
-);
-router.put(
-  "/confirm-multiple",
-  authMiddleware,
-  adminMiddleware,
-  ordersController.confirmOrders
 );
 module.exports = router;

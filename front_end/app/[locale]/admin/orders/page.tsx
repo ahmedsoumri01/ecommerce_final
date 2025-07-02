@@ -161,6 +161,8 @@ export default function OrdersManagement({
   };
 
   const handleSelectOrder = (orderId: string, checked: boolean) => {
+    const order = displayedOrders.find((o) => o._id === orderId);
+    if (!order || order.status !== "pending") return;
     if (checked) {
       setSelectedOrders((prev) => [...prev, orderId]);
     } else {
@@ -171,7 +173,12 @@ export default function OrdersManagement({
 
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
-      setSelectedOrders(displayedOrders.map((order) => order._id));
+      // Only select pending orders
+      setSelectedOrders(
+        displayedOrders
+          .filter((order) => order.status === "pending")
+          .map((order) => order._id)
+      );
       setSelectAll(true);
     } else {
       setSelectedOrders([]);
@@ -443,6 +450,7 @@ export default function OrdersManagement({
                             onCheckedChange={(checked) =>
                               handleSelectOrder(order._id, checked as boolean)
                             }
+                            disabled={order.status !== "pending"}
                           />
                         </TableCell>
                         <TableCell className="font-mono font-medium">

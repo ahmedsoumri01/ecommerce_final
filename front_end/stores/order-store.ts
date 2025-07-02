@@ -148,8 +148,18 @@ export const useOrderStore = create<OrderStore>()(
           toast.success(`${updatedCount} order(s) confirmed successfully`);
           return true;
         } catch (error: any) {
-          const errorMessage =
+          let errorMessage =
             error.response?.data?.message || "Failed to confirm orders";
+          // Show invalid IDs if present
+          if (error.response?.data?.invalidIds) {
+            errorMessage += `\nInvalid IDs: ${error.response.data.invalidIds.join(
+              ", "
+            )}`;
+          }
+          // Show backend error details if present
+          if (error.response?.data?.error) {
+            errorMessage += `\nDetails: ${error.response.data.error}`;
+          }
           set({ confirmError: errorMessage, confirmingOrders: false });
           toast.error(errorMessage);
           return false;
