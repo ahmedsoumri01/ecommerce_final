@@ -1,6 +1,11 @@
 // controllers/orders.controller.js
 const Order = require("../models/order.model");
 
+const rateLimitMap = new Map(); // { ip: { count, firstRequest, blockedUntil } }
+
+const ORDER_LIMIT = 1; // max orders per minute
+const BLOCK_DURATION = 24 * 60 * 60 * 1000; // 24 hours in ms
+
 // Get all orders
 exports.getAllOrders = async (req, res) => {
   try {
@@ -57,6 +62,42 @@ exports.getOrderByReference = async (req, res) => {
 
 // Create a new order
 exports.createOrder = async (req, res) => {
+  const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+  const now = Date.now();
+  let entry = rateLimitMap.get(ip) || {
+    count: 0,
+    firstRequest: now,
+    blockedUntil: 0,
+  };
+
+  if (entry.blockedUntil > now) {
+    console.log(
+      `Blocked IP: ${ip} - Count: ${entry.count}, First Request: ${new Date(
+        entry.firstRequest
+      )}`
+    );
+    return res.status(429).json({
+      message:
+        "You are blocked for 24h due to too many orders. Try again later.",
+      blocked: true,
+    });
+  }
+
+  if (now - entry.firstRequest > 60 * 1000) {
+    entry = { count: 0, firstRequest: now, blockedUntil: 0 };
+  }
+  entry.count++;
+  if (entry.count > ORDER_LIMIT) {
+    entry.blockedUntil = now + BLOCK_DURATION;
+    rateLimitMap.set(ip, entry);
+    return res.status(429).json({
+      message:
+        "You are blocked for 24h due to too many orders. Try again later.",
+      blocked: true,
+    });
+  }
+  rateLimitMap.set(ip, entry);
+
   const {
     customerName,
     email,

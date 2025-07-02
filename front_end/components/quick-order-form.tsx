@@ -25,6 +25,9 @@ import { useToast } from "@/hooks/use-toast";
 import { useOrderStore } from "@/stores/order-store";
 import { tunisiaStates, tunisiaCities } from "@/lib/data/tunisia-locations";
 import type { Product } from "@/stores/product-store";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 interface QuickOrderFormProps {
   product: Product;
@@ -42,6 +45,17 @@ interface QuickOrderData {
   quantity: number;
 }
 
+const quickOrderSchema = z.object({
+  customerName: z.string().min(1, "الاسم مطلوب"),
+  phoneNumber: z.string().regex(/^\d{8}$/, "رقم الهاتف يجب أن يكون 8 أرقام"),
+  address: z.string().min(1, "العنوان مطلوب"),
+  city: z.string().min(1, "المدينة مطلوبة"),
+  state: z.string().min(1, "الولاية مطلوبة"),
+  comment: z.string().optional(),
+  quantity: z.number().min(1, "الكمية مطلوبة"),
+});
+type QuickOrderFormType = z.infer<typeof quickOrderSchema>;
+
 export function QuickOrderForm({
   product,
   locale,
@@ -49,19 +63,29 @@ export function QuickOrderForm({
 }: QuickOrderFormProps) {
   const { toast } = useToast();
   const { createOrder } = useOrderStore();
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedState, setSelectedState] = useState("");
-  const [quantity, setQuantity] = useState(1);
 
-  const [formData, setFormData] = useState<QuickOrderData>({
-    customerName: "",
-    phoneNumber: "",
-    address: "",
-    city: "",
-    state: "",
-    comment: "",
-    quantity: 1,
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    setValue,
+    watch,
+    reset,
+  } = useForm<QuickOrderFormType>({
+    resolver: zodResolver(quickOrderSchema),
+    defaultValues: {
+      customerName: "",
+      phoneNumber: "",
+      address: "",
+      city: "",
+      state: "",
+      comment: "",
+      quantity: 1,
+    },
   });
+  const stateWatch = watch("state");
+  const quantityWatch = watch("quantity");
 
   const getProductName = () => {
     switch (locale) {
@@ -74,110 +98,61 @@ export function QuickOrderForm({
     }
   };
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
-  };
-
-  const handleSelectChange = (name: string, value: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-
-    if (name === "state") {
-      setSelectedState(value);
-      setFormData((prev) => ({
-        ...prev,
-        city: "",
-      }));
-    }
-  };
-
-  const increaseQuantity = () => {
-    const newQuantity = quantity + 1;
-    setQuantity(newQuantity);
-    setFormData((prev) => ({ ...prev, quantity: newQuantity }));
-  };
-
-  const decreaseQuantity = () => {
-    const newQuantity = Math.max(1, quantity - 1);
-    setQuantity(newQuantity);
-    setFormData((prev) => ({ ...prev, quantity: newQuantity }));
-  };
-
   const generateOrderRef = () => {
     const timestamp = Date.now().toString().slice(-6);
     const random = Math.random().toString(36).substring(2, 5).toUpperCase();
     return `ORD-${timestamp}-${random}`;
   };
 
-  const handleQuickOrder = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
+  const onSubmit = async (data: QuickOrderFormType) => {
     try {
       const orderData = {
-        customerName: formData.customerName,
+        customerName: data.customerName,
         email: "", // Optional for quick order
-        phoneNumberOne: formData.phoneNumber,
-        address: formData.address,
-        city: formData.city,
-        state: formData.state,
-        comment: formData.comment,
+        phoneNumberOne: data.phoneNumber,
+        address: data.address,
+        city: data.city,
+        state: data.state,
+        comment: data.comment,
         orderRef: generateOrderRef(),
-        total: product.price * quantity * 1.15, // Including tax
+        total: product.price * data.quantity * 1.15, // Including tax
         status: "pending",
         items: [
           {
             product: product._id,
-            quantity: quantity,
+            quantity: data.quantity,
             price: product.price,
           },
         ],
       };
-
       const success = await createOrder(orderData);
-
       if (success) {
         toast({
           title: "تم إرسال الطلب بنجاح!",
           description: "سيتم التواصل معك قريباً لتأكيد الطلب",
           duration: 5000,
         });
-
-        // Reset form
-        setFormData({
-          customerName: "",
-          phoneNumber: "",
-          address: "",
-          city: "",
-          state: "",
-          comment: "",
-          quantity: 1,
-        });
-        setQuantity(1);
+        reset();
         setSelectedState("");
+      } else {
+        toast({
+          title: "تم حظرك مؤقتاً",
+          description: "لقد قمت بعدد كبير من الطلبات. أنت محظور لمدة 24 ساعة.",
+          duration: 7000,
+        });
       }
     } catch (error) {
-      console.error("Error creating quick order:", error);
       toast({
         title: "خطأ في الطلب",
         description: "حدث خطأ أثناء إرسال الطلب. يرجى المحاولة مرة أخرى.",
       });
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
   const availableCities = selectedState
     ? tunisiaCities[selectedState] || []
     : [];
-  const subtotal = product.price * quantity;
+  const subtotal = product.price * quantityWatch;
   const total = subtotal + 7;
 
   return (
@@ -195,7 +170,7 @@ export function QuickOrderForm({
       </CardHeader>
 
       <CardContent className="p-4 space-y-4">
-        <form onSubmit={handleQuickOrder} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           {/* Customer Name */}
           <div>
             <label className="block text-sm font-medium mb-1 flex items-center gap-2">
@@ -203,13 +178,16 @@ export function QuickOrderForm({
               الاسم *
             </label>
             <Input
-              name="customerName"
-              value={formData.customerName}
-              onChange={handleChange}
+              {...register("customerName")}
               placeholder="أدخل اسمك"
               required
               className="text-right"
             />
+            {errors.customerName && (
+              <div className="text-red-500 text-xs mt-1">
+                {errors.customerName.message}
+              </div>
+            )}
           </div>
 
           {/* Phone Number */}
@@ -219,22 +197,30 @@ export function QuickOrderForm({
               رقم الهاتف *
             </label>
             <Input
-              name="phoneNumber"
-              type="number"
-              value={formData.phoneNumber}
-              onChange={handleChange}
+              {...register("phoneNumber")}
+              type="text"
               placeholder="أدخل رقم هاتفك"
               required
               className="text-right"
+              maxLength={8}
             />
+            {errors.phoneNumber && (
+              <div className="text-red-500 text-xs mt-1">
+                {errors.phoneNumber.message}
+              </div>
+            )}
           </div>
 
           {/* State */}
           <div>
             <label className="block text-sm font-medium mb-1">الولاية</label>
             <Select
-              value={formData.state}
-              onValueChange={(value) => handleSelectChange("state", value)}
+              value={watch("state")}
+              onValueChange={(value) => {
+                setValue("state", value);
+                setSelectedState(value);
+                setValue("city", "");
+              }}
             >
               <SelectTrigger className="text-right">
                 <SelectValue placeholder="أختر مدينتك" />
@@ -247,76 +233,86 @@ export function QuickOrderForm({
                 ))}
               </SelectContent>
             </Select>
+            {errors.state && (
+              <div className="text-red-500 text-xs mt-1">
+                {errors.state.message}
+              </div>
+            )}
           </div>
 
           {/* City */}
           <div>
             <label className="block text-sm font-medium mb-1">المدينة</label>
             <Select
-              value={formData.city}
-              onValueChange={(value) => handleSelectChange("city", value)}
+              value={watch("city")}
+              onValueChange={(value) => setValue("city", value)}
               disabled={!selectedState}
             >
               <SelectTrigger className="text-right">
-                <SelectValue
-                  placeholder={
-                    selectedState ? "اختر المدينة" : "اختر الولاية أولاً"
-                  }
-                />
+                <SelectValue placeholder="أختر المدينة" />
               </SelectTrigger>
               <SelectContent>
-                {availableCities.map((city) => (
+                {(tunisiaCities[selectedState] || []).map((city) => (
                   <SelectItem key={city.value} value={city.value}>
                     {city.label}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
+            {errors.city && (
+              <div className="text-red-500 text-xs mt-1">
+                {errors.city.message}
+              </div>
+            )}
           </div>
 
           {/* Address */}
           <div>
             <label className="block text-sm font-medium mb-1 flex items-center gap-2">
               <MapPin className="h-4 w-4" />
-              عنوان
+              العنوان *
             </label>
-            <Textarea
-              name="address"
-              value={formData.address}
-              onChange={handleChange}
+            <Input
+              {...register("address")}
               placeholder="أدخل عنوانك"
-              rows={2}
+              required
               className="text-right"
             />
+            {errors.address && (
+              <div className="text-red-500 text-xs mt-1">
+                {errors.address.message}
+              </div>
+            )}
           </div>
 
           {/* Quantity */}
           <div>
-            <label className="block text-sm font-medium mb-2">الكمية</label>
-            <div className="flex items-center justify-center border rounded-lg w-32 mx-auto">
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon"
-                onClick={decreaseQuantity}
-                disabled={quantity <= 1}
-                className="h-8 w-8"
-              >
-                <Minus className="h-4 w-4" />
-              </Button>
-              <span className="px-4 py-2 min-w-[3rem] text-center font-medium">
-                {quantity}
-              </span>
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon"
-                onClick={increaseQuantity}
-                className="h-8 w-8"
-              >
-                <Plus className="h-4 w-4" />
-              </Button>
-            </div>
+            <label className="block text-sm font-medium mb-1">الكمية</label>
+            <Input
+              {...register("quantity", { valueAsNumber: true })}
+              type="number"
+              min={1}
+              value={quantityWatch}
+              onChange={(e) => setValue("quantity", Number(e.target.value))}
+              className="text-right"
+            />
+            {errors.quantity && (
+              <div className="text-red-500 text-xs mt-1">
+                {errors.quantity.message}
+              </div>
+            )}
+          </div>
+
+          {/* Comment */}
+          <div>
+            <label className="block text-sm font-medium mb-1">
+              ملاحظات إضافية
+            </label>
+            <Textarea
+              {...register("comment")}
+              rows={2}
+              placeholder="أي ملاحظات أو تعليمات خاصة للتوصيل"
+            />
           </div>
 
           {/* Order Summary */}

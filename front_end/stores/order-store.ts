@@ -185,7 +185,13 @@ export const useOrderStore = create<OrderStore>()(
           const errorMessage =
             error.response?.data?.message || "Failed to create order";
           set({ error: errorMessage, loading: false });
-          toast.error(errorMessage);
+          if (error.response?.data?.blocked) {
+            toast.error(
+              "You are blocked for 24h due to too many orders. Try again later."
+            );
+          } else {
+            toast.error(errorMessage);
+          }
           return false;
         }
       },
