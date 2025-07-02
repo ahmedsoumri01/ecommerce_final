@@ -33,6 +33,10 @@ export default function ProductsPage({
   const isRTL = params.locale === "ar";
   const searchParams = useSearchParams();
   const selectedCategory = searchParams.get("category");
+  // Make selectedCategory case-insensitive by normalizing to lowercase
+  const [selectedCategories, setSelectedCategories] = useState<string[]>(
+    selectedCategory ? [selectedCategory.toLowerCase()] : []
+  );
   const { t } = useClientDictionary(params.locale);
 
   // Store hooks
@@ -57,9 +61,6 @@ export default function ProductsPage({
   // Local state for filters
   const [priceRange, setPriceRange] = useState([0, 5000]);
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
-  const [selectedCategories, setSelectedCategories] = useState<string[]>(
-    selectedCategory ? [selectedCategory] : []
-  );
   const [sortBy, setSortBy] = useState("featured");
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 

@@ -98,7 +98,7 @@ export function CheckoutForm({
         state: data.state || undefined,
         comment: data.comment || undefined,
         orderRef: generateOrderRef(),
-        total: totalPrice * 1.15, // Including tax
+        total: totalPrice,
         status: "pending",
         items: cartItems.map((item) => ({
           product: item.product._id, // Product ID

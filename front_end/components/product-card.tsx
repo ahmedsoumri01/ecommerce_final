@@ -135,8 +135,13 @@ export function ProductCard({
                 <span> {product.price} </span> <span> DT</span>
               </p>
               {product.originalPrice &&
+                product.originalPrice !== 0 &&
                 product.originalPrice > product.price && (
-                  <p className="text-sm text-red-400 flex rtl:flex-row-reverse text-muted-foreground line-through">
+                  <p
+                    className={`text-sm text-red-400 flex rtl:flex-row-reverse text-muted-foreground line-through ${
+                      product.originalPrice === 0 ? "hidden" : ""
+                    }`}
+                  >
                     <span> {product.originalPrice} </span> <span> DT</span>
                   </p>
                 )}

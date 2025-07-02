@@ -255,7 +255,7 @@ export default function CartPage({ params }: { params: { locale: string } }) {
                     <div className="flex justify-between text-lg font-bold">
                       <span>{t("cart_page.total")}</span>
                       <span className="flex rtl:flex-row-reverse">
-                        <span> {(getTotalPrice() + 7).toFixed(2)} </span>{" "}
+                        <span> {getTotalPrice().toFixed(2)} </span>{" "}
                         <span>DT</span>{" "}
                       </span>
                     </div>

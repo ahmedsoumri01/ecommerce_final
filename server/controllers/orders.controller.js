@@ -63,7 +63,7 @@ exports.getOrderByReference = async (req, res) => {
 
 // Create a new order
 exports.createOrder = async (req, res) => {
-  const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+  /*   const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
   const now = Date.now();
   let entry = rateLimitMap.get(ip) || {
     count: 0,
@@ -98,7 +98,7 @@ exports.createOrder = async (req, res) => {
     });
   }
   rateLimitMap.set(ip, entry);
-
+ */
   const {
     customerName,
     email,
@@ -287,4 +287,10 @@ exports.cancelOrder = async (req, res) => {
     console.error("Error cancelling order:", error.message);
     res.status(500).json({ message: "Server error" });
   }
+};
+
+// Admin: Clear all rate limits (unblock all users)
+exports.clearOrderBlocks = (req, res) => {
+  rateLimitMap.clear();
+  res.json({ message: "All order blocks have been cleared." });
 };

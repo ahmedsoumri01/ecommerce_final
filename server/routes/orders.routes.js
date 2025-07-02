@@ -58,4 +58,10 @@ router.put(
   adminMiddleware,
   ordersController.cancelOrder
 );
+// Admin: Clear all order blocks
+router.post(
+  "/clear-blocks",
+
+  ordersController.clearOrderBlocks
+);
 module.exports = router;

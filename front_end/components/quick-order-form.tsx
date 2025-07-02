@@ -179,8 +179,8 @@ export function QuickOrderForm({
   };
 
   const calculateSubtotal = () => product.price * quantityWatch;
-  const calculateDelivery = () => 7;
-  const calculateTotal = () => calculateSubtotal() + calculateDelivery();
+
+  const calculateTotal = () => calculateSubtotal();
 
   const formatPhoneNumber = (value: string) => {
     // Remove all non-digits
@@ -468,13 +468,13 @@ export function QuickOrderForm({
                     {calculateSubtotal().toFixed(2)} DT
                   </span>
                 </div>
-                <div className="flex justify-between items-center">
+                {/*      <div className="flex justify-between items-center">
                   <span className="text-gray-600 flex items-center gap-1">
                     <Truck className="h-3 w-3" />
                     التوصيل
                   </span>
-                  <span className="font-medium text-green-600">7.00 DT</span>
-                </div>
+                 { <span className="font-medium text-green-600">7.00 DT</span>}
+                </div> */}
                 <Separator />
                 <div className="flex justify-between items-center text-lg font-bold">
                   <span>المجموع الإجمالي</span>
@@ -514,7 +514,7 @@ export function QuickOrderForm({
         </Form>
 
         {/* Payment & Delivery Info */}
-        <div className="space-y-3">
+        {/*  <div className="space-y-3">
           <div className="text-center text-sm bg-blue-50 p-3 rounded-lg border border-blue-200">
             <div className="flex items-center justify-center gap-2 text-blue-700 font-medium">
               <CreditCard className="h-4 w-4" />
@@ -528,7 +528,7 @@ export function QuickOrderForm({
               <span>✅ توصيل مجاني للطلبات فوق 100 DT</span>
             </div>
           </div>
-        </div>
+        </div> */}
       </CardContent>
     </Card>
   );
