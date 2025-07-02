@@ -320,7 +320,8 @@ export default function ProductsManagement({
                               <span>DT</span>
                             </div>
                             {product.originalPrice &&
-                              product.originalPrice > product.price && (
+                              product.originalPrice > product.price &&
+                              product.originalPrice > 0 && (
                                 <div className="text-sm text-red-400 text-muted-foreground line-through flex rtl:flex-row-reverse">
                                   <span> {product.originalPrice} </span>
                                   <span>DT</span>
