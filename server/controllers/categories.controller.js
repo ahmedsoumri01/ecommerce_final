@@ -2,7 +2,7 @@
 const Category = require("../models/category.model");
 const fs = require("fs");
 const path = require("path");
-
+const Product = require("../models/product.model");
 // Get all categories
 // controllers/categories.controller.js
 
@@ -136,6 +136,16 @@ exports.deleteCategory = async (req, res) => {
   const category = await Category.findById(id);
   if (!category) {
     return res.status(404).json({ message: "Category not found" });
+  }
+
+  // Check for related products
+
+  const relatedProductsCount = await Product.countDocuments({ category: id });
+  if (relatedProductsCount > 0) {
+    return res.status(400).json({
+      message:
+        "Cannot delete category that contains products. Please remove or reassign all products first.",
+    });
   }
 
   try {
