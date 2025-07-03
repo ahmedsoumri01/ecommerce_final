@@ -104,7 +104,7 @@ export function Header({ locale }: HeaderProps) {
 
                 <div className="flex flex-col h-full">
                   {/* Mobile Navigation */}
-                  <nav className="flex-1 p-6">
+                  <nav className="p-6">
                     <div className="space-y-2">
                       {navItems.map((item) => (
                         <Link

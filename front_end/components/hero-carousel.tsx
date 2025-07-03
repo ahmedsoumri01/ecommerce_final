@@ -149,8 +149,11 @@ export function HeroCarousel({
                   )}
                 </div>
 
-                <div className="flex gap-4">
-                  <Link href={`/${locale}/products/${product._id}`}>
+                <div className="sm:flex gap-4">
+                  <Link
+                    className="m-1"
+                    href={`/${locale}/products/${product._id}`}
+                  >
                     <Button
                       size="lg"
                       className="bg-white text-blue-600 hover:bg-gray-100 text-lg px-8 py-3"
@@ -159,11 +162,11 @@ export function HeroCarousel({
                       View Product
                     </Button>
                   </Link>
-                  <Link href={`/${locale}/products`}>
+                  <Link className="m-1" href={`/${locale}/products`}>
                     <Button
                       size="lg"
                       variant="outline"
-                      className="bg-blue-500 text-lg px-8 py-3"
+                      className="bg-blue-500 my-1 text-lg px-8 py-3"
                     >
                       Browse All
                     </Button>

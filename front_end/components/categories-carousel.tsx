@@ -88,10 +88,10 @@ export function CategoriesCarousel({
             >
               <Link
                 href={`/${locale}/products?category=${category.name.toLowerCase()}`}
-                className="block h-full"
+                className="block sm:h-full"
               >
-                <Card className="group hover:shadow-lg transition-all duration-300 cursor-pointer border-2 hover:border-blue-500 h-full">
-                  <CardContent className="p-4 md:p-6 text-center space-y-3 md:space-y-4 flex flex-col items-center justify-center h-full min-h-[140px] md:min-h-[160px]">
+                <Card className="group hover:shadow-lg transition-all duration-300 cursor-pointer border-2 hover:border-blue-500 sm:h-full">
+                  <CardContent className="p-4 md:p-6 text-center space-y-3 md:space-y-4 flex flex-col items-center justify-center sm:h-full sm:min-h-[140px] md:min-h-[160px]">
                     <div className="text-3xl md:text-4xl group-hover:scale-110 transition-transform duration-300">
                       {category?.image ? (
                         <Image
