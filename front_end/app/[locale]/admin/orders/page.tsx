@@ -107,6 +107,9 @@ export default function OrdersManagement({
   const [bulkActionLoading, setBulkActionLoading] = useState(false);
   const [bulkStatus, setBulkStatus] = useState<string>("");
 
+  // Search type state
+  const [searchType, setSearchType] = useState<string>("all");
+
   const stats = getOrderStats();
   const displayedOrders = getSortedOrders();
 
@@ -120,12 +123,51 @@ export default function OrdersManagement({
     setSelectAll(false);
   }, [statusFilter, searchTerm]);
 
+  // Enhanced search: support search type
+  function enhancedFilteredOrders() {
+    const term = String(searchTerm).trim().toLowerCase();
+    if (!term) return filteredOrders();
+    return filteredOrders().filter((order: any) => {
+      const phone1 = order.phoneNumberOne
+        ? String(order.phoneNumberOne).trim().toLowerCase()
+        : "";
+      const phone2 = order.phoneNumbertwo
+        ? String(order.phoneNumbertwo).trim().toLowerCase()
+        : "";
+      // For phone search, normalize to digits only
+      const digitsTerm = term.replace(/\D/g, "");
+      const digitsPhone1 = phone1.replace(/\D/g, "");
+      const digitsPhone2 = phone2.replace(/\D/g, "");
+      switch (searchType) {
+        case "name":
+          return order.customerName?.toLowerCase().includes(term);
+        case "email":
+          return order.email?.toLowerCase().includes(term);
+        case "orderRef":
+          return order.orderRef?.toLowerCase().includes(term);
+        case "phone":
+          return (
+            digitsPhone1.includes(digitsTerm) ||
+            digitsPhone2.includes(digitsTerm)
+          );
+        case "all":
+        default:
+          return (
+            order.customerName?.toLowerCase().includes(term) ||
+            order.email?.toLowerCase().includes(term) ||
+            order.orderRef?.toLowerCase().includes(term) ||
+            digitsPhone1.includes(digitsTerm) ||
+            digitsPhone2.includes(digitsTerm)
+          );
+      }
+    });
+  }
+
   function getSortedOrders() {
-    const filtered = filteredOrders();
+    const filtered = enhancedFilteredOrders();
     return [...filtered].sort((a, b) => {
       let aValue: any;
       let bValue: any;
-
       switch (sortField) {
         case "total":
           aValue = a.total;
@@ -142,7 +184,6 @@ export default function OrdersManagement({
         default:
           return 0;
       }
-
       if (sortDirection === "asc") {
         return aValue > bValue ? 1 : -1;
       } else {
@@ -171,9 +212,13 @@ export default function OrdersManagement({
     );
   };
 
+  // Multi-select logic: only allow selection when a status filter (not 'all') is active
+  const canMultiSelect = statusFilter !== "all";
+
   const handleSelectOrder = (orderId: string, checked: boolean) => {
+    if (!canMultiSelect) return; // Prevent selection if not allowed
     const order = displayedOrders.find((o) => o._id === orderId);
-    if (!order || order.status !== "pending") return;
+    if (!order || order.status !== statusFilter) return;
     if (checked) {
       setSelectedOrders((prev) => [...prev, orderId]);
     } else {
@@ -183,11 +228,11 @@ export default function OrdersManagement({
   };
 
   const handleSelectAll = (checked: boolean) => {
+    if (!canMultiSelect) return;
     if (checked) {
-      // Only select pending orders
       setSelectedOrders(
         displayedOrders
-          .filter((order) => order.status === "pending")
+          .filter((order) => order.status === statusFilter)
           .map((order) => order._id)
       );
       setSelectAll(true);
@@ -267,7 +312,6 @@ export default function OrdersManagement({
     setSelectAll(false);
     setBulkStatus("");
   };
-
   return (
     <TooltipProvider>
       <div className="space-y-6">
@@ -412,14 +456,32 @@ export default function OrdersManagement({
           </CardHeader>
           <CardContent>
             <div className="flex flex-col sm:flex-row gap-4 mb-6">
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-                <Input
-                  placeholder="Search by customer name, email, or order reference..."
-                  className="pl-10"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
+              <div className="relative flex-1 flex gap-2">
+                <select
+                  className="border rounded px-2 py-1 text-sm h-10 min-w-[120px]"
+                  value={searchType}
+                  onChange={(e) => setSearchType(e.target.value)}
+                  title="Search type"
+                >
+                  <option value="all">All</option>
+                  <option value="name">Name</option>
+                  <option value="email">Email</option>
+                  <option value="orderRef">Order Ref</option>
+                  <option value="phone">Phone Number</option>
+                </select>
+                <div className="relative flex-1">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+                  <Input
+                    placeholder={`Search by ${
+                      searchType === "all"
+                        ? "customer name, email, order reference, or phone number"
+                        : searchType
+                    }`}
+                    className="pl-10"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                </div>
               </div>
               <div className="flex gap-2">
                 <Button
@@ -498,7 +560,9 @@ export default function OrdersManagement({
                         <Checkbox
                           checked={selectAll}
                           onCheckedChange={handleSelectAll}
-                          disabled={displayedOrders.length === 0}
+                          disabled={
+                            displayedOrders.length === 0 || !canMultiSelect
+                          }
                         />
                       </TableHead>
                       <TableHead>Order Ref</TableHead>
@@ -571,7 +635,9 @@ export default function OrdersManagement({
                               onCheckedChange={(checked) =>
                                 handleSelectOrder(order._id, checked as boolean)
                               }
-                              disabled={order.status !== "pending"}
+                              disabled={
+                                order.status !== statusFilter || !canMultiSelect
+                              }
                             />
                           </TableCell>
                           <TableCell className="font-mono font-medium">
