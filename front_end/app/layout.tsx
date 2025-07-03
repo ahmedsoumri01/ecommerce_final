@@ -5,7 +5,7 @@ import "./globals.css";
 import ClientLayout from "./ClientLayout";
 import { Analytics } from "@vercel/analytics/next";
 const inter = Inter({ subsets: ["latin"] });
-
+import OGImage from "@/public/metadata/og-image.png";
 export const metadata: Metadata = {
   metadataBase: new URL("https://tuni-kado.vercel.app/"), // Change to your actual domain
   title: "TuniKado",
@@ -56,8 +56,48 @@ export default function RootLayout({
   return (
     <html lang="fr">
       <head>
-        {/* Use the Next.js Head component for custom head tags if needed */}
+        {/* SEO Meta Tags */}
         <meta name="application-name" content="TuniKado" />
+        <meta
+          name="description"
+          content="TuniKado - Boutique en ligne d’accessoires et vêtements tendance en Tunisie. Découvrez les dernières tendances en vêtements et accessoires de mode chez TuniKado."
+        />
+        <meta
+          name="keywords"
+          content="TuniKado, boutique, vêtements, accessoires, mode, Tunisie, fashion, tendance, cadeaux, shopping en ligne"
+        />
+        <meta name="robots" content="index, follow" />
+        <link rel="canonical" href="https://tuni-kado.vercel.app/" />
+
+        {/* Open Graph Meta Tags */}
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="TuniKado" />
+        <meta property="og:url" content="https://tuni-kado.vercel.app/" />
+        <meta
+          property="og:title"
+          content="TuniKado - Mode & Accessoires en ligne"
+        />
+        <meta
+          property="og:description"
+          content="Découvrez les dernières tendances en vêtements et accessoires de mode chez TuniKado."
+        />
+        <meta property="og:image" content={"/metadata/og-image.png"} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:alt" content="TuniKado - Boutique en ligne" />
+        {/* Twitter Card Meta Tags */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@tunikado" />
+        <meta
+          name="twitter:title"
+          content="TuniKado - Mode & Accessoires en ligne"
+        />
+        <meta
+          name="twitter:description"
+          content="Boutique en ligne tunisienne spécialisée dans la vente de vêtements et accessoires fashion."
+        />
+        <meta name="twitter:image" content="/metadata/og-image.png" />
+        {/* PWA & Icons */}
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="TuniKado" />
@@ -66,7 +106,6 @@ export default function RootLayout({
         <meta name="msapplication-config" content="/icons/browserconfig.xml" />
         <meta name="msapplication-TileColor" content="#3b82f6" />
         <meta name="msapplication-tap-highlight" content="no" />
-        <meta name="theme-color" content="#3b82f6" />
         <link
           rel="apple-touch-icon"
           sizes="152x152"
@@ -87,6 +126,22 @@ export default function RootLayout({
         <link rel="manifest" href="/manifest.json" />
         <link rel="mask-icon" href="/icons/icon-512x512.png" color="#3b82f6" />
         <link rel="shortcut icon" href="/favicon.ico" />
+        {/* Alternate language links for SEO (add more as needed) */}
+        <link
+          rel="alternate"
+          href="https://tuni-kado.vercel.app/"
+          hrefLang="fr"
+        />
+        <link
+          rel="alternate"
+          href="https://tuni-kado.vercel.app/en"
+          hrefLang="en"
+        />
+        <link
+          rel="alternate"
+          href="https://tuni-kado.vercel.app/ar"
+          hrefLang="ar"
+        />
       </head>
       <body className={inter.className}>
         <ClientLayout>{children}</ClientLayout> <Analytics />

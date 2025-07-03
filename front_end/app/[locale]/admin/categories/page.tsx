@@ -193,7 +193,7 @@ export default function CategoriesManagement({
               </Button>
             </div>
           </div>
-          <div className="w-[290px] mb-4 sm:!w-[10s90px]">
+          <div className="w-[290px] mb-4 sm:!w-[1090px]">
             {/* Categories Table */}
             <div className="rounded-md border overflow-x-auto">
               {isLoading ? (
