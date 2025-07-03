@@ -88,7 +88,7 @@ export default function CreateCategoryPage({
                 <CardHeader>
                   <CardTitle className="flex items-center">
                     <Tag className="h-5 w-5 mr-2" />
-                    Category Information
+                    Category Information .
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
