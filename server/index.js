@@ -19,7 +19,10 @@ connectDB();
 // Initialize Express app
 const app = express();
 // Enable CORS for all requests
-const allowedOrigins = ["http://localhost:3000"];
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://tuni-kado.vercel.app",
+];
 
 app.use(
   cors({
