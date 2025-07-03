@@ -92,7 +92,15 @@
     "no_results_search": "No products match your search",
     "no_results_filters": "No products match the selected filters",
     "load_more": "Load more products",
-    "showing_results": "Showing {count} of {total} products"
+    "showing_results": "Showing {count} of {total} products",
+    "loading_products": "Loading products...",
+    "error_loading_products": "An error occurred while loading data",
+    "retry": "Retry",
+    "discover_collection": "Discover the collection of",
+    "results_count": "Showing {count} of {total} products",
+    "results_count_prefix": "Showing",
+    "results_count_middle": "of",
+    "results_count_suffix": "products"
   },
   "home_page": {
     "hero": {

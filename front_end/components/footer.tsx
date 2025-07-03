@@ -72,7 +72,8 @@ export function Footer({ dict, locale, isRTL = false }: FooterProps) {
             <ul className="space-y-2 text-gray-400">
               <li>
                 <Link
-                  href={`/${locale}/about`}
+                  /*   href={`/${locale}/about`} */
+                  href={"/"}
                   className="hover:text-white transition-colors"
                 >
                   {dict.information.about_us}
@@ -80,7 +81,7 @@ export function Footer({ dict, locale, isRTL = false }: FooterProps) {
               </li>
               <li>
                 <Link
-                  href={`/${locale}/contact`}
+                  /*    href={`/${locale}/contact`} */ href={"/"}
                   className="hover:text-white transition-colors"
                 >
                   {dict.information.contact_us}
@@ -88,7 +89,7 @@ export function Footer({ dict, locale, isRTL = false }: FooterProps) {
               </li>
               <li>
                 <Link
-                  href={`/${locale}/shipping`}
+                  /*  href={`/${locale}/shipping`} */ href={"/"}
                   className="hover:text-white transition-colors"
                 >
                   {dict.information.shipping}
@@ -96,7 +97,7 @@ export function Footer({ dict, locale, isRTL = false }: FooterProps) {
               </li>
               <li>
                 <Link
-                  href={`/${locale}/returns`}
+                  /*   href={`/${locale}/returns`} */ href={"/"}
                   className="hover:text-white transition-colors"
                 >
                   {dict.information.returns}

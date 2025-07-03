@@ -39,7 +39,15 @@
       "name": "Set d'ustensiles de cuisine",
       "description": "Ensemble complet d'ustensiles de cuisine de haute qualité",
       "price": "299€"
-    }
+    },
+    "loading_products": "Chargement des produits...",
+    "error_loading_products": "Une erreur s'est produite lors du chargement des données",
+    "retry": "Réessayer",
+    "discover_collection": "Découvrez la collection de",
+    "results_count": "Affichage de {count} sur {total} produits",
+    "results_count_prefix": "Affichage de",
+    "results_count_middle": "sur",
+    "results_count_suffix": "produits"
   },
   "common": {
     "loading": "Chargement...",
@@ -107,27 +115,36 @@
     "featured_desc": "Une variété de produits de haute qualité dans",
     "product_available": "produits disponibles"
   },
+
   "all_products_page": {
     "header_title": "Tous les produits",
-    "header_subtitle": "Découvrez notre gamme complète de produits de haute qualité",
-    "discover": "Découvrez les meilleurs produits de",
+    "header_subtitle": "Explorez notre collection complète de produits de haute qualité",
+    "discover": "Découvrez le meilleur de",
     "price_range": "Fourchette de prix",
     "categories": "Catégories",
     "brands": "Marques",
     "clear_filters": "Effacer les filtres",
     "filter_products": "Filtrer les produits",
     "sort": {
-      "featured": "Mises en avant",
+      "featured": "Mise en avant",
       "price_low": "Prix : du plus bas au plus élevé",
       "price_high": "Prix : du plus élevé au plus bas",
-      "rating": "Meilleures évaluations",
-      "newest": "Nouveautés"
+      "rating": "Mieux notés",
+      "newest": "Les plus récents"
     },
     "search_placeholder": "Rechercher des produits...",
-    "no_results_search": "Aucun produit ne correspond à la recherche",
+    "no_results_search": "Aucun produit ne correspond à votre recherche",
     "no_results_filters": "Aucun produit ne correspond aux filtres sélectionnés",
-    "load_more": "Afficher plus de produits",
-    "showing_results": "Affichage de {count} sur {total} produits"
+    "load_more": "Charger plus de produits",
+    "showing_results": "Affichage de {count} sur {total} produits",
+    "loading_products": "Chargement des produits...",
+    "error_loading_products": "Une erreur s'est produite lors du chargement des données",
+    "retry": "Réessayer",
+    "discover_collection": "Découvrez la collection de",
+    "results_count": "Affichage de {count} sur {total} produits",
+    "results_count_prefix": "Affichage",
+    "results_count_middle": "sur",
+    "results_count_suffix": "produits"
   },
   "home_page": {
     "hero": {

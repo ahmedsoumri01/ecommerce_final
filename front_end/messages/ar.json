@@ -39,7 +39,15 @@
       "name": "طقم أدوات المطبخ",
       "description": "طقم كامل من أدوات المطبخ عالية الجودة",
       "price": "299 ريال"
-    }
+    },
+    "loading_products": "جاري تحميل المنتجات...",
+    "error_loading_products": "حدث خطأ في تحميل البيانات",
+    "retry": "إعادة المحاولة",
+    "discover_collection": "اكتشف مجموعة",
+    "results_count": "عرض {count} من أصل {total} منتج",
+    "results_count_prefix": "عرض",
+    "results_count_middle": "من أصل",
+    "results_count_suffix": "منتج"
   },
   "common": {
     "loading": "جاري التحميل...",
@@ -107,27 +115,36 @@
     "featured_desc": "مجموعة متنوعة من منتجات",
     "product_available": "منتج متاح"
   },
+
   "all_products_page": {
-    "header_title": "All Products",
-    "header_subtitle": "Discover our complete collection of high-quality products",
-    "discover": "Discover the best products of",
-    "price_range": "Price Range",
-    "categories": "Categories",
-    "brands": "Brands",
-    "clear_filters": "Clear Filters",
-    "filter_products": "Filter Products",
+    "header_title": "جميع المنتجات",
+    "header_subtitle": "استكشف مجموعتنا الكاملة من المنتجات عالية الجودة",
+    "discover": "اكتشف الأفضل من",
+    "price_range": "نطاق السعر",
+    "categories": "الفئات",
+    "brands": "العلامات التجارية",
+    "clear_filters": "مسح الفلاتر",
+    "filter_products": "فلترة المنتجات",
     "sort": {
-      "featured": "Featured",
-      "price_low": "Price: Low to High",
-      "price_high": "Price: High to Low",
-      "rating": "Top Rated",
-      "newest": "Newest"
+      "featured": "مميزة",
+      "price_low": "السعر: من الأقل إلى الأعلى",
+      "price_high": "السعر: من الأعلى إلى الأقل",
+      "rating": "الأعلى تقييمًا",
+      "newest": "الأحدث"
     },
-    "search_placeholder": "Search for products...",
-    "no_results_search": "No products match the search",
-    "no_results_filters": "No products match the selected filters",
-    "load_more": "Show More Products",
-    "showing_results": "Showing {count} of {total} products"
+    "search_placeholder": "ابحث عن منتجات...",
+    "no_results_search": "لا توجد منتجات تطابق البحث",
+    "no_results_filters": "لا توجد منتجات تطابق الفلاتر المحددة",
+    "load_more": "تحميل المزيد من المنتجات",
+    "showing_results": "عرض {count} من أصل {total} منتج",
+    "loading_products": "جارٍ تحميل المنتجات...",
+    "error_loading_products": "حدث خطأ أثناء تحميل البيانات",
+    "retry": "إعادة المحاولة",
+    "discover_collection": "اكتشف مجموعة",
+    "results_count": "عرض {count} من أصل {total} منتج",
+    "results_count_prefix": "عرض",
+    "results_count_middle": "من أصل",
+    "results_count_suffix": "منتج"
   },
   "home_page": {
     "hero": {

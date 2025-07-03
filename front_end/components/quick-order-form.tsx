@@ -152,7 +152,7 @@ export function QuickOrderForm({
       if (success) {
         toast({
           title: "✅ تم إرسال الطلب بنجاح!",
-          description: "سيتم التواصل معك خلال 15 دقيقة لتأكيد الطلب",
+          description: "سيتم التواصل معك لتأكيد الطلب",
           duration: 5000,
         });
         reset();

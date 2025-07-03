@@ -225,7 +225,7 @@ export default function ProductsPage({
       <div className="min-h-screen flex items-center justify-center">
         <div className="flex items-center gap-2">
           <Loader2 className="h-6 w-6 animate-spin" />
-          <span>جاري تحميل المنتجات...</span>
+          <span>{t("all_products_page.loading_products")}</span>
         </div>
       </div>
     );
@@ -236,8 +236,10 @@ export default function ProductsPage({
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <p className="text-red-500 mb-4">حدث خطأ في تحميل البيانات</p>
-          <Button onClick={fetchData}>إعادة المحاولة</Button>
+          <p className="text-red-500 mb-4">
+            {t("all_products_page.error_loading_products")}
+          </p>
+          <Button onClick={fetchData}>{t("all_products_page.retry")}</Button>
         </div>
       </div>
     );
@@ -350,7 +352,9 @@ export default function ProductsPage({
           </h1>
           <p className="text-xl text-muted-foreground">
             {selectedCategories.length > 0
-              ? `اكتشف مجموعة ${getCategoryName(selectedCategories[0])}`
+              ? `${t(
+                  "all_products_page.discover_collection"
+                )} ${getCategoryName(selectedCategories[0])}`
               : t("all_products_page.header_subtitle")}
           </p>
         </div>
@@ -471,7 +475,10 @@ export default function ProductsPage({
             {/* Results Count */}
             <div className="mb-6">
               <p className="text-gray-600">
-                عرض {localFilteredProducts.length} من أصل {products.length} منتج
+                {t("all_products_page.results_count_prefix")}{" "}
+                {localFilteredProducts.length}{" "}
+                {t("all_products_page.results_count_middle")} {products.length}{" "}
+                {t("all_products_page.results_count_suffix")}
               </p>
             </div>
 
