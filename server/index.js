@@ -43,6 +43,19 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Logging middleware for all requests
+app.use((req, res, next) => {
+  const start = Date.now();
+  res.on("finish", () => {
+    const duration = Date.now() - start;
+    const log = `[${new Date().toISOString()}] ${req.method} ${
+      req.originalUrl
+    } - Status: ${res.statusCode} - ${duration}ms`;
+    console.log(log);
+  });
+  next();
+});
+
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productsRoutes);
