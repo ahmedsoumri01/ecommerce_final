@@ -136,6 +136,7 @@ export function QuickOrderForm({
         comment: data.comment,
         orderRef: generateOrderRef(),
         total: calculateTotal(),
+        deliveryFee: getDeliveryFee(), // Add delivery fee to order data
         status: "pending",
         items: [
           {
@@ -180,7 +181,15 @@ export function QuickOrderForm({
 
   const calculateSubtotal = () => product.price * quantityWatch;
 
-  const calculateTotal = () => calculateSubtotal();
+  // Calculate delivery fee if present
+  const getDeliveryFee = () => {
+    // If product.deliveryFee is a valid number, use it, else 0
+    return typeof product.deliveryFee === "number" && product.deliveryFee > 0
+      ? product.deliveryFee
+      : 0;
+  };
+
+  const calculateTotal = () => calculateSubtotal() + getDeliveryFee();
 
   const formatPhoneNumber = (value: string) => {
     // Remove all non-digits
@@ -468,13 +477,17 @@ export function QuickOrderForm({
                     {calculateSubtotal().toFixed(2)} DT
                   </span>
                 </div>
-                {/*      <div className="flex justify-between items-center">
-                  <span className="text-gray-600 flex items-center gap-1">
-                    <Truck className="h-3 w-3" />
-                    التوصيل
-                  </span>
-                 { <span className="font-medium text-green-600">7.00 DT</span>}
-                </div> */}
+                {getDeliveryFee() > 0 && (
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600 flex items-center gap-1">
+                      <Truck className="h-3 w-3" />
+                      التوصيل
+                    </span>
+                    <span className="font-medium text-green-600">
+                      {getDeliveryFee().toFixed(2)} DT
+                    </span>
+                  </div>
+                )}
                 <Separator />
                 <div className="flex justify-between items-center text-lg font-bold">
                   <span>المجموع الإجمالي</span>
@@ -512,23 +525,6 @@ export function QuickOrderForm({
             )}
           </form>
         </Form>
-
-        {/* Payment & Delivery Info */}
-        {/*  <div className="space-y-3">
-          <div className="text-center text-sm bg-blue-50 p-3 rounded-lg border border-blue-200">
-            <div className="flex items-center justify-center gap-2 text-blue-700 font-medium">
-              <CreditCard className="h-4 w-4" />
-              💳 الدفع عند الاستلام متاح
-            </div>
-          </div>
-
-          <div className="text-center text-xs text-gray-500 bg-green-50 p-2 rounded border border-green-200">
-            <div className="flex items-center justify-center gap-1">
-              <CheckCircle className="h-3 w-3 text-green-600" />
-              <span>✅ توصيل مجاني للطلبات فوق 100 DT</span>
-            </div>
-          </div>
-        </div> */}
       </CardContent>
     </Card>
   );
