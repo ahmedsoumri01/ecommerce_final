@@ -93,6 +93,19 @@ export default function AdminDashboard({
 
   const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884D8"];
 
+  const BAR_COLORS = [
+    "#0088FE",
+    "#00C49F",
+    "#FFBB28",
+    "#FF8042",
+    "#8884D8",
+    "#FF6699",
+    "#A28BFE",
+    "#FFB347",
+    "#B6E880",
+    "#FF6F61",
+  ];
+
   return (
     <div className="space-y-6">
       {/* Welcome Card */}
@@ -444,9 +457,9 @@ export default function AdminDashboard({
 
       {/* KPI Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card>
+        <Card className="p-0">
           <CardHeader>
-            <CardTitle>Visits by Month</CardTitle>
+            <CardTitle className="!p-0">Visits by Month</CardTitle>
           </CardHeader>
           <CardContent>
             {visitsChartData.length > 0 ? (
@@ -457,7 +470,7 @@ export default function AdminDashboard({
                     color: "hsl(var(--chart-1))",
                   },
                 }}
-                className="min-h-[200px]"
+                className="min-h-[170px] sm:min-h-[200px]"
               >
                 <BarChart data={visitsChartData}>
                   <XAxis
@@ -471,7 +484,14 @@ export default function AdminDashboard({
                     cursor={false}
                     content={<ChartTooltipContent hideLabel />}
                   />
-                  <Bar dataKey="visits" fill="var(--color-visits)" radius={8} />
+                  <Bar dataKey="visits" radius={8}>
+                    {visitsChartData.map((entry: any, index: any) => (
+                      <Cell
+                        key={`cell-month-${index}`}
+                        fill={BAR_COLORS[index % BAR_COLORS.length]}
+                      />
+                    ))}
+                  </Bar>
                 </BarChart>
               </ChartContainer>
             ) : (
@@ -495,7 +515,7 @@ export default function AdminDashboard({
                     color: "hsl(var(--chart-2))",
                   },
                 }}
-                className="min-h-[200px]"
+                className="min-h-[180px] sm:min-h-[200px]"
               >
                 <BarChart data={topVisitedChartData}>
                   <XAxis
@@ -509,7 +529,14 @@ export default function AdminDashboard({
                     cursor={false}
                     content={<ChartTooltipContent hideLabel />}
                   />
-                  <Bar dataKey="visits" fill="var(--color-visits)" radius={8} />
+                  <Bar dataKey="visits" radius={8}>
+                    {topVisitedChartData.map((entry, index) => (
+                      <Cell
+                        key={`cell-product-${index}`}
+                        fill={BAR_COLORS[index % BAR_COLORS.length]}
+                      />
+                    ))}
+                  </Bar>
                 </BarChart>
               </ChartContainer>
             ) : (
