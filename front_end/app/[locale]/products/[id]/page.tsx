@@ -207,7 +207,7 @@ export default function ProductDetailPage({
               <span>DT</span>
             </div>
             {/* Description */}
-            <div className="text-gray-600 leading-relaxed lg:hidden">
+            <div className="text-gray-700 leading-relaxed lg:hidden">
               {getProductDescription()}
             </div>
             {/* Quick Order Form */}
