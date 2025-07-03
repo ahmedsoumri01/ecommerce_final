@@ -128,6 +128,8 @@ exports.createOrder = async (req, res) => {
       total,
       status: status || "pending",
       items,
+      deliveryFee:
+        req.body.deliveryFee !== undefined ? Number(req.body.deliveryFee) : 0,
     });
 
     await newOrder.save();

@@ -205,8 +205,20 @@ export function OrderDetailsModal({
                 </div>
 
                 {/* Order Total */}
-                <div className="flex justify-end pt-4 border-t">
+                <div className="flex flex-col items-end pt-4 border-t gap-1">
                   <div className="text-right">
+                    <div className="text-base">
+                      Delivery Fee:{" "}
+                      {order.deliveryFee === 0 ? (
+                        <span className="text-green-600 font-semibold">
+                          Free
+                        </span>
+                      ) : (
+                        <span className="text-orange-600 font-semibold">
+                          {order.deliveryFee?.toFixed(2)} DT
+                        </span>
+                      )}
+                    </div>
                     <div className="text-lg font-semibold">
                       Total: {order.total.toFixed(2)} DT
                     </div>

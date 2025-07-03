@@ -25,6 +25,7 @@ export default function CartPage({ params }: { params: { locale: string } }) {
     getTotalItems,
     getTotalPrice,
     clearCart,
+    getOrderDeliveryFee,
   } = useCartStore();
 
   const getProductName = (item: any) => {
@@ -245,9 +246,15 @@ export default function CartPage({ params }: { params: { locale: string } }) {
                     </div>
                     <div className="flex justify-between">
                       <span>{t("cart_page.shipping")}</span>
-                      <span className="text-green-600">
-                        {t("cart_page.free")}
-                      </span>
+                      {getOrderDeliveryFee() === 0 ? (
+                        <span className="text-green-600">
+                          {t("cart_page.free")}
+                        </span>
+                      ) : (
+                        <span className="text-orange-600 font-bold">
+                          +{getOrderDeliveryFee()} DT
+                        </span>
+                      )}
                     </div>
                   </div>
 
@@ -255,7 +262,12 @@ export default function CartPage({ params }: { params: { locale: string } }) {
                     <div className="flex justify-between text-lg font-bold">
                       <span>{t("cart_page.total")}</span>
                       <span className="flex rtl:flex-row-reverse">
-                        <span> {getTotalPrice().toFixed(2)} </span>{" "}
+                        <span>
+                          {" "}
+                          {(getTotalPrice() + getOrderDeliveryFee()).toFixed(
+                            2
+                          )}{" "}
+                        </span>{" "}
                         <span>DT</span>{" "}
                       </span>
                     </div>

@@ -18,6 +18,7 @@ interface CartStore {
   getTotalPrice: () => number;
   toggleCart: () => void;
   setCartOpen: (open: boolean) => void;
+  getOrderDeliveryFee: () => number; // <-- Add this line
 }
 
 export const useCartStore = create<CartStore>()(
@@ -83,6 +84,29 @@ export const useCartStore = create<CartStore>()(
       toggleCart: () => set({ isOpen: !get().isOpen }),
 
       setCartOpen: (open: boolean) => set({ isOpen: open }),
+
+      getOrderDeliveryFee: () => {
+        const items = get().items;
+        if (items.length === 0) return 0;
+        // If any product has deliveryFee 0, order delivery fee is 0
+        if (
+          items.some(
+            (item) =>
+              !item.product.deliveryFee || item.product.deliveryFee === 0
+          )
+        ) {
+          return 0;
+        }
+        // If all products have the same deliveryFee, return that fee
+        const uniqueFees = Array.from(
+          new Set(items.map((item) => item.product.deliveryFee))
+        );
+        if (uniqueFees.length === 1) {
+          return uniqueFees[0] || 0;
+        }
+        // If multiple non-zero delivery fees, return 7
+        return 7;
+      },
     }),
     {
       name: "cart-storage",

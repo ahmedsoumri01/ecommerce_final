@@ -67,7 +67,6 @@ export function ProductDetails({
     : 0;
 
   const description = getProductDescription();
-
   return (
     <div className="space-y-6">
       {/* Product Name */}
@@ -86,18 +85,25 @@ export function ProductDetails({
         <span className="text-4xl flex rtl:flex-row-reverse font-bold text-primary">
           <span> {product.price}</span> <span>DT</span>
         </span>
-        {hasDiscount && (
-          <>
-            <span className="text-xl text-red-500 text-muted-foreground flex rtl:flex-row-reverse line-through">
-              <span> {product.originalPrice}</span> <span> DT</span>
-            </span>
-            <Badge className="bg-red-500 hover:bg-red-600">
-              {discountPercentage}% {t("product_detail_page.discount")}
-            </Badge>
-          </>
-        )}
-      </div>
 
+        {hasDiscount &&
+          !!product.originalPrice &&
+          product.originalPrice > 0 && (
+            <>
+              <span className="text-xl text-red-500 text-muted-foreground flex rtl:flex-row-reverse line-through">
+                <span> {product.originalPrice}</span> <span> DT</span>
+              </span>
+              <Badge className="bg-red-500 hover:bg-red-600">
+                {discountPercentage}% {t("product_detail_page.discount")}
+              </Badge>
+            </>
+          )}
+      </div>
+      {product.deliveryFee && product.deliveryFee > 0 && (
+        <span className="text-sm text-green-500 ml-2">
+          + {product.deliveryFee} DT delivery fee
+        </span>
+      )}
       {/* Rating */}
       <div className="flex items-center gap-4">
         <div className="flex items-center">

@@ -31,6 +31,7 @@ export interface Order {
   items: OrderItem[];
   createdAt: string;
   updatedAt: string;
+  deliveryFee?: number;
 }
 
 export interface CreateOrderData {
@@ -50,9 +51,12 @@ export interface CreateOrderData {
     quantity: number;
     price: number;
   }[];
+  deliveryFee?: number;
 }
 
-export interface UpdateOrderData extends Partial<CreateOrderData> {}
+export interface UpdateOrderData extends Partial<CreateOrderData> {
+  deliveryFee?: number;
+}
 
 interface OrderStore {
   orders: Order[];

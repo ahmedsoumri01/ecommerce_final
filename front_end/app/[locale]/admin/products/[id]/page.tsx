@@ -266,7 +266,12 @@ export default function ProductDetailsPage({
                   <span>DT</span>
                 </p>
               </div>
-
+              {selectedProduct.deliveryFee &&
+                selectedProduct.deliveryFee > 0 && (
+                  <span className="text-sm text-green-500 ml-2">
+                    + {selectedProduct.deliveryFee} DT delivery fee
+                  </span>
+                )}
               {selectedProduct.originalPrice &&
                 selectedProduct.originalPrice > selectedProduct.price && (
                   <div>

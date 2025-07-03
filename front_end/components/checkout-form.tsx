@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/select";
 import { ArrowLeft, CreditCard, MapPin, User, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import type { CartItem } from "@/lib/store/cart-store";
+import { useCartStore, type CartItem } from "@/lib/store/cart-store";
 import { useClientDictionary } from "@/hooks/useClientDictionary";
 import { useOrderStore } from "@/stores/order-store";
 import { tunisiaStates, tunisiaCities } from "@/lib/data/tunisia-locations";
@@ -54,6 +54,7 @@ export function CheckoutForm({
   const { t } = useClientDictionary(locale);
   const { toast } = useToast();
   const { createOrder } = useOrderStore();
+  const { getOrderDeliveryFee } = useCartStore();
 
   const {
     register,
@@ -98,13 +99,14 @@ export function CheckoutForm({
         state: data.state || undefined,
         comment: data.comment || undefined,
         orderRef: generateOrderRef(),
-        total: totalPrice,
+        total: totalPrice + getOrderDeliveryFee(),
         status: "pending",
         items: cartItems.map((item) => ({
           product: item.product._id, // Product ID
           quantity: item.quantity,
           price: item.product.price,
         })),
+        deliveryFee: getOrderDeliveryFee(),
       };
       const success = await createOrder(orderData);
       if (success) {
@@ -406,18 +408,16 @@ export function CheckoutForm({
                 </div>
                 <div className="flex justify-between">
                   <span>{t("checkout_form.shipping")}</span>
-                  <span className="text-green-600">
-                    {t("checkout_form.free")}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span>{t("checkout_form.tax")}</span>
-                  <span>{(totalPrice * 0.15).toFixed(2)} DT</span>
+                  {getOrderDeliveryFee() === 0 ? (
+                    <span className="text-green-600">{t("checkout_form.free")}</span>
+                  ) : (
+                    <span className="text-orange-600 font-bold">+{getOrderDeliveryFee()} DT</span>
+                  )}
                 </div>
                 <div className="border-t pt-3">
                   <div className="flex justify-between text-lg font-bold">
                     <span>{t("checkout_form.grand_total")}</span>
-                    <span>{(totalPrice * 1.15).toFixed(2)} DT</span>
+                    <span>{(totalPrice + getOrderDeliveryFee()).toFixed(2)} DT</span>
                   </div>
                 </div>
               </CardContent>
