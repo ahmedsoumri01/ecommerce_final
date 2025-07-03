@@ -1,6 +1,5 @@
 "use client";
 
-import { InstallPrompt } from "@/components/install-prompt";
 import { useEffect } from "react";
 
 export default function ClientLayout({
@@ -21,7 +20,6 @@ export default function ClientLayout({
   return (
     <>
       {/* Show PWA install prompt */}
-      <InstallPrompt dict={require("@/lib/dictionaries/ar.json")} />
       {children}
     </>
   );

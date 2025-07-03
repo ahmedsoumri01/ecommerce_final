@@ -2,7 +2,6 @@
 import { useClientDictionary } from "@/hooks/useClientDictionary";
 import type React from "react";
 import { Header } from "@/components/header";
-import { InstallPrompt } from "@/components/install-prompt";
 import { OfflineIndicator } from "@/components/offline-indicator";
 import { Toaster } from "@/components/toaster";
 
@@ -23,7 +22,6 @@ export default function LocaleLayout({
     >
       <Header locale={params.locale} />
       <main>{children}</main>
-      <InstallPrompt dict={{}} />
       <OfflineIndicator />
       <Toaster />
     </div>
