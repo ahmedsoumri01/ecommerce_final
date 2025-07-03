@@ -145,7 +145,7 @@ export default function ClientLayout({
         </header>
 
         {/* Page content */}
-        <main className="flex-1 p-6">{children}</main>
+        <main className="flex-1 p-3">{children}</main>
       </div>
     </div>
   );

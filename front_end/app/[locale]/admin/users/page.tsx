@@ -104,7 +104,7 @@ export default function UsersManagement({
           </p>
         </div>
         <Link className="my-1" href={`/${params.locale}/admin/users/create`}>
-          <Button className="flex items-center">
+          <Button className="flex my-1 items-center">
             <Plus className="h-4 w-4 mr-2" />
             Add User
           </Button>

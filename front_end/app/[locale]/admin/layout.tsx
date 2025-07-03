@@ -86,8 +86,8 @@ export default function AdminLayout({
       <div className="flex-1 flex flex-col">
         {/* Header */}
         <header className="bg-white shadow-sm border-b">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center h-16">
+          <div className="mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex justify-around items-center h-16">
               <div className="items-center hidden sm:flex md:ml-12 lg:ml-0">
                 <Shield className="h-8 w-8 text-blue-600 mr-3" />
                 <h1 className="text-xl font-semibold text-gray-900">
@@ -113,7 +113,7 @@ export default function AdminLayout({
         </header>
 
         {/* Page content */}
-        <main className="flex-1 p-6">{children}</main>
+        <main className="flex-1 p-3">{children}</main>
       </div>
     </div>
   );

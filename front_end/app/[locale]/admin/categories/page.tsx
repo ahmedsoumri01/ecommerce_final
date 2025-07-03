@@ -98,7 +98,7 @@ export default function CategoriesManagement({
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex justify-between items-center">
+      <div className="md:flex justify-between items-center">
         <div>
           <h1 className="text-2xl font-bold">Categories Management</h1>
           <p className="text-muted-foreground">
@@ -106,7 +106,7 @@ export default function CategoriesManagement({
           </p>
         </div>
         <Link href={`/${params.locale}/admin/categories/create`}>
-          <Button className="flex items-center">
+          <Button className="flex my-1 items-center">
             <Plus className="h-4 w-4 mr-2" />
             Add Category
           </Button>
@@ -193,144 +193,150 @@ export default function CategoriesManagement({
               </Button>
             </div>
           </div>
+          <div className="w-[290px] mb-4 sm:!w-[10s90px]">
+            {/* Categories Table */}
+            <div className="rounded-md border overflow-x-auto">
+              {isLoading ? (
+                <div className="flex items-center justify-center p-8">
+                  <Loader2 className="h-8 w-8 animate-spin" />
+                  <span className="ml-2">Loading categories...</span>
+                </div>
+              ) : (
+                <div>
+                  {" "}
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Image</TableHead>
+                        <TableHead>Name</TableHead>
+                        <TableHead>Translations</TableHead>
 
-          {/* Categories Table */}
-          <div className="rounded-md border overflow-x-auto">
-            {isLoading ? (
-              <div className="flex items-center justify-center p-8">
-                <Loader2 className="h-8 w-8 animate-spin" />
-                <span className="ml-2">Loading categories...</span>
-              </div>
-            ) : (
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Image</TableHead>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Translations</TableHead>
-
-                    <TableHead>Status</TableHead>
-                    <TableHead>Created</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredCategories.length === 0 ? (
-                    <TableRow>
-                      <TableCell
-                        colSpan={7}
-                        className="text-center py-8 text-muted-foreground"
-                      >
-                        No categories found
-                      </TableCell>
-                    </TableRow>
-                  ) : (
-                    filteredCategories.map((category) => (
-                      <TableRow key={category._id}>
-                        <TableCell>
-                          <div className="w-12 h-12 rounded-lg overflow-hidden bg-muted flex items-center justify-center">
-                            {category.image ? (
-                              <img
-                                src={getImageUrl(category.image) || ""}
-                                alt={category.name}
-                                className="w-full h-full object-cover"
-                              />
-                            ) : (
-                              <ImageIcon className="h-6 w-6 text-muted-foreground" />
-                            )}
-                          </div>
-                        </TableCell>
-                        <TableCell className="font-medium">
-                          <div className="flex items-center">
-                            {category.name}
-                            {category.featured && (
-                              <Star className="h-4 w-4 ml-2 text-yellow-500 fill-current" />
-                            )}
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <div className="space-y-1">
-                            <table className="border-2">
-                              <tbody>
-                                {category.nameAr && (
-                                  <tr>
-                                    <td className="text-sm text-muted-foreground border-2">
-                                      AR:
-                                    </td>
-                                    <td className="border-2">
-                                      {category.nameAr}
-                                    </td>
-                                  </tr>
-                                )}
-                                {category.nameFr && (
-                                  <tr>
-                                    <td className="text-sm text-muted-foreground border-2">
-                                      FR:
-                                    </td>
-                                    <td className="border-2">
-                                      {category.nameFr}
-                                    </td>
-                                  </tr>
-                                )}
-                                {!category.nameAr && !category.nameFr && (
-                                  <tr>
-                                    <td> No translations</td>
-                                  </tr>
-                                )}
-                              </tbody>
-                            </table>
-                          </div>
-                        </TableCell>
-
-                        <TableCell>
-                          <Badge
-                            variant={
-                              category.featured ? "default" : "secondary"
-                            }
-                            className={
-                              category.featured
-                                ? "bg-yellow-100 text-yellow-800"
-                                : ""
-                            }
-                          >
-                            {category.featured ? "Featured" : "Regular"}
-                          </Badge>
-                        </TableCell>
-                        <TableCell>{formatDate(category.createdAt)}</TableCell>
-                        <TableCell className="text-right">
-                          <div className="flex gap-2 justify-end">
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => handleViewProducts(category)}
-                              className="bg-transparent"
-                            >
-                              <Eye className="h-4 w-4" />
-                            </Button>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => handleEdit(category)}
-                              className="bg-transparent"
-                            >
-                              <Edit className="h-4 w-4" />
-                            </Button>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => handleDelete(category)}
-                              className="bg-transparent text-red-600 hover:text-red-700 hover:bg-red-50"
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        </TableCell>
+                        <TableHead>Status</TableHead>
+                        <TableHead>Created</TableHead>
+                        <TableHead className="text-right">Actions</TableHead>
                       </TableRow>
-                    ))
-                  )}
-                </TableBody>
-              </Table>
-            )}
+                    </TableHeader>
+                    <TableBody>
+                      {filteredCategories.length === 0 ? (
+                        <TableRow>
+                          <TableCell
+                            colSpan={7}
+                            className="text-center py-8 text-muted-foreground"
+                          >
+                            No categories found
+                          </TableCell>
+                        </TableRow>
+                      ) : (
+                        filteredCategories.map((category) => (
+                          <TableRow key={category._id}>
+                            <TableCell>
+                              <div className="w-12 h-12 rounded-lg overflow-hidden bg-muted flex items-center justify-center">
+                                {category.image ? (
+                                  <img
+                                    src={getImageUrl(category.image) || ""}
+                                    alt={category.name}
+                                    className="w-full h-full object-cover"
+                                  />
+                                ) : (
+                                  <ImageIcon className="h-6 w-6 text-muted-foreground" />
+                                )}
+                              </div>
+                            </TableCell>
+                            <TableCell className="font-medium">
+                              <div className="flex items-center">
+                                {category.name}
+                                {category.featured && (
+                                  <Star className="h-4 w-4 ml-2 text-yellow-500 fill-current" />
+                                )}
+                              </div>
+                            </TableCell>
+                            <TableCell>
+                              <div className="space-y-1">
+                                <table className="border-2">
+                                  <tbody>
+                                    {category.nameAr && (
+                                      <tr>
+                                        <td className="text-sm text-muted-foreground border-2">
+                                          AR:
+                                        </td>
+                                        <td className="border-2">
+                                          {category.nameAr}
+                                        </td>
+                                      </tr>
+                                    )}
+                                    {category.nameFr && (
+                                      <tr>
+                                        <td className="text-sm text-muted-foreground border-2">
+                                          FR:
+                                        </td>
+                                        <td className="border-2">
+                                          {category.nameFr}
+                                        </td>
+                                      </tr>
+                                    )}
+                                    {!category.nameAr && !category.nameFr && (
+                                      <tr>
+                                        <td> No translations</td>
+                                      </tr>
+                                    )}
+                                  </tbody>
+                                </table>
+                              </div>
+                            </TableCell>
+
+                            <TableCell>
+                              <Badge
+                                variant={
+                                  category.featured ? "default" : "secondary"
+                                }
+                                className={
+                                  category.featured
+                                    ? "bg-yellow-100 text-yellow-800"
+                                    : ""
+                                }
+                              >
+                                {category.featured ? "Featured" : "Regular"}
+                              </Badge>
+                            </TableCell>
+                            <TableCell>
+                              {formatDate(category.createdAt)}
+                            </TableCell>
+                            <TableCell className="text-right">
+                              <div className="flex gap-2 justify-end">
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => handleViewProducts(category)}
+                                  className="bg-transparent"
+                                >
+                                  <Eye className="h-4 w-4" />
+                                </Button>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => handleEdit(category)}
+                                  className="bg-transparent"
+                                >
+                                  <Edit className="h-4 w-4" />
+                                </Button>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => handleDelete(category)}
+                                  className="bg-transparent text-red-600 hover:text-red-700 hover:bg-red-50"
+                                >
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        ))
+                      )}
+                    </TableBody>
+                  </Table>
+                </div>
+              )}
+            </div>
           </div>
         </CardContent>
       </Card>
