@@ -177,7 +177,7 @@ export function CheckoutForm({
                 <div className="grid md:grid-cols-2 gap-4">
                   {/* Customer Name */}
                   <div>
-                    <label className="block text-sm font-medium mb-1 flex items-center gap-2">
+                    <label className="block text-sm font-medium mb-1  items-center gap-2">
                       <User className="h-4 w-4" />
                       {t("name")} *
                     </label>
@@ -409,15 +409,21 @@ export function CheckoutForm({
                 <div className="flex justify-between">
                   <span>{t("checkout_form.shipping")}</span>
                   {getOrderDeliveryFee() === 0 ? (
-                    <span className="text-green-600">{t("checkout_form.free")}</span>
+                    <span className="text-green-600">
+                      {t("checkout_form.free")}
+                    </span>
                   ) : (
-                    <span className="text-orange-600 font-bold">+{getOrderDeliveryFee()} DT</span>
+                    <span className="text-orange-600 font-bold">
+                      +{getOrderDeliveryFee()} DT
+                    </span>
                   )}
                 </div>
                 <div className="border-t pt-3">
                   <div className="flex justify-between text-lg font-bold">
                     <span>{t("checkout_form.grand_total")}</span>
-                    <span>{(totalPrice + getOrderDeliveryFee()).toFixed(2)} DT</span>
+                    <span>
+                      {(totalPrice + getOrderDeliveryFee()).toFixed(2)} DT
+                    </span>
                   </div>
                 </div>
               </CardContent>

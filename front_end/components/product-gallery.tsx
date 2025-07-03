@@ -172,7 +172,7 @@ export function ProductGallery({
         )}
       </div>
       {/* Product Name */}
-      <div className="lg:hidden">
+      <div className="hidden lg:block">
         <h1 className="text-3xl font-bold leading-tight">{getProductName()}</h1>
         <p className="text-sm text-gray-500 mt-1">
           رقم المنتج: {product.productRef}
@@ -180,7 +180,7 @@ export function ProductGallery({
       </div>
 
       {/* Price */}
-      <div className="flex items-center gap-4 lg:hidden">
+      <div className="hidden  items-center gap-4 lg:flex">
         <span className="text-4xl flex rtl:flex-row-reverse font-bold text-primary">
           <span> {product.price}</span> <span>DT</span>
         </span>
@@ -196,7 +196,7 @@ export function ProductGallery({
         )}
       </div>
       {/* Quantity and Add to Cart */}
-      <div className="space-y-4 mt-3">
+      <div className="space-y-4 mt- hidden lg:block">
         <div className="flex items-center gap-4">
           <span className="font-medium">
             {t("product_detail_page.quantity_label")}:
@@ -249,7 +249,7 @@ export function ProductGallery({
         </div>
       </div>
       {/* Product Info */}
-      <div className="space-y-3 pt-6 py-3 border-t">
+      <div className="hidden space-y-3 pt-6 py-3 border-t lg:block">
         <div className="flex items-center gap-2">
           <span className="font-medium">
             {t("product_detail_page.availability")}:
