@@ -12,7 +12,6 @@ interface SidebarProps {
     title: string;
     href: string;
     icon: React.ComponentType<{ className?: string }>;
-    badge?: string;
   }>;
   locale: string;
   className?: string;
@@ -178,11 +177,6 @@ export function Sidebar({ items, locale, className }: SidebarProps) {
                       {showFullContent && (
                         <div className="flex items-center justify-between w-full min-w-0">
                           <span className="truncate">{item.title}</span>
-                          {item.badge && (
-                            <span className="ml-2 px-2 py-0.5 text-xs bg-red-100 text-red-600 rounded-full flex-shrink-0">
-                              {item.badge}
-                            </span>
-                          )}
                         </div>
                       )}
 
@@ -190,11 +184,6 @@ export function Sidebar({ items, locale, className }: SidebarProps) {
                       {!showFullContent && (
                         <div className="absolute left-full ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 whitespace-nowrap z-50">
                           {item.title}
-                          {item.badge && (
-                            <span className="ml-1 px-1.5 py-0.5 bg-red-500 text-white rounded-full text-xs">
-                              {item.badge}
-                            </span>
-                          )}
                         </div>
                       )}
                     </Link>

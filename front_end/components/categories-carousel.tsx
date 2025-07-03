@@ -62,6 +62,13 @@ export function CategoriesCarousel({
       </div>
     );
   }
+  if (filteredCategories.length === 0) {
+    return (
+      <div className="w-full flex justify-center items-center py-8">
+        <div className="text-muted-foreground">لا توجد فئات متاحة</div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full">

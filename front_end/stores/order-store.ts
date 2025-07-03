@@ -31,6 +31,7 @@ export interface Order {
   items: OrderItem[];
   createdAt: string;
   updatedAt: string;
+  deliveryFee?: number;
 }
 
 export interface CreateOrderData {
@@ -50,9 +51,12 @@ export interface CreateOrderData {
     quantity: number;
     price: number;
   }[];
+  deliveryFee?: number;
 }
 
-export interface UpdateOrderData extends Partial<CreateOrderData> {}
+export interface UpdateOrderData extends Partial<CreateOrderData> {
+  deliveryFee?: number;
+}
 
 interface OrderStore {
   orders: Order[];
@@ -73,6 +77,12 @@ interface OrderStore {
   changeOrderStatus: (id: string, status: string) => Promise<boolean>;
   cancelOrder: (id: string) => Promise<boolean>;
   confirmOrders: (orderIds: string[]) => Promise<boolean>;
+  cancelMultipleOrders: (orderIds: string[]) => Promise<boolean>;
+  changeStatusMultipleOrders: (
+    orderIds: string[],
+    status: string
+  ) => Promise<boolean>;
+  deleteMultipleOrders: (orderIds: string[]) => Promise<boolean>;
 
   // Filters
   setSearchTerm: (term: string) => void;
@@ -148,8 +158,18 @@ export const useOrderStore = create<OrderStore>()(
           toast.success(`${updatedCount} order(s) confirmed successfully`);
           return true;
         } catch (error: any) {
-          const errorMessage =
+          let errorMessage =
             error.response?.data?.message || "Failed to confirm orders";
+          // Show invalid IDs if present
+          if (error.response?.data?.invalidIds) {
+            errorMessage += `\nInvalid IDs: ${error.response.data.invalidIds.join(
+              ", "
+            )}`;
+          }
+          // Show backend error details if present
+          if (error.response?.data?.error) {
+            errorMessage += `\nDetails: ${error.response.data.error}`;
+          }
           set({ confirmError: errorMessage, confirmingOrders: false });
           toast.error(errorMessage);
           return false;
@@ -185,7 +205,13 @@ export const useOrderStore = create<OrderStore>()(
           const errorMessage =
             error.response?.data?.message || "Failed to create order";
           set({ error: errorMessage, loading: false });
-          toast.error(errorMessage);
+          if (error.response?.data?.blocked) {
+            toast.error(
+              "You are blocked for 24h due to too many orders. Try again later."
+            );
+          } else {
+            toast.error(errorMessage);
+          }
           return false;
         }
       },
@@ -272,6 +298,76 @@ export const useOrderStore = create<OrderStore>()(
         } catch (error: any) {
           const errorMessage =
             error.response?.data?.message || "Failed to cancel order";
+          toast.error(errorMessage);
+          return false;
+        }
+      },
+
+      cancelMultipleOrders: async (orderIds) => {
+        try {
+          console.log("Cancelling orders:", orderIds);
+          const response = await api.put("/orders/cancel-multiple", {
+            orderIds,
+          });
+          set((state) => ({
+            orders: state.orders.map((order) =>
+              orderIds.includes(order._id)
+                ? { ...order, status: "cancelled" as const }
+                : order
+            ),
+          }));
+          toast.success(
+            `${response.data.updatedOrderCount} order(s) cancelled successfully`
+          );
+          return true;
+        } catch (error: any) {
+          const errorMessage =
+            error.response?.data?.message || "Failed to cancel orders";
+          toast.error(errorMessage);
+          return false;
+        }
+      },
+      changeStatusMultipleOrders: async (orderIds, status) => {
+        try {
+          const response = await api.put("/orders/status-multiple", {
+            orderIds,
+            status,
+          });
+          set((state) => ({
+            orders: state.orders.map((order) =>
+              orderIds.includes(order._id)
+                ? { ...order, status: status as Order["status"] }
+                : order
+            ),
+          }));
+          toast.success(
+            `${response.data.updatedOrderCount} order(s) updated to status '${status}'`
+          );
+          return true;
+        } catch (error: any) {
+          const errorMessage =
+            error.response?.data?.message || "Failed to update order statuses";
+          toast.error(errorMessage);
+          return false;
+        }
+      },
+      deleteMultipleOrders: async (orderIds) => {
+        try {
+          const response = await api.delete("/orders/delete-multiple", {
+            data: { orderIds },
+          });
+          set((state) => ({
+            orders: state.orders.filter(
+              (order) => !orderIds.includes(order._id)
+            ),
+          }));
+          toast.success(
+            `${response.data.deletedCount} order(s) deleted successfully`
+          );
+          return true;
+        } catch (error: any) {
+          const errorMessage =
+            error.response?.data?.message || "Failed to delete orders";
           toast.error(errorMessage);
           return false;
         }

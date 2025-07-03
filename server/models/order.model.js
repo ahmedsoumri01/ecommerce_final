@@ -26,7 +26,6 @@ const OrderSchema = new mongoose.Schema(
     },
     email: {
       type: String,
-      required: true,
     },
     phoneNumberOne: {
       type: String,
@@ -58,6 +57,10 @@ const OrderSchema = new mongoose.Schema(
     total: {
       type: Number,
       required: true,
+    },
+    deliveryFee: {
+      type: Number,
+      default: 0,
     },
     status: {
       type: String,

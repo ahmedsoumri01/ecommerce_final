@@ -9,6 +9,7 @@ const productsRoutes = require("./routes/products.routes.js");
 const categoryRoutes = require("./routes/categories.routes");
 const orderRoutes = require("./routes/orders.routes");
 const userRoutes = require("./routes/users.routes");
+const kpiRoutes = require("./routes/kpi.routes.js");
 
 // Load environment variables from .env file
 dotenv.config();
@@ -42,6 +43,19 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Logging middleware for all requests
+app.use((req, res, next) => {
+  const start = Date.now();
+  res.on("finish", () => {
+    const duration = Date.now() - start;
+    const log = `[${new Date().toISOString()}] ${req.method} ${
+      req.originalUrl
+    } - Status: ${res.statusCode} - ${duration}ms`;
+    console.log(log);
+  });
+  next();
+});
+
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productsRoutes);
@@ -49,6 +63,7 @@ app.use("/api/orders", ordersRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/kpi", kpiRoutes);
 // Define a simple route for testing
 app.get("/", (req, res) => {
   res.send("API is running...");

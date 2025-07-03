@@ -1,6 +1,7 @@
 "use client";
 
 import type React from "react";
+import NoImage from "@/public/placeholder.jpg";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -9,6 +10,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useCartStore } from "@/lib/store/cart-store";
 import type { Product } from "@/stores/product-store";
+import { HtmlContent } from "./ui/html-content";
 
 interface ProductCardProps {
   product: Product;
@@ -44,7 +46,10 @@ export function ProductCard({
         return product.description;
     }
   };
-
+  const description = getProductDescription();
+  const isHtmlDescription = (description: string) => {
+    return /<[^>]*>/g.test(description);
+  };
   const addToCartText = {
     ar: "إضافة إلى السلة",
     en: "Add to Cart",
@@ -62,16 +67,29 @@ export function ProductCard({
     <Link href={`/${locale}/products/${product._id}`}>
       <Card className="group hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer">
         <div className="relative overflow-hidden">
-          <Image
-            src={
-              process.env.NEXT_PUBLIC_ASSETS_URL + product.images?.[0] ||
-              "/placeholder.svg"
-            }
-            alt={getProductName()}
-            width={300}
-            height={300}
-            className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
-          />
+          {product?.images.length > 0 ? (
+            <>
+              {" "}
+              <Image
+                src={process.env.NEXT_PUBLIC_ASSETS_URL + product?.images?.[0]}
+                alt={getProductName()}
+                width={300}
+                height={300}
+                className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
+              />
+            </>
+          ) : (
+            <>
+              <Image
+                src={NoImage}
+                alt={getProductName()}
+                width={300}
+                height={300}
+                className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
+              />
+            </>
+          )}
+
           {product.originalPrice && product.originalPrice > product.price && (
             <Badge className="absolute top-3 left-3 bg-red-500 hover:bg-red-600">
               {Math.round(
@@ -113,13 +131,18 @@ export function ProductCard({
               </h3>
             </div>
             <div className={`text-right ${isRTL ? "text-left" : ""}`}>
-              <p className="text-2xl font-bold text-primary">
-                {product.price} DT
+              <p className="text-2xl flex rtl:flex-row-reverse font-bold text-primary">
+                <span> {product.price} </span> <span> DT</span>
               </p>
               {product.originalPrice &&
+                product.originalPrice !== 0 &&
                 product.originalPrice > product.price && (
-                  <p className="text-sm text-muted-foreground line-through">
-                    {product.originalPrice} DT
+                  <p
+                    className={`text-sm text-red-400 flex rtl:flex-row-reverse text-muted-foreground line-through ${
+                      product.originalPrice === 0 ? "hidden" : ""
+                    }`}
+                  >
+                    <span> {product.originalPrice} </span> <span> DT</span>
                   </p>
                 )}
             </div>
@@ -127,17 +150,27 @@ export function ProductCard({
         </CardHeader>
 
         <CardContent className="pt-0">
-          <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
-            {getProductDescription()}
-          </p>
-
+          {/* Description */}
+          <div>
+            {description && isHtmlDescription(description) ? (
+              <HtmlContent
+                content={description.slice(0, 30)}
+                className={isRTL ? "rtl:text-right" : ""}
+              />
+            ) : (
+              <p className="text-gray-600 leading-relaxed">
+                {description?.slice(0, 50)}
+                {description && description.length > 30 ? "..." : ""}
+              </p>
+            )}
+          </div>
           <div className="flex items-center gap-2 mb-4">
             <div className="flex items-center">
               {[...Array(5)].map((_, i) => (
                 <Star
                   key={i}
                   className={`h-4 w-4 ${
-                    i < 4 // Default rating of 4 since it's not in your API
+                    i < 5 // Default rating of 4 since it's not in your API
                       ? "fill-yellow-400 text-yellow-400"
                       : "text-gray-300"
                   }`}
@@ -145,7 +178,7 @@ export function ProductCard({
               ))}
             </div>
             <span className="text-sm text-muted-foreground">
-              (4.0) {/* Default rating display */}
+              (5.0) {/* Default rating display */}
             </span>
           </div>
 

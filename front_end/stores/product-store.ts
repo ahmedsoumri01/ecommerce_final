@@ -27,6 +27,7 @@ export interface Product {
   audience: "public" | "private";
   createdAt: string;
   updatedAt: string;
+  deliveryFee?: number;
 }
 
 export interface CreateProductData {
@@ -45,6 +46,7 @@ export interface CreateProductData {
   productRef: string;
   audience: "public" | "private";
   images?: File[];
+  deliveryFee?: number;
 }
 
 export interface UpdateProductData {
@@ -63,6 +65,7 @@ export interface UpdateProductData {
   productRef?: string;
   audience?: "public" | "private";
   images?: File[];
+  deliveryFee?: number;
 }
 
 export interface ProductState {
@@ -219,6 +222,8 @@ export const useProductStore = create<ProductState & ProductActions>()(
             formData.append("featured", productData.featured.toString());
             formData.append("productRef", productData.productRef);
             formData.append("audience", productData.audience);
+            if (productData.deliveryFee !== undefined)
+              formData.append("deliveryFee", productData.deliveryFee.toString());
 
             // Add images
             if (productData.images) {
@@ -305,6 +310,8 @@ export const useProductStore = create<ProductState & ProductActions>()(
               formData.append("productRef", productData.productRef);
             if (productData.audience)
               formData.append("audience", productData.audience);
+            if (productData.deliveryFee !== undefined)
+              formData.append("deliveryFee", productData.deliveryFee.toString());
 
             // Add images if provided
             if (productData.images) {

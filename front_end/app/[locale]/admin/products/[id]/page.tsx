@@ -38,13 +38,6 @@ export default function ProductDetailsPage({
     return new Date(dateString).toLocaleDateString();
   };
 
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-    }).format(price);
-  };
-
   const getImageUrl = (imagePath: string) => {
     if (imagePath.startsWith("http")) return imagePath;
     return `${
@@ -168,7 +161,7 @@ export default function ProductDetailsPage({
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                <div>
+                <div className="border-2 p-2">
                   <h4 className="font-medium mb-2">English</h4>
                   <div
                     className="prose prose-sm max-w-none"
@@ -179,7 +172,7 @@ export default function ProductDetailsPage({
                 </div>
 
                 {selectedProduct.descriptionAr && (
-                  <div>
+                  <div className="border-2 p-2">
                     <h4 className="font-medium mb-2">Arabic</h4>
                     <div
                       className="prose prose-sm max-w-none"
@@ -192,7 +185,7 @@ export default function ProductDetailsPage({
                 )}
 
                 {selectedProduct.descriptionFr && (
-                  <div>
+                  <div className="border-2 p-2">
                     <h4 className="font-medium mb-2">French</h4>
                     <div
                       className="prose prose-sm max-w-none"
@@ -268,25 +261,34 @@ export default function ProductDetailsPage({
                 <label className="text-sm font-medium text-gray-600">
                   Current Price
                 </label>
-                <p className="text-2xl font-bold text-green-600">
-                  {formatPrice(selectedProduct.price)}
+                <p className="text-2xl font-bold text-green-600 flex rtl:flex-row-reverse">
+                  <span> {selectedProduct.price} </span>
+                  <span>DT</span>
                 </p>
               </div>
-
+              {selectedProduct.deliveryFee &&
+                selectedProduct.deliveryFee > 0 && (
+                  <span className="text-sm text-green-500 ml-2">
+                    + {selectedProduct.deliveryFee} DT delivery fee
+                  </span>
+                )}
               {selectedProduct.originalPrice &&
                 selectedProduct.originalPrice > selectedProduct.price && (
                   <div>
                     <label className="text-sm font-medium text-gray-600">
                       Original Price
                     </label>
-                    <p className="text-lg text-gray-500 line-through">
-                      {formatPrice(selectedProduct.originalPrice)}
+                    <p className="text-lg text-gray-500 line-through flex rtl:flex-row-reverse">
+                      <span>{selectedProduct.originalPrice} </span>
+                      <span>DT</span>
                     </p>
-                    <p className="text-sm text-green-600">
+                    <p className="text-sm text-green-600 flex rtl:flex-row-reverse">
                       Save{" "}
-                      {formatPrice(
-                        selectedProduct.originalPrice - selectedProduct.price
-                      )}
+                      <span>
+                        {" "}
+                        {selectedProduct.originalPrice - selectedProduct.price}
+                      </span>
+                      <span>DT</span>
                     </p>
                   </div>
                 )}

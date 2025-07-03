@@ -2,7 +2,7 @@ const withPWA = require("next-pwa")({
   dest: "public",
   register: true,
   skipWaiting: true,
-  disable: process.env.NODE_ENV === "development", // Disable PWA in development
+  disable: true,
 
   runtimeCaching: [
     {
@@ -28,7 +28,7 @@ const nextConfig = withPWA({
   },
   images: {
     unoptimized: true,
-  }, // Add i18n configuration to handle locales properly
+  },
 });
 
 module.exports = nextConfig;

@@ -98,8 +98,8 @@ export default function UsersManagement({
       {/* Header */}
       <div className="block my-1 md:flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">User Management</h1>
-          <p className="text-gray-600">
+          <h1 className="text-2xl font-bold">User Management</h1>
+          <p className="text-muted-foreground">
             Manage system users and their permissions
           </p>
         </div>
@@ -116,7 +116,7 @@ export default function UsersManagement({
         <Card>
           <CardContent className="p-4">
             <div className="text-2xl font-bold">{totalUsers}</div>
-            <p className="text-sm text-gray-600">Total Users</p>
+            <p className="text-sm text-muted-foreground">Total Users</p>
           </CardContent>
         </Card>
         <Card>
@@ -124,7 +124,7 @@ export default function UsersManagement({
             <div className="text-2xl font-bold text-green-600">
               {activeUsers}
             </div>
-            <p className="text-sm text-gray-600">Active Users</p>
+            <p className="text-sm text-muted-foreground">Active Users</p>
           </CardContent>
         </Card>
         <Card>
@@ -132,13 +132,13 @@ export default function UsersManagement({
             <div className="text-2xl font-bold text-red-600">
               {blockedUsers}
             </div>
-            <p className="text-sm text-gray-600">Blocked Users</p>
+            <p className="text-sm text-muted-foreground">Blocked Users</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4">
             <div className="text-2xl font-bold text-blue-600">{adminUsers}</div>
-            <p className="text-sm text-gray-600">Admins</p>
+            <p className="text-sm text-muted-foreground">Admins</p>
           </CardContent>
         </Card>
       </div>
@@ -151,7 +151,7 @@ export default function UsersManagement({
         <CardContent>
           <div className="flex flex-col sm:flex-row gap-4 mb-6">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
               <Input
                 placeholder="Search users by name or email..."
                 className="pl-10"
@@ -193,83 +193,78 @@ export default function UsersManagement({
             </div>
           </div>
 
-          {/* Users Table */}
-          <div className="rounded-md border overflow-y-auto max-w-[290px] sm:max-w-[590px] md:max-w-[690px]">
-            {isLoading ? (
-              <div className="flex items-center justify-center p-8">
-                <Loader2 className="h-8 w-8 animate-spin" />
-                <span className="ml-2">Loading users...</span>
-              </div>
-            ) : (
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Email</TableHead>
-                    <TableHead>Role</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Created</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredUsers.length === 0 ? (
+          <div className="overflow-x-auto w-[300px] sm:w-[550px] md:w-[700px]   xl:w-[1000px] ">
+            {/* Users Table */}
+            <div className="rounded-md border">
+              {isLoading ? (
+                <div className="flex items-center justify-center p-8">
+                  <Loader2 className="h-8 w-8 animate-spin" />
+                  <span className="ml-2">Loading users...</span>
+                </div>
+              ) : (
+                <Table>
+                  <TableHeader>
                     <TableRow>
-                      <TableCell
-                        colSpan={6}
-                        className="text-center py-8 text-gray-500"
-                      >
-                        No users found
-                      </TableCell>
+                      <TableHead>Name</TableHead>
+                      <TableHead>Email</TableHead>
+                      <TableHead>Role</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead>Created</TableHead>
+                      <TableHead className="text-right">Actions</TableHead>
                     </TableRow>
-                  ) : (
-                    filteredUsers.map((user) => (
-                      <TableRow key={user._id}>
-                        <TableCell className="font-medium">
-                          {user.firstName} {user.lastName}
+                  </TableHeader>
+                  <TableBody>
+                    {filteredUsers.length === 0 ? (
+                      <TableRow>
+                        <TableCell
+                          colSpan={6}
+                          className="text-center py-8 text-muted-foreground"
+                        >
+                          No users found
                         </TableCell>
-                        <TableCell>{user.email}</TableCell>
-                        <TableCell>
-                          <Badge
-                            variant={
-                              user.role === "admin" ? "default" : "secondary"
-                            }
-                          >
-                            {user.role}
-                          </Badge>
-                        </TableCell>
-                        <TableCell>
-                          <Badge
-                            variant={
-                              user.accountStatus === "active"
-                                ? "default"
-                                : "destructive"
-                            }
-                            className={
-                              user.accountStatus === "active"
-                                ? "bg-green-100 text-green-800"
-                                : ""
-                            }
-                          >
-                            {user.accountStatus}
-                          </Badge>
-                        </TableCell>
-                        <TableCell>{formatDate(user.createdAt)}</TableCell>
-                        <TableCell className="text-right">
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" className="h-8 w-8 p-0">
-                                <MoreHorizontal className="h-4 w-4" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuItem
+                      </TableRow>
+                    ) : (
+                      filteredUsers.map((user) => (
+                        <TableRow key={user._id}>
+                          <TableCell className="font-medium">
+                            {user.firstName} {user.lastName}
+                          </TableCell>
+                          <TableCell>{user.email}</TableCell>
+                          <TableCell>
+                            <Badge
+                              variant={
+                                user.role === "admin" ? "default" : "secondary"
+                              }
+                            >
+                              {user.role}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>
+                            <Badge
+                              variant={
+                                user.accountStatus === "active"
+                                  ? "default"
+                                  : "destructive"
+                              }
+                              className={
+                                user.accountStatus === "active"
+                                  ? "bg-green-100 text-green-800"
+                                  : ""
+                              }
+                            >
+                              {user.accountStatus}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>{formatDate(user.createdAt)}</TableCell>
+                          <TableCell className="text-right">
+                            <div className="block gap-2">
+                              <Button
                                 onClick={() => handleEdit(user)}
+                                className="cursor-pointer bg-orange-500 m-1.5"
                               >
-                                <Edit className="mr-2 h-4 w-4" />
-                                Edit
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
+                                <Edit className="h-4 w-4" /> update
+                              </Button>
+                              <Button
                                 onClick={() =>
                                   handleBlock(
                                     user,
@@ -278,58 +273,62 @@ export default function UsersManagement({
                                       : "unblock"
                                   )
                                 }
+                                className="cursor-pointer  m-1.5"
                               >
                                 {user.accountStatus === "active" ? (
                                   <>
-                                    <Ban className="mr-2 h-4 w-4" />
-                                    Block User
+                                    <Ban className=" h-4 w-4" /> block
                                   </>
                                 ) : (
                                   <>
-                                    <CheckCircle className="mr-2 h-4 w-4" />
-                                    Unblock User
+                                    <CheckCircle className="h-4 w-4" /> activate
                                   </>
                                 )}
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                className="text-red-600"
+                              </Button>
+                              <Button
                                 onClick={() => handleDelete(user)}
+                                className="text-white bg-red-600 cursor-pointer  m-1.5 focus:text-red-600"
                               >
-                                <Trash2 className="mr-2 h-4 w-4" />
-                                Delete
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  )}
-                </TableBody>
-              </Table>
-            )}
+                                <Trash2 className="h-4 w-4" /> delete
+                              </Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    )}
+                  </TableBody>
+                </Table>
+              )}
+            </div>
           </div>
         </CardContent>
       </Card>
 
-      {/* Modals and Dialogs */}
-      <EditUserModal
-        user={editUser}
-        open={!!editUser}
-        onOpenChange={(open) => !open && setEditUser(null)}
-      />
+      {/* Modals - Rendered outside of dropdown to prevent conflicts */}
+      {editUser && (
+        <EditUserModal
+          user={editUser}
+          open={!!editUser}
+          onOpenChange={(open) => !open && setEditUser(null)}
+        />
+      )}
 
-      <DeleteUserDialog
-        user={deleteUser}
-        open={!!deleteUser}
-        onOpenChange={(open) => !open && setDeleteUser(null)}
-      />
+      {deleteUser && (
+        <DeleteUserDialog
+          user={deleteUser}
+          open={!!deleteUser}
+          onOpenChange={(open) => !open && setDeleteUser(null)}
+        />
+      )}
 
-      <BlockUserDialog
-        user={blockUser?.user || null}
-        action={blockUser?.action || "block"}
-        open={!!blockUser}
-        onOpenChange={(open) => !open && setBlockUser(null)}
-      />
+      {blockUser && (
+        <BlockUserDialog
+          user={blockUser.user}
+          action={blockUser.action}
+          open={!!blockUser}
+          onOpenChange={(open) => !open && setBlockUser(null)}
+        />
+      )}
     </div>
   );
 }

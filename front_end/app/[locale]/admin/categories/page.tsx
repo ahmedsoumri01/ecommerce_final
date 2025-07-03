@@ -14,15 +14,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
   Search,
   Plus,
-  MoreHorizontal,
   Edit,
   Trash2,
   Eye,
@@ -75,7 +68,6 @@ export default function CategoriesManagement({
   const notFeaturedCategories = categories.filter(
     (category) => !category.featured
   ).length;
-  // Note: We don't have product count in the category model, so we'll show placeholder
   const totalProducts = 0; // This would come from a products API call
 
   const formatDate = (dateString: string) => {
@@ -91,7 +83,6 @@ export default function CategoriesManagement({
   };
 
   const handleViewProducts = (category: Category) => {
-    // Create a URL-friendly slug from category name
     const categorySlug = category.name.toLowerCase().replace(/\s+/g, "-");
     router.push(`/${params.locale}/admin/products?category=${categorySlug}`);
   };
@@ -109,10 +100,8 @@ export default function CategoriesManagement({
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">
-            Categories Management
-          </h1>
-          <p className="text-gray-600">
+          <h1 className="text-2xl font-bold">Categories Management</h1>
+          <p className="text-muted-foreground">
             Organize your products with categories
           </p>
         </div>
@@ -129,7 +118,7 @@ export default function CategoriesManagement({
         <Card>
           <CardContent className="p-4">
             <div className="text-2xl font-bold">{totalCategories}</div>
-            <p className="text-sm text-gray-600">Total Categories</p>
+            <p className="text-sm text-muted-foreground">Total Categories</p>
           </CardContent>
         </Card>
         <Card>
@@ -137,15 +126,15 @@ export default function CategoriesManagement({
             <div className="text-2xl font-bold text-yellow-600">
               {featuredCategories}
             </div>
-            <p className="text-sm text-gray-600">Featured Categories</p>
+            <p className="text-sm text-muted-foreground">Featured Categories</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4">
-            <div className="text-2xl font-bold text-gray-600">
+            <div className="text-2xl font-bold text-muted-foreground">
               {notFeaturedCategories}
             </div>
-            <p className="text-sm text-gray-600">Regular Categories</p>
+            <p className="text-sm text-muted-foreground">Regular Categories</p>
           </CardContent>
         </Card>
         <Card>
@@ -153,7 +142,7 @@ export default function CategoriesManagement({
             <div className="text-2xl font-bold text-blue-600">
               {totalProducts}
             </div>
-            <p className="text-sm text-gray-600">Total Products</p>
+            <p className="text-sm text-muted-foreground">Total Products</p>
           </CardContent>
         </Card>
       </div>
@@ -166,7 +155,7 @@ export default function CategoriesManagement({
         <CardContent>
           <div className="flex flex-col sm:flex-row gap-4 mb-6">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
               <Input
                 placeholder="Search categories..."
                 className="pl-10"
@@ -206,7 +195,7 @@ export default function CategoriesManagement({
           </div>
 
           {/* Categories Table */}
-          <div className="rounded-md border">
+          <div className="rounded-md border overflow-x-auto">
             {isLoading ? (
               <div className="flex items-center justify-center p-8">
                 <Loader2 className="h-8 w-8 animate-spin" />
@@ -219,7 +208,7 @@ export default function CategoriesManagement({
                     <TableHead>Image</TableHead>
                     <TableHead>Name</TableHead>
                     <TableHead>Translations</TableHead>
-                    <TableHead>Icon</TableHead>
+
                     <TableHead>Status</TableHead>
                     <TableHead>Created</TableHead>
                     <TableHead className="text-right">Actions</TableHead>
@@ -230,7 +219,7 @@ export default function CategoriesManagement({
                     <TableRow>
                       <TableCell
                         colSpan={7}
-                        className="text-center py-8 text-gray-500"
+                        className="text-center py-8 text-muted-foreground"
                       >
                         No categories found
                       </TableCell>
@@ -239,7 +228,7 @@ export default function CategoriesManagement({
                     filteredCategories.map((category) => (
                       <TableRow key={category._id}>
                         <TableCell>
-                          <div className="w-12 h-12 rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center">
+                          <div className="w-12 h-12 rounded-lg overflow-hidden bg-muted flex items-center justify-center">
                             {category.image ? (
                               <img
                                 src={getImageUrl(category.image) || ""}
@@ -247,7 +236,7 @@ export default function CategoriesManagement({
                                 className="w-full h-full object-cover"
                               />
                             ) : (
-                              <ImageIcon className="h-6 w-6 text-gray-400" />
+                              <ImageIcon className="h-6 w-6 text-muted-foreground" />
                             )}
                           </div>
                         </TableCell>
@@ -261,32 +250,38 @@ export default function CategoriesManagement({
                         </TableCell>
                         <TableCell>
                           <div className="space-y-1">
-                            {category.nameAr && (
-                              <div className="text-sm text-gray-600" dir="rtl">
-                                AR: {category.nameAr}
-                              </div>
-                            )}
-                            {category.nameFr && (
-                              <div className="text-sm text-gray-600">
-                                FR: {category.nameFr}
-                              </div>
-                            )}
-                            {!category.nameAr && !category.nameFr && (
-                              <span className="text-sm text-gray-400">
-                                No translations
-                              </span>
-                            )}
+                            <table className="border-2">
+                              <tbody>
+                                {category.nameAr && (
+                                  <tr>
+                                    <td className="text-sm text-muted-foreground border-2">
+                                      AR:
+                                    </td>
+                                    <td className="border-2">
+                                      {category.nameAr}
+                                    </td>
+                                  </tr>
+                                )}
+                                {category.nameFr && (
+                                  <tr>
+                                    <td className="text-sm text-muted-foreground border-2">
+                                      FR:
+                                    </td>
+                                    <td className="border-2">
+                                      {category.nameFr}
+                                    </td>
+                                  </tr>
+                                )}
+                                {!category.nameAr && !category.nameFr && (
+                                  <tr>
+                                    <td> No translations</td>
+                                  </tr>
+                                )}
+                              </tbody>
+                            </table>
                           </div>
                         </TableCell>
-                        <TableCell>
-                          {category.icon ? (
-                            <Badge variant="secondary">{category.icon}</Badge>
-                          ) : (
-                            <span className="text-sm text-gray-400">
-                              No icon
-                            </span>
-                          )}
-                        </TableCell>
+
                         <TableCell>
                           <Badge
                             variant={
@@ -303,34 +298,32 @@ export default function CategoriesManagement({
                         </TableCell>
                         <TableCell>{formatDate(category.createdAt)}</TableCell>
                         <TableCell className="text-right">
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" className="h-8 w-8 p-0">
-                                <MoreHorizontal className="h-4 w-4" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuItem
-                                onClick={() => handleViewProducts(category)}
-                              >
-                                <Eye className="mr-2 h-4 w-4" />
-                                View Products
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                onClick={() => handleEdit(category)}
-                              >
-                                <Edit className="mr-2 h-4 w-4" />
-                                Edit
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                className="text-red-600"
-                                onClick={() => handleDelete(category)}
-                              >
-                                <Trash2 className="mr-2 h-4 w-4" />
-                                Delete
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
+                          <div className="flex gap-2 justify-end">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleViewProducts(category)}
+                              className="bg-transparent"
+                            >
+                              <Eye className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleEdit(category)}
+                              className="bg-transparent"
+                            >
+                              <Edit className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleDelete(category)}
+                              className="bg-transparent text-red-600 hover:text-red-700 hover:bg-red-50"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
                         </TableCell>
                       </TableRow>
                     ))
@@ -342,18 +335,22 @@ export default function CategoriesManagement({
         </CardContent>
       </Card>
 
-      {/* Modals and Dialogs */}
-      <EditCategoryModal
-        category={editCategory}
-        open={!!editCategory}
-        onOpenChange={(open) => !open && setEditCategory(null)}
-      />
+      {/* Modals - Rendered outside of table to prevent conflicts */}
+      {editCategory && (
+        <EditCategoryModal
+          category={editCategory}
+          open={!!editCategory}
+          onOpenChange={(open) => !open && setEditCategory(null)}
+        />
+      )}
 
-      <DeleteCategoryDialog
-        category={deleteCategory}
-        open={!!deleteCategory}
-        onOpenChange={(open) => !open && setDeleteCategory(null)}
-      />
+      {deleteCategory && (
+        <DeleteCategoryDialog
+          category={deleteCategory}
+          open={!!deleteCategory}
+          onOpenChange={(open) => !open && setDeleteCategory(null)}
+        />
+      )}
     </div>
   );
 }

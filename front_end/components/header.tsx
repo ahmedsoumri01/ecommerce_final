@@ -34,8 +34,6 @@ export function Header({ locale }: HeaderProps) {
       href: `/${locale}/categories`,
       label: t("header.Categories"),
     },
-    { href: `/${locale}/about`, label: t("header.about") },
-    { href: `/${locale}/contact`, label: t("header.contact") },
   ];
 
   return (
@@ -82,22 +80,6 @@ export function Header({ locale }: HeaderProps) {
               </div>
             )}
 
-            <div>
-              {user && isAuthenticated && (
-                <div>
-                  <Link
-                    href={
-                      user?.role === "admin"
-                        ? `/${locale}/admin`
-                        : `/${locale}/dashboard`
-                    }
-                    className="hover:text-blue-400"
-                  >
-                    <User />
-                  </Link>
-                </div>
-              )}
-            </div>
             {/* Mobile Menu */}
             <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
               <SheetTrigger asChild>
@@ -141,42 +123,6 @@ export function Header({ locale }: HeaderProps) {
                   <div className="p-6 border-t">
                     <div className="mb-2">
                       <LanguageSwitcher currentLocale={locale} />
-                    </div>
-
-                    {/* Login/Register Buttons */}
-                    <div className="space-y-5 mb-16">
-                      {user && isAuthenticated ? (
-                        <div>
-                          <Link
-                            href={
-                              user?.role === "admin"
-                                ? `/${locale}/admin`
-                                : `/${locale}/dashboard`
-                            }
-                            onClick={() => setIsMobileMenuOpen(false)}
-                            className="block w-full"
-                          >
-                            <Button className="w-full">
-                              {" "}
-                              <User /> My Dashboard
-                            </Button>
-                          </Link>
-                        </div>
-                      ) : (
-                        <Link
-                          href={`/${locale}/login`}
-                          onClick={() => setIsMobileMenuOpen(false)}
-                          className="block w-full"
-                        >
-                          <Button className="w-full">
-                            {locale === "ar"
-                              ? "تسجيل الدخول"
-                              : locale === "fr"
-                              ? "Connexion"
-                              : "Login"}
-                          </Button>
-                        </Link>
-                      )}
                     </div>
                   </div>
                 </div>

@@ -97,6 +97,7 @@ export function EditProductModal({
         productRef: product.productRef,
         audience: product.audience,
         images: product.images,
+        deliveryFee: product.deliveryFee ?? 0,
       });
     }
   }, [product, form]);
@@ -104,7 +105,20 @@ export function EditProductModal({
   const onSubmit = async (data: UpdateProductFormData) => {
     if (!product) return;
 
-    const success = await updateProduct(product._id, data);
+    // Only include images if they have changed
+    let updateData = { ...data };
+    const originalImages = product.images || [];
+    const newImages = data.images || [];
+    const imagesChanged =
+      originalImages.length !== newImages.length ||
+      originalImages.some((img, idx) => img !== newImages[idx]);
+
+    if (!imagesChanged) {
+      // Remove images from update payload if unchanged
+      delete updateData.images;
+    }
+
+    const success = await updateProduct(product._id, updateData);
 
     if (success) {
       onOpenChange(false);
@@ -305,6 +319,36 @@ export function EditProductModal({
                     </FormItem>
                   )}
                 />
+
+                <FormField
+                  control={form.control}
+                  name="deliveryFee"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Delivery Fee (DT)</FormLabel>
+                      <FormControl>
+                        <div className="relative">
+                          <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                          <Input
+                            {...field}
+                            type="number"
+                            step="0.01"
+                            min="0"
+                            placeholder="0.00 (0 = Free)"
+                            className="pl-10"
+                            disabled={isLoading}
+                            onChange={(e) =>
+                              field.onChange(
+                                Number.parseFloat(e.target.value) || 0
+                              )
+                            }
+                          />
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </div>
             </div>
 
@@ -444,7 +488,9 @@ export function EditProductModal({
                       <FormControl>
                         <Switch
                           checked={field.value}
-                          onCheckedChange={field.onChange}
+                          onCheckedChange={(checked) =>
+                            field.onChange(!!checked)
+                          }
                           disabled={isLoading}
                         />
                       </FormControl>

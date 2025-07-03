@@ -4,10 +4,10 @@ import { useEffect, useState } from "react";
 import { ProductGallery } from "@/components/product-gallery";
 import { ProductDetails } from "@/components/product-details";
 import { useProductStore, type Product } from "@/stores/product-store";
-import { notFound } from "next/navigation";
 import { Loader2, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { QuickOrderForm } from "@/components/quick-order-form";
 
 export default function ProductDetailPage({
   params,
@@ -130,25 +130,95 @@ export default function ProductDetailPage({
     }
   };
 
+  // Get product price
+  const getProductPrice = () => product.price;
+
+  // Get product description
+  const getProductDescription = () => {
+    switch (params.locale) {
+      case "ar":
+        return product.descriptionAr || product.description;
+      case "fr":
+        return product.descriptionFr || product.description;
+      default:
+        return product.description;
+    }
+  };
+
+  // Fake stock counter for urgency
+  const fakeStockLeft = 3 + Math.floor(Math.random() * 3); // 3-5 left
+
   return (
     <div className={`${isRTL ? "rtl" : "ltr"}`}>
       <div className="container mx-auto px-4 py-8">
-        <div className="grid lg:grid-cols-2 gap-12">
+        {/* Mobile layout */}
+        <div className="flex flex-col gap-4 lg:hidden">
           {/* Product Gallery */}
-          <div className="w-full lg:w-[500px]">
+          <div className="w-full">
             <ProductGallery
+              product={product}
               images={productImages}
+              locale={params.locale}
               productName={getProductName()}
             />
           </div>
-
-          {/* Product Details */}
+          {/* Product Name */}
+          <h1 className="text-2xl font-bold leading-tight mt-2">
+            {getProductName()}
+          </h1>
+          {/* Price */}
+          <div className="text-xl font-semibold text-primary flex gap-2 items-center">
+            <span>{getProductPrice()}</span>
+            <span>DT</span>
+          </div>
+          {/* Description */}
+          <div className="text-gray-600 leading-relaxed">
+            {getProductDescription()}
+          </div>
+          {/* Quick Order Form */}
           <div>
-            <ProductDetails
+            <QuickOrderForm
               product={product}
               locale={params.locale}
               isRTL={isRTL}
             />
+          </div>
+        </div>
+        {/* Desktop layout */}
+        <div className="hidden lg:grid lg:grid-cols-2 gap-12">
+          {/* Product Gallery */}
+          <div className="w-full lg:w-[500px]">
+            <ProductGallery
+              product={product}
+              images={productImages}
+              locale={params.locale}
+              productName={getProductName()}
+            />
+          </div>
+          {/* Product Details - manual order */}
+          <div className="flex flex-col gap-4">
+            {/* Product Name */}
+            <h1 className="text-3xl font-bold leading-tight mt-2 lg:hidden">
+              {getProductName()}
+            </h1>
+            {/* Price */}
+            <div className="text-2xl font-semibold text-primary flex gap-2 items-center lg:hidden">
+              <span>{getProductPrice()}</span>
+              <span>DT</span>
+            </div>
+            {/* Description */}
+            <div className="text-gray-600 leading-relaxed lg:hidden">
+              {getProductDescription()}
+            </div>
+            {/* Quick Order Form */}
+
+            <div>
+              <QuickOrderForm
+                product={product}
+                locale={params.locale}
+                isRTL={isRTL}
+              />
+            </div>
           </div>
         </div>
       </div>

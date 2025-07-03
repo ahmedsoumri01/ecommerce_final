@@ -14,12 +14,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
   Select,
   SelectContent,
   SelectItem,
@@ -29,7 +23,6 @@ import {
 import {
   Search,
   Plus,
-  MoreHorizontal,
   Edit,
   Trash2,
   Eye,
@@ -97,13 +90,6 @@ export default function ProductsManagement({
     return new Date(dateString).toLocaleDateString();
   };
 
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-    }).format(price);
-  };
-
   const handleEdit = (product: Product) => {
     setEditProduct(product);
   };
@@ -129,10 +115,8 @@ export default function ProductsManagement({
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">
-            Products Management
-          </h1>
-          <p className="text-gray-600">
+          <h1 className="text-2xl font-bold">Products Management</h1>
+          <p className="text-muted-foreground">
             Manage your product inventory and details
           </p>
         </div>
@@ -149,7 +133,7 @@ export default function ProductsManagement({
         <Card>
           <CardContent className="p-4">
             <div className="text-2xl font-bold">{totalProducts}</div>
-            <p className="text-sm text-gray-600">Total Products</p>
+            <p className="text-sm text-muted-foreground">Total Products</p>
           </CardContent>
         </Card>
         <Card>
@@ -157,7 +141,7 @@ export default function ProductsManagement({
             <div className="text-2xl font-bold text-green-600">
               {inStockProducts}
             </div>
-            <p className="text-sm text-gray-600">In Stock</p>
+            <p className="text-sm text-muted-foreground">In Stock</p>
           </CardContent>
         </Card>
         <Card>
@@ -165,7 +149,7 @@ export default function ProductsManagement({
             <div className="text-2xl font-bold text-red-600">
               {outOfStockProducts}
             </div>
-            <p className="text-sm text-gray-600">Out of Stock</p>
+            <p className="text-sm text-muted-foreground">Out of Stock</p>
           </CardContent>
         </Card>
         <Card>
@@ -173,7 +157,7 @@ export default function ProductsManagement({
             <div className="text-2xl font-bold text-yellow-600">
               {featuredProducts}
             </div>
-            <p className="text-sm text-gray-600">Featured</p>
+            <p className="text-sm text-muted-foreground">Featured</p>
           </CardContent>
         </Card>
       </div>
@@ -187,7 +171,7 @@ export default function ProductsManagement({
           <div className="flex flex-col gap-4 mb-6">
             {/* Search */}
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
               <Input
                 placeholder="Search products by name, brand, or reference..."
                 className="pl-10"
@@ -263,7 +247,7 @@ export default function ProductsManagement({
           </div>
 
           {/* Products Table */}
-          <div className="rounded-md border">
+          <div className="rounded-md border overflow-x-auto">
             {isLoading ? (
               <div className="flex items-center justify-center p-8">
                 <Loader2 className="h-8 w-8 animate-spin" />
@@ -289,7 +273,7 @@ export default function ProductsManagement({
                     <TableRow>
                       <TableCell
                         colSpan={9}
-                        className="text-center py-8 text-gray-500"
+                        className="text-center py-8 text-muted-foreground"
                       >
                         No products found
                       </TableCell>
@@ -298,7 +282,7 @@ export default function ProductsManagement({
                     filteredProducts.map((product) => (
                       <TableRow key={product._id}>
                         <TableCell>
-                          <div className="w-12 h-12 rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center">
+                          <div className="w-12 h-12 rounded-lg overflow-hidden bg-muted flex items-center justify-center">
                             {product.images.length > 0 ? (
                               <img
                                 src={getImageUrl(product.images[0]) || ""}
@@ -306,7 +290,7 @@ export default function ProductsManagement({
                                 className="w-full h-full object-cover"
                               />
                             ) : (
-                              <ImageIcon className="h-6 w-6 text-gray-400" />
+                              <ImageIcon className="h-6 w-6 text-muted-foreground" />
                             )}
                           </div>
                         </TableCell>
@@ -314,7 +298,7 @@ export default function ProductsManagement({
                           <div className="flex items-center">
                             <div>
                               <div className="font-medium">{product.name}</div>
-                              <div className="text-sm text-gray-500">
+                              <div className="text-sm text-muted-foreground">
                                 Ref: {product.productRef}
                               </div>
                             </div>
@@ -331,13 +315,16 @@ export default function ProductsManagement({
                         </TableCell>
                         <TableCell>
                           <div>
-                            <div className="font-medium">
-                              {formatPrice(product.price)}
+                            <div className="font-medium flex rtl:flex-row-reverse">
+                              <span>{product.price}</span>
+                              <span>DT</span>
                             </div>
                             {product.originalPrice &&
-                              product.originalPrice > product.price && (
-                                <div className="text-sm text-gray-500 line-through">
-                                  {formatPrice(product.originalPrice)}
+                              product.originalPrice > product.price &&
+                              product.originalPrice > 0 && (
+                                <div className="text-sm text-red-400 text-muted-foreground line-through flex rtl:flex-row-reverse">
+                                  <span> {product.originalPrice} </span>
+                                  <span>DT</span>
                                 </div>
                               )}
                           </div>
@@ -388,34 +375,32 @@ export default function ProductsManagement({
                         </TableCell>
                         <TableCell>{formatDate(product.createdAt)}</TableCell>
                         <TableCell className="text-right">
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" className="h-8 w-8 p-0">
-                                <MoreHorizontal className="h-4 w-4" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuItem
-                                onClick={() => handleViewDetails(product)}
-                              >
-                                <Eye className="mr-2 h-4 w-4" />
-                                View Details
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                onClick={() => handleEdit(product)}
-                              >
-                                <Edit className="mr-2 h-4 w-4" />
-                                Edit
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                className="text-red-600"
-                                onClick={() => handleDelete(product)}
-                              >
-                                <Trash2 className="mr-2 h-4 w-4" />
-                                Delete
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
+                          <div className="flex flex-wrap gap-2 justify-end">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleViewDetails(product)}
+                              className="bg-transparent"
+                            >
+                              <Eye className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleEdit(product)}
+                              className="bg-transparent"
+                            >
+                              <Edit className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleDelete(product)}
+                              className="bg-transparent text-red-600 hover:text-red-700 hover:bg-red-50"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
                         </TableCell>
                       </TableRow>
                     ))
@@ -427,18 +412,22 @@ export default function ProductsManagement({
         </CardContent>
       </Card>
 
-      {/* Modals and Dialogs */}
-      <EditProductModal
-        product={editProduct}
-        open={!!editProduct}
-        onOpenChange={(open) => !open && setEditProduct(null)}
-      />
+      {/* Modals - Rendered outside of table to prevent conflicts */}
+      {editProduct && (
+        <EditProductModal
+          product={editProduct}
+          open={!!editProduct}
+          onOpenChange={(open) => !open && setEditProduct(null)}
+        />
+      )}
 
-      <DeleteProductDialog
-        product={deleteProduct}
-        open={!!deleteProduct}
-        onOpenChange={(open) => !open && setDeleteProduct(null)}
-      />
+      {deleteProduct && (
+        <DeleteProductDialog
+          product={deleteProduct}
+          open={!!deleteProduct}
+          onOpenChange={(open) => !open && setDeleteProduct(null)}
+        />
+      )}
     </div>
   );
 }

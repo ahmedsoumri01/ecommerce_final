@@ -1,14 +1,13 @@
 "use client";
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { useCartStore } from "@/lib/store/cart-store";
-import { Star, Plus, Minus, Heart, BookCheck, BadgeCheck } from "lucide-react";
+import { Star } from "lucide-react";
 import type { Product } from "@/stores/product-store";
-import { SocialShare } from "./social-share";
-import { Shield } from "lucide-react";
+import { useEffect } from "react";
 import { useClientDictionary } from "@/hooks/useClientDictionary";
+import { QuickOrderForm } from "./quick-order-form";
+import { useKpi } from "@/stores/kpi-store";
+import { HtmlContent } from "@/components/ui/html-content";
 
 interface ProductDetailsProps {
   product: Product;
@@ -22,9 +21,13 @@ export function ProductDetails({
   isRTL = false,
 }: ProductDetailsProps) {
   const { t } = useClientDictionary(locale);
-  const [quantity, setQuantity] = useState(1);
-  const [isWishlisted, setIsWishlisted] = useState(false);
-  const { addItem } = useCartStore();
+  const { visits, incrementProductVisit } = useKpi();
+
+  useEffect(() => {
+    if (product._id) {
+      incrementProductVisit(product._id);
+    }
+  }, [product._id]);
 
   const getProductName = () => {
     switch (locale) {
@@ -48,19 +51,10 @@ export function ProductDetails({
     }
   };
 
-  const getCategoryName = () => {
-    // Since category is now an object with _id and name
-    return product.category.name;
+  // Check if description contains HTML tags
+  const isHtmlDescription = (description: string) => {
+    return /<[^>]*>/g.test(description);
   };
-
-  const handleAddToCart = () => {
-    addItem(product, quantity);
-  };
-
-  const increaseQuantity = () => setQuantity((prev) => prev + 1);
-  const decreaseQuantity = () => setQuantity((prev) => Math.max(1, prev - 1));
-
-  const currentUrl = typeof window !== "undefined" ? window.location.href : "";
 
   // Calculate discount percentage
   const hasDiscount =
@@ -72,11 +66,14 @@ export function ProductDetails({
       )
     : 0;
 
+  const description = getProductDescription();
   return (
     <div className="space-y-6">
       {/* Product Name */}
-      <div>
-        <p className="text-sm text-muted-foreground mb-2">{product.brand}</p>
+      <div className="hidden lg:block">
+        <p className="text-sm text-muted-foreground mb-2 rtl:text-end">
+          {product.brand}
+        </p>
         <h1 className="text-3xl font-bold leading-tight">{getProductName()}</h1>
         <p className="text-sm text-gray-500 mt-1">
           رقم المنتج: {product.productRef}
@@ -84,22 +81,29 @@ export function ProductDetails({
       </div>
 
       {/* Price */}
-      <div className="flex items-center gap-4">
-        <span className="text-4xl font-bold text-primary">
-          {product.price} DT
+      <div className="hidden items-center gap-4 lg:flex">
+        <span className="text-4xl flex rtl:flex-row-reverse font-bold text-primary">
+          <span> {product.price}</span> <span>DT</span>
         </span>
-        {hasDiscount && (
-          <>
-            <span className="text-xl text-muted-foreground line-through">
-              {product.originalPrice} DT
-            </span>
-            <Badge className="bg-red-500 hover:bg-red-600">
-              {discountPercentage}% {t("product_detail_page.discount")}
-            </Badge>
-          </>
-        )}
-      </div>
 
+        {hasDiscount &&
+          !!product.originalPrice &&
+          product.originalPrice > 0 && (
+            <>
+              <span className="text-xl text-red-500 text-muted-foreground flex rtl:flex-row-reverse line-through">
+                <span> {product.originalPrice}</span> <span> DT</span>
+              </span>
+              <Badge className="bg-red-500 hover:bg-red-600">
+                {discountPercentage}% {t("product_detail_page.discount")}
+              </Badge>
+            </>
+          )}
+      </div>
+      {product.deliveryFee && product.deliveryFee > 0 && (
+        <span className="text-sm text-green-500 ml-2">
+          + {product.deliveryFee} DT delivery fee
+        </span>
+      )}
       {/* Rating */}
       <div className="flex items-center gap-4">
         <div className="flex items-center">
@@ -107,144 +111,38 @@ export function ProductDetails({
             <Star
               key={i}
               className={`h-5 w-5 ${
-                i < 4 ? "fill-yellow-400 text-yellow-400" : "text-gray-300"
+                i < 5 ? "fill-yellow-400 text-yellow-400" : "text-gray-300"
               }`}
             />
           ))}
         </div>
         <span className="text-sm text-muted-foreground">
-          (25 {t("product_detail_page.reviews_label")})
+          (250 {t("product_detail_page.reviews_label")})
         </span>
       </div>
 
       {/* Description */}
       <div>
-        <p className="text-gray-600 leading-relaxed">
-          {getProductDescription()}
-        </p>
-      </div>
-
-      {/* Quantity and Add to Cart */}
-      <div className="space-y-4">
-        <div className="flex items-center gap-4">
-          <span className="font-medium">
-            {t("product_detail_page.quantity_label")}:
-          </span>
-          <div className="flex items-center border rounded-lg">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={decreaseQuantity}
-              disabled={quantity <= 1}
-              className="h-10 w-10"
-            >
-              <Minus className="h-4 w-4" />
-            </Button>
-            <span className="px-4 py-2 min-w-[3rem] text-center">
-              {quantity}
-            </span>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={increaseQuantity}
-              className="h-10 w-10"
-            >
-              <Plus className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
-
-        <div className="flex gap-4">
-          <Button
-            size="lg"
-            className="flex-1"
-            onClick={handleAddToCart}
-            disabled={!product.inStock}
-          >
-            {product.inStock
-              ? t("product_detail_page.add_to_cart")
-              : t("product_detail_page.out_of_stock")}
-          </Button>
-          <Button
-            variant="outline"
-            size="lg"
-            onClick={() => setIsWishlisted(!isWishlisted)}
-            className={isWishlisted ? "text-red-500 border-red-500" : ""}
-          >
-            <Heart
-              className={`h-4 w-4 ${isWishlisted ? "fill-current" : ""}`}
-            />
-          </Button>
-        </div>
-      </div>
-
-      {/* Product Info */}
-      <div className="space-y-3 pt-6 border-t">
-        <div className="flex items-center gap-2">
-          <span className="font-medium">
-            {t("product_detail_page.availability")}:
-          </span>
-          <Badge variant={product.inStock ? "default" : "destructive"}>
-            {product.inStock
-              ? t("product_detail_page.in_stock")
-              : t("product_detail_page.out_of_stock_badge")}
-          </Badge>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <span className="font-medium">
-            {t("product_detail_page.category")}:
-          </span>
-          <Badge variant="outline">{getCategoryName()}</Badge>
-        </div>
-
-        {product.featured && (
-          <div className="flex items-center gap-2">
-            <span className="font-medium">المنتج:</span>
-            <Badge variant="default" className="bg-blue-600">
-              مميز
-            </Badge>
-          </div>
+        {description && isHtmlDescription(description) ? (
+          <HtmlContent
+            content={description}
+            className={isRTL ? "rtl:text-right" : ""}
+          />
+        ) : (
+          <p className="text-gray-600 leading-relaxed">{description}</p>
         )}
 
-        <div className="flex items-center gap-2">
-          <span className="font-medium">الحالة:</span>
-          <Badge
-            variant={product.audience === "public" ? "default" : "secondary"}
-          >
-            {product.audience === "public" ? "عام" : "خاص"}
-          </Badge>
-        </div>
+        {visits !== null && (
+          <div className="mt-2 text-xs text-gray-500">Visits: {visits}</div>
+        )}
       </div>
 
-      {/* Social Sharing */}
-      <div className="pt-6 border-t">
-        <p className="font-medium mb-3">
-          {t("product_detail_page.share_product")}:
-        </p>
-        <SocialShare
-          url={currentUrl}
-          title={getProductName()}
-          description={getProductDescription()}
-        />
+      <div className="block lg:hidden">
+        <QuickOrderForm product={product} locale={locale} isRTL={isRTL} />
       </div>
 
-      {/* Security Badges */}
-      <div className="pt-6 border-t">
-        <div className="flex flex-wrap justify-around gap-6 opacity-60">
-          <div className="text-xs flex justify-center items-center text-center hover:text-blue-500">
-            <Shield size={30} />
-            <span>{t("product_detail_page.secure")}</span>
-          </div>
-          <div className="text-xs flex text-center justify-center items-center hover:text-purple-500">
-            <BookCheck size={30} />
-            <span>{t("product_detail_page.trusted")}</span>
-          </div>
-          <div className="text-xs flex text-center justify-center items-center hover:text-green-500">
-            <BadgeCheck size={30} />
-            <span>{t("product_detail_page.guaranteed")}</span>
-          </div>
-        </div>
+      <div className="hidden lg:block">
+        <QuickOrderForm product={product} locale={locale} isRTL={isRTL} />
       </div>
     </div>
   );

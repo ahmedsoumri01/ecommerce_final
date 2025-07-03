@@ -63,6 +63,11 @@ export const createProductSchema = z.object({
     ),
   audience: z.enum(["public", "private"]).default("public"),
   images: z.array(z.any()).optional(),
+  deliveryFee: z
+    .number()
+    .min(0, "Delivery fee cannot be negative")
+    .max(9999, "Delivery fee is too high")
+    .default(0),
 });
 
 export const updateProductSchema = z.object({
@@ -129,6 +134,11 @@ export const updateProductSchema = z.object({
     .optional(),
   audience: z.enum(["public", "private"]).optional(),
   images: z.array(z.any()).optional(),
+  deliveryFee: z
+    .number()
+    .min(0, "Delivery fee cannot be negative")
+    .max(9999, "Delivery fee is too high")
+    .optional(),
 });
 
 export type CreateProductFormData = z.infer<typeof createProductSchema>;

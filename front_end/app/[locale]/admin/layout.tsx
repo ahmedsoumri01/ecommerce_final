@@ -44,7 +44,6 @@ const adminSidebarItems = [
     title: "Orders",
     href: "/admin/orders",
     icon: ShoppingCart,
-    badge: "12",
   },
   {
     title: "Settings",

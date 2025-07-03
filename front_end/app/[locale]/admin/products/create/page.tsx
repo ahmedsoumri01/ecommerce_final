@@ -29,6 +29,7 @@ import {
   Globe,
   Star,
   Users,
+  RefreshCw,
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -41,6 +42,13 @@ import {
 import { MultipleImageUpload } from "@/components/ui/multiple-image-upload";
 import { RichTextEditor } from "@/components/ui/rich-text-editor";
 import { useEffect } from "react";
+
+// Generate unique product reference
+const generateProductRef = () => {
+  const timestamp = Date.now().toString().slice(-6);
+  const random = Math.random().toString(36).substring(2, 5).toUpperCase();
+  return `PROD-${timestamp}-${random}`;
+};
 
 export default function CreateProductPage({
   params,
@@ -77,9 +85,20 @@ export default function CreateProductPage({
     getAllCategories();
   }, [getAllCategories]);
 
+  // Auto-generate product reference when component mounts
+  useEffect(() => {
+    if (!form.getValues("productRef")) {
+      form.setValue("productRef", generateProductRef());
+    }
+  }, [form]);
+
+  const handleGenerateNewRef = () => {
+    const newRef = generateProductRef();
+    form.setValue("productRef", newRef);
+  };
+
   const onSubmit = async (data: CreateProductFormData) => {
     const success = await createProduct(data);
-
     if (success) {
       router.push(`/${params.locale}/admin/products`);
     }
@@ -138,7 +157,6 @@ export default function CreateProductPage({
                       </FormItem>
                     )}
                   />
-
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <FormField
                       control={form.control}
@@ -162,7 +180,6 @@ export default function CreateProductPage({
                         </FormItem>
                       )}
                     />
-
                     <FormField
                       control={form.control}
                       name="nameFr"
@@ -185,7 +202,6 @@ export default function CreateProductPage({
                       )}
                     />
                   </div>
-
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <FormField
                       control={form.control}
@@ -204,7 +220,6 @@ export default function CreateProductPage({
                         </FormItem>
                       )}
                     />
-
                     <FormField
                       control={form.control}
                       name="productRef"
@@ -212,11 +227,25 @@ export default function CreateProductPage({
                         <FormItem>
                           <FormLabel>Product Reference *</FormLabel>
                           <FormControl>
-                            <Input
-                              {...field}
-                              placeholder="e.g., PROD-001"
-                              disabled={isLoading}
-                            />
+                            <div className="flex gap-2">
+                              <Input
+                                {...field}
+                                placeholder="Auto-generated"
+                                disabled={isLoading}
+                                className="font-mono text-sm bg-gray-50"
+                                readOnly
+                              />
+                              <Button
+                                type="button"
+                                variant="outline"
+                                size="icon"
+                                onClick={handleGenerateNewRef}
+                                disabled={isLoading}
+                                title="Generate new reference"
+                              >
+                                <RefreshCw className="h-4 w-4" />
+                              </Button>
+                            </div>
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -265,7 +294,6 @@ export default function CreateProductPage({
                         </FormItem>
                       )}
                     />
-
                     <FormField
                       control={form.control}
                       name="originalPrice"
@@ -296,6 +324,35 @@ export default function CreateProductPage({
                       )}
                     />
                   </div>
+                  <FormField
+                    control={form.control}
+                    name="deliveryFee"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Delivery Fee (DT)</FormLabel>
+                        <FormControl>
+                          <div className="relative">
+                            <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                            <Input
+                              {...field}
+                              type="number"
+                              step="0.01"
+                              min="0"
+                              placeholder="0.00 (0 = Free)"
+                              className="pl-10"
+                              disabled={isLoading}
+                              onChange={(e) =>
+                                field.onChange(
+                                  Number.parseFloat(e.target.value) || 0
+                                )
+                              }
+                            />
+                          </div>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                 </CardContent>
               </Card>
 
@@ -363,7 +420,6 @@ export default function CreateProductPage({
                       </FormItem>
                     )}
                   />
-
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <FormField
                       control={form.control}
@@ -383,7 +439,6 @@ export default function CreateProductPage({
                         </FormItem>
                       )}
                     />
-
                     <FormField
                       control={form.control}
                       name="descriptionFr"

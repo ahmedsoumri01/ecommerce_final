@@ -66,6 +66,14 @@ const ProductSchema = new mongoose.Schema(
       enum: ["public", "private"],
       default: "public",
     },
+    visits: {
+      type: Number,
+      default: 0,
+    },
+    deliveryFee: {
+      type: Number,
+      default: 0,
+    },
   },
   {
     timestamps: true,

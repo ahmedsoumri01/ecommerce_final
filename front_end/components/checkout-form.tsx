@@ -15,10 +15,13 @@ import {
 } from "@/components/ui/select";
 import { ArrowLeft, CreditCard, MapPin, User, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import type { CartItem } from "@/lib/store/cart-store";
+import { useCartStore, type CartItem } from "@/lib/store/cart-store";
 import { useClientDictionary } from "@/hooks/useClientDictionary";
 import { useOrderStore } from "@/stores/order-store";
 import { tunisiaStates, tunisiaCities } from "@/lib/data/tunisia-locations";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 interface CheckoutFormProps {
   locale: string;
@@ -28,16 +31,18 @@ interface CheckoutFormProps {
   onSuccess: () => void;
 }
 
-interface FormData {
-  customerName: string;
-  email: string;
-  phoneNumberOne: string;
-  phoneNumbertwo: string;
-  address: string;
-  city: string;
-  state: string;
-  comment: string;
-}
+const checkoutSchema = z.object({
+  customerName: z.string().min(1, "الاسم مطلوب"),
+  email: z.string(),
+  phoneNumberOne: z.string().regex(/^\d{8}$/, "رقم الهاتف يجب أن يكون 8 أرقام"),
+  phoneNumbertwo: z.string().optional(),
+  address: z.string().min(1, "العنوان مطلوب"),
+  city: z.string().min(1, "المدينة مطلوبة"),
+  state: z.string().min(1, "الولاية مطلوبة"),
+  comment: z.string().optional(),
+});
+
+type CheckoutFormType = z.infer<typeof checkoutSchema>;
 
 export function CheckoutForm({
   locale,
@@ -49,46 +54,32 @@ export function CheckoutForm({
   const { t } = useClientDictionary(locale);
   const { toast } = useToast();
   const { createOrder } = useOrderStore();
+  const { getOrderDeliveryFee } = useCartStore();
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [selectedState, setSelectedState] = useState("");
-  const [formData, setFormData] = useState<FormData>({
-    customerName: "",
-    email: "",
-    phoneNumberOne: "",
-    phoneNumbertwo: "",
-    address: "",
-    city: "",
-    state: "",
-    comment: "",
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    setValue,
+    watch,
+    reset,
+  } = useForm<CheckoutFormType>({
+    resolver: zodResolver(checkoutSchema),
+    defaultValues: {
+      customerName: "",
+      email: "",
+      phoneNumberOne: "",
+      phoneNumbertwo: "",
+      address: "",
+      city: "",
+      state: "",
+      comment: "",
+    },
   });
 
+  const selectedState = watch("state");
+
   const isRTL = locale === "ar";
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
-  };
-
-  const handleSelectChange = (name: string, value: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-
-    // Reset city when state changes
-    if (name === "state") {
-      setSelectedState(value);
-      setFormData((prev) => ({
-        ...prev,
-        city: "",
-      }));
-    }
-  };
 
   const generateOrderRef = () => {
     const timestamp = Date.now().toString().slice(-6);
@@ -96,35 +87,28 @@ export function CheckoutForm({
     return `ORD-${timestamp}-${random}`;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
+  const onSubmit = async (data: CheckoutFormType) => {
     try {
-      // Prepare order data for API
       const orderData = {
-        customerName: formData.customerName,
-        email: formData.email,
-        phoneNumberOne: formData.phoneNumberOne,
-        phoneNumbertwo: formData.phoneNumbertwo || undefined,
-        address: formData.address,
-        city: formData.city,
-        state: formData.state || undefined,
-        comment: formData.comment || undefined,
+        customerName: data.customerName,
+        email: data.email,
+        phoneNumberOne: data.phoneNumberOne,
+        phoneNumbertwo: data.phoneNumbertwo || undefined,
+        address: data.address,
+        city: data.city,
+        state: data.state || undefined,
+        comment: data.comment || undefined,
         orderRef: generateOrderRef(),
-        total: totalPrice * 1.15, // Including tax
+        total: totalPrice + getOrderDeliveryFee(),
         status: "pending",
         items: cartItems.map((item) => ({
           product: item.product._id, // Product ID
           quantity: item.quantity,
           price: item.product.price,
         })),
+        deliveryFee: getOrderDeliveryFee(),
       };
-
-      console.log("🛒 Order Data being sent:", orderData);
-
       const success = await createOrder(orderData);
-
       if (success) {
         toast({
           title: t("checkout_form.toast_title"),
@@ -132,6 +116,15 @@ export function CheckoutForm({
           duration: 5000,
         });
         onSuccess();
+        reset();
+      } else {
+        toast({
+          title: t("checkout_form.blocked_title") || "تم حظرك مؤقتاً",
+          description:
+            t("checkout_form.blocked_description") ||
+            "لقد قمت بعدد كبير من الطلبات. أنت محظور لمدة 24 ساعة.",
+          duration: 7000,
+        });
       }
     } catch (error) {
       console.error("Error creating order:", error);
@@ -139,8 +132,6 @@ export function CheckoutForm({
         title: "خطأ في الطلب",
         description: "حدث خطأ أثناء إنشاء الطلب. يرجى المحاولة مرة أخرى.",
       });
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
@@ -154,11 +145,6 @@ export function CheckoutForm({
         return item.product.name;
     }
   };
-
-  // Get available cities based on selected state
-  const availableCities = selectedState
-    ? tunisiaCities[selectedState] || []
-    : [];
 
   return (
     <div className={`min-h-screen bg-gray-50 ${isRTL ? "rtl" : "ltr"}`}>
@@ -186,61 +172,66 @@ export function CheckoutForm({
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                 {/* Personal Information */}
                 <div className="grid md:grid-cols-2 gap-4">
+                  {/* Customer Name */}
                   <div>
-                    <label
-                      htmlFor="customerName"
-                      className="block text-sm font-medium mb-2"
-                    >
-                      الاسم الكامل *
+                    <label className="block text-sm font-medium mb-1  items-center gap-2">
+                      <User className="h-4 w-4" />
+                      {t("name")} *
                     </label>
                     <Input
-                      id="customerName"
-                      name="customerName"
-                      value={formData.customerName}
-                      onChange={handleChange}
+                      {...register("customerName")}
+                      placeholder={t("name")}
                       required
-                      placeholder="أدخل الاسم الكامل"
+                      className="text-right"
                     />
+                    {errors.customerName && (
+                      <div className="text-red-500 text-xs mt-1">
+                        {errors.customerName.message}
+                      </div>
+                    )}
                   </div>
+                  {/* Email */}
                   <div>
-                    <label
-                      htmlFor="email"
-                      className="block text-sm font-medium mb-2"
-                    >
-                      البريد الإلكتروني *
+                    <label className="block text-sm font-medium mb-1 flex items-center gap-2">
+                      <User className="h-4 w-4" />
+                      {t("email")}
                     </label>
                     <Input
-                      id="email"
-                      name="email"
+                      {...register("email")}
                       type="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      required
-                      placeholder="أدخل البريد الإلكتروني"
+                      placeholder={t("email")}
+                      className="text-right"
                     />
+                    {errors.email && (
+                      <div className="text-red-500 text-xs mt-1">
+                        {errors.email.message}
+                      </div>
+                    )}
                   </div>
                 </div>
-
                 <div className="grid md:grid-cols-2 gap-4">
+                  {/* Phone Number */}
                   <div>
-                    <label
-                      htmlFor="phoneNumberOne"
-                      className="block text-sm font-medium mb-2"
-                    >
-                      رقم الهاتف الأول *
+                    <label className="block text-sm font-medium mb-1 flex items-center gap-2">
+                      <User className="h-4 w-4" />
+                      {t("checkout_form.phone_label")} *
                     </label>
                     <Input
-                      id="phoneNumberOne"
-                      name="phoneNumberOne"
-                      type="tel"
-                      value={formData.phoneNumberOne}
-                      onChange={handleChange}
+                      {...register("phoneNumberOne")}
+                      type="text"
+                      placeholder={t("checkout_form.phone_placeholder")}
                       required
-                      placeholder="أدخل رقم الهاتف"
+                      className="text-right"
+                      maxLength={8}
                     />
+                    {errors.phoneNumberOne && (
+                      <div className="text-red-500 text-xs mt-1">
+                        {errors.phoneNumberOne.message}
+                      </div>
+                    )}
                   </div>
                   <div>
                     <label
@@ -250,16 +241,12 @@ export function CheckoutForm({
                       رقم الهاتف الثاني
                     </label>
                     <Input
-                      id="phoneNumbertwo"
-                      name="phoneNumbertwo"
+                      {...register("phoneNumbertwo")}
                       type="tel"
-                      value={formData.phoneNumbertwo}
-                      onChange={handleChange}
                       placeholder="أدخل رقم الهاتف الثاني (اختياري)"
                     />
                   </div>
                 </div>
-
                 {/* Address Information */}
                 <div>
                   <label
@@ -269,16 +256,17 @@ export function CheckoutForm({
                     العنوان *
                   </label>
                   <Textarea
-                    id="address"
-                    name="address"
-                    value={formData.address}
-                    onChange={handleChange}
+                    {...register("address")}
                     required
                     rows={3}
                     placeholder="أدخل العنوان الكامل"
                   />
+                  {errors.address && (
+                    <div className="text-red-500 text-xs mt-1">
+                      {errors.address.message}
+                    </div>
+                  )}
                 </div>
-
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
                     <label
@@ -288,10 +276,8 @@ export function CheckoutForm({
                       الولاية
                     </label>
                     <Select
-                      value={formData.state}
-                      onValueChange={(value) =>
-                        handleSelectChange("state", value)
-                      }
+                      value={watch("state")}
+                      onValueChange={(value) => setValue("state", value)}
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="اختر الولاية" />
@@ -304,6 +290,11 @@ export function CheckoutForm({
                         ))}
                       </SelectContent>
                     </Select>
+                    {errors.state && (
+                      <div className="text-red-500 text-xs mt-1">
+                        {errors.state.message}
+                      </div>
+                    )}
                   </div>
                   <div>
                     <label
@@ -313,10 +304,8 @@ export function CheckoutForm({
                       المدينة *
                     </label>
                     <Select
-                      value={formData.city}
-                      onValueChange={(value) =>
-                        handleSelectChange("city", value)
-                      }
+                      value={watch("city")}
+                      onValueChange={(value) => setValue("city", value)}
                       disabled={!selectedState}
                     >
                       <SelectTrigger>
@@ -329,16 +318,20 @@ export function CheckoutForm({
                         />
                       </SelectTrigger>
                       <SelectContent>
-                        {availableCities.map((city) => (
+                        {(tunisiaCities[selectedState] || []).map((city) => (
                           <SelectItem key={city.value} value={city.value}>
                             {city.label}
                           </SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
+                    {errors.city && (
+                      <div className="text-red-500 text-xs mt-1">
+                        {errors.city.message}
+                      </div>
+                    )}
                   </div>
                 </div>
-
                 <div>
                   <label
                     htmlFor="comment"
@@ -347,15 +340,11 @@ export function CheckoutForm({
                     ملاحظات إضافية
                   </label>
                   <Textarea
-                    id="comment"
-                    name="comment"
-                    value={formData.comment}
-                    onChange={handleChange}
+                    {...register("comment")}
                     rows={3}
                     placeholder="أي ملاحظات أو تعليمات خاصة للتوصيل"
                   />
                 </div>
-
                 <Button
                   type="submit"
                   size="lg"
@@ -419,18 +408,22 @@ export function CheckoutForm({
                 </div>
                 <div className="flex justify-between">
                   <span>{t("checkout_form.shipping")}</span>
-                  <span className="text-green-600">
-                    {t("checkout_form.free")}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span>{t("checkout_form.tax")}</span>
-                  <span>{(totalPrice * 0.15).toFixed(2)} DT</span>
+                  {getOrderDeliveryFee() === 0 ? (
+                    <span className="text-green-600">
+                      {t("checkout_form.free")}
+                    </span>
+                  ) : (
+                    <span className="text-orange-600 font-bold">
+                      +{getOrderDeliveryFee()} DT
+                    </span>
+                  )}
                 </div>
                 <div className="border-t pt-3">
                   <div className="flex justify-between text-lg font-bold">
                     <span>{t("checkout_form.grand_total")}</span>
-                    <span>{(totalPrice * 1.15).toFixed(2)} DT</span>
+                    <span>
+                      {(totalPrice + getOrderDeliveryFee()).toFixed(2)} DT
+                    </span>
                   </div>
                 </div>
               </CardContent>

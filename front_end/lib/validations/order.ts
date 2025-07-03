@@ -10,7 +10,7 @@ export const createOrderSchema = z.object({
   customerName: z
     .string()
     .min(2, "Customer name must be at least 2 characters"),
-  email: z.string().email("Invalid email address"),
+  email: z.string(),
   phoneNumberOne: z
     .string()
     .min(8, "Phone number must be at least 8 characters"),
