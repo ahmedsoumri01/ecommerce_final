@@ -11,6 +11,31 @@ const {
 // Controllers
 const ordersController = require("../controllers/orders.controller");
 
+// Bulk actions (must be before /:id)
+router.put(
+  "/cancel-multiple",
+  authMiddleware,
+  adminMiddleware,
+  ordersController.cancelMultipleOrders
+);
+router.put(
+  "/status-multiple",
+  authMiddleware,
+  adminMiddleware,
+  ordersController.changeStatusMultipleOrders
+);
+router.delete(
+  "/delete-multiple",
+  authMiddleware,
+  adminMiddleware,
+  ordersController.deleteMultipleOrders
+);
+// Admin: Clear all order blocks
+router.post(
+  "/clear-blocks",
+
+  ordersController.clearOrderBlocks
+);
 // Public Routes
 router.get("/", authMiddleware, adminMiddleware, ordersController.getAllOrders); // Admin only for now
 router.get(
@@ -57,11 +82,5 @@ router.put(
   authMiddleware,
   adminMiddleware,
   ordersController.cancelOrder
-);
-// Admin: Clear all order blocks
-router.post(
-  "/clear-blocks",
-
-  ordersController.clearOrderBlocks
 );
 module.exports = router;

@@ -291,6 +291,117 @@ exports.cancelOrder = async (req, res) => {
   }
 };
 
+// Cancel multiple orders
+exports.cancelMultipleOrders = async (req, res) => {
+  const { orderIds } = req.body;
+  console.log({ orderIds, body: req.body });
+  // Use the same validation as confirmOrders
+  if (!Array.isArray(orderIds) || orderIds.length === 0) {
+    return res.status(400).json({ message: "No valid order IDs provided" });
+  }
+  // Validate all IDs before converting
+  const invalidIds = orderIds.filter(
+    (id) => !id || typeof id !== "string" || !id.match(/^[0-9a-fA-F]{24}$/)
+  );
+  if (invalidIds.length > 0) {
+    return res.status(400).json({
+      message: `Invalid order ID(s): ${invalidIds.join(", ")}`,
+      invalidIds,
+    });
+  }
+  try {
+    // Convert string IDs to ObjectId
+    const objectIds = orderIds.map((id) => new mongoose.Types.ObjectId(id));
+    const result = await Order.updateMany(
+      {
+        _id: { $in: objectIds },
+        status: { $nin: ["delivered", "cancelled"] },
+      },
+      { $set: { status: "cancelled" } }
+    );
+    res.json({
+      message: `${result.modifiedCount} order(s) cancelled successfully`,
+      updatedOrderCount: result.modifiedCount,
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Failed to cancel orders.", error: error.message });
+  }
+};
+
+// Change status for multiple orders
+exports.changeStatusMultipleOrders = async (req, res) => {
+  const { orderIds, status } = req.body;
+
+  // Use the same validation as confirmOrders
+  if (!Array.isArray(orderIds) || orderIds.length === 0 || !status) {
+    return res
+      .status(400)
+      .json({ message: "Order IDs and status are required" });
+  }
+  // Validate all IDs before converting
+  const invalidIds = orderIds.filter(
+    (id) => !id || typeof id !== "string" || !id.match(/^[0-9a-fA-F]{24}$/)
+  );
+  if (invalidIds.length > 0) {
+    return res.status(400).json({
+      message: `Invalid order ID(s): ${invalidIds.join(", ")}`,
+      invalidIds,
+    });
+  }
+  try {
+    // Convert string IDs to ObjectId
+    const objectIds = orderIds.map((id) => new mongoose.Types.ObjectId(id));
+    const result = await Order.updateMany(
+      { _id: { $in: objectIds } },
+      { $set: { status } }
+    );
+    res.json({
+      message: `${result.modifiedCount} order(s) updated to status '${status}'`,
+      updatedOrderCount: result.modifiedCount,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to update order statuses.",
+      error: error.message,
+    });
+  }
+};
+
+// Delete multiple orders
+exports.deleteMultipleOrders = async (req, res) => {
+  const { orderIds } = req.body;
+
+  // Use the same validation as confirmOrders
+  if (!Array.isArray(orderIds) || orderIds.length === 0) {
+    return res.status(400).json({ message: "No valid order IDs provided" });
+  }
+  // Validate all IDs before converting
+  const invalidIds = orderIds.filter(
+    (id) => !id || typeof id !== "string" || !id.match(/^[0-9a-fA-F]{24}$/)
+  );
+  if (invalidIds.length > 0) {
+    return res.status(400).json({
+      message: `Invalid order ID(s): ${invalidIds.join(", ")}`,
+      invalidIds,
+    });
+  }
+  try {
+    // Convert string IDs to ObjectId
+    const objectIds = orderIds.map((id) => new mongoose.Types.ObjectId(id));
+    const result = await Order.deleteMany({ _id: { $in: objectIds } });
+    res.json({
+      message: `${result.deletedCount} order(s) deleted successfully`,
+      deletedCount: result.deletedCount,
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Failed to delete orders.", error: error.message });
+  }
+};
+
 // Admin: Clear all rate limits (unblock all users)
 exports.clearOrderBlocks = (req, res) => {
   rateLimitMap.clear();
