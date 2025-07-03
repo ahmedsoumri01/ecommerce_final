@@ -36,6 +36,13 @@ router.post(
 
   ordersController.clearOrderBlocks
 );
+// Admin: Unblock a user or IP from order rate limit
+router.post(
+  "/unblock-rate-limit",
+  authMiddleware,
+  adminMiddleware,
+  ordersController.unblockOrderRateLimit
+);
 // Public Routes
 router.get("/", authMiddleware, adminMiddleware, ordersController.getAllOrders); // Admin only for now
 router.get(
