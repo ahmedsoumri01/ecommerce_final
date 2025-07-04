@@ -107,7 +107,7 @@ export function HeroCarousel({
                   <p className="text-lg opacity-80 uppercase tracking-wide">
                     {product.brand}
                   </p>
-                  <h1 className="text-4xl md:text-6xl font-bold leading-tight">
+                  <h1 className="text-2xl md:text-4xl lg:text-6xl font-bold leading-tight">
                     {getProductName(product)}
                   </h1>
                 </div>
@@ -127,13 +127,6 @@ export function HeroCarousel({
                     <span></span>
                   )}
                 </div>
-
-                <p className="text-lg opacity-80 max-w-lg line-clamp-3">
-                  {getProductDescription(product)
-                    .replace(/<[^>]*>/g, "")
-                    .substring(0, 150)}
-                  ...
-                </p>
 
                 <div className="flex items-center gap-2 mb-4">
                   <span

@@ -47,7 +47,7 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
               }
               alt={productName}
               fill
-              className={`object-cover transition-transform duration-300 max-w-[400px] ${
+              className={`object-cover transition-transform duration-300  ${
                 isZoomed ? "scale-150" : "scale-100"
               }`}
             />
