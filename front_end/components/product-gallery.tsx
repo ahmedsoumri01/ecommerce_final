@@ -184,7 +184,7 @@ export function ProductGallery({
         <span className="text-4xl flex rtl:flex-row-reverse font-bold text-primary">
           <span> {product.price}</span> <span>DT</span>
         </span>
-        {hasDiscount && (
+        {hasDiscount ? (
           <>
             <span className="text-xl text-red-500 text-muted-foreground flex rtl:flex-row-reverse line-through">
               <span> {product.originalPrice}</span> <span> DT</span>
@@ -193,6 +193,8 @@ export function ProductGallery({
               {discountPercentage}% {t("product_detail_page.discount")}
             </Badge>
           </>
+        ) : (
+          <span></span>
         )}
       </div>
       {/* Quantity and Add to Cart */}

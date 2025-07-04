@@ -90,7 +90,7 @@ export function ProductCard({
             </>
           )}
 
-          {product.originalPrice && product.originalPrice > product.price && (
+          {product.originalPrice && product.originalPrice > product.price ? (
             <Badge className="absolute top-3 left-3 bg-red-500 hover:bg-red-600">
               {Math.round(
                 ((product.originalPrice - product.price) /
@@ -99,6 +99,8 @@ export function ProductCard({
               )}
               % خصم
             </Badge>
+          ) : (
+            <span></span>
           )}
           <Button
             size="sm"
@@ -135,16 +137,18 @@ export function ProductCard({
                 <span> {product.price} </span> <span> DT</span>
               </p>
               {product.originalPrice &&
-                product.originalPrice !== 0 &&
-                product.originalPrice > product.price && (
-                  <p
-                    className={`text-sm text-red-400 flex rtl:flex-row-reverse text-muted-foreground line-through ${
-                      product.originalPrice === 0 ? "hidden" : ""
-                    }`}
-                  >
-                    <span> {product.originalPrice} </span> <span> DT</span>
-                  </p>
-                )}
+              product.originalPrice !== 0 &&
+              product.originalPrice > product.price ? (
+                <p
+                  className={`text-sm text-red-400 flex rtl:flex-row-reverse text-muted-foreground line-through ${
+                    product.originalPrice === 0 ? "hidden" : ""
+                  }`}
+                >
+                  <span> {product.originalPrice} </span> <span> DT</span>
+                </p>
+              ) : (
+                <span></span>
+              )}
             </div>
           </div>
         </CardHeader>

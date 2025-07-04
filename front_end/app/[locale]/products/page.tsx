@@ -61,8 +61,12 @@ export default function ProductsPage({
   // Local state for filters
   const [priceRange, setPriceRange] = useState([0, 5000]);
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
-  const [sortBy, setSortBy] = useState("featured");
+  // Set default sort to 'newest' for newest-to-oldest
+  const [sortBy, setSortBy] = useState("newest");
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const PRODUCTS_PER_PAGE = 9;
 
   // Fetch data on component mount - using useCallback to prevent infinite loops
   const fetchData = useCallback(() => {
@@ -139,9 +143,12 @@ export default function ProductsPage({
         );
         break;
       default:
-        result.sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
+        // Default to newest if sortBy is not set
+        result.sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
     }
-
     return result;
   }, [
     products,
@@ -152,6 +159,17 @@ export default function ProductsPage({
     sortBy,
     filteredCategories,
   ]);
+
+  // Paginated products for current page
+  const paginatedProducts = useMemo(() => {
+    const startIdx = (currentPage - 1) * PRODUCTS_PER_PAGE;
+    return localFilteredProducts.slice(startIdx, startIdx + PRODUCTS_PER_PAGE);
+  }, [localFilteredProducts, currentPage]);
+
+  // Reset to first page when filters/search change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedCategories, selectedBrands, searchQuery, priceRange, sortBy]);
 
   // Memoize category name function
   const getCategoryName = useCallback(
@@ -486,7 +504,7 @@ export default function ProductsPage({
             {localFilteredProducts.length > 0 ? (
               <>
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {localFilteredProducts.map((product) => (
+                  {paginatedProducts.map((product) => (
                     <ProductCard
                       key={product._id}
                       product={product}
@@ -496,12 +514,57 @@ export default function ProductsPage({
                   ))}
                 </div>
 
-                {/* Load More Button */}
-                <div className="text-center mt-12">
-                  <Button variant="outline" size="lg">
-                    {t("all_products_page.load_more")}
-                  </Button>
-                </div>
+                {/* Pagination Controls */}
+                {localFilteredProducts.length > PRODUCTS_PER_PAGE && (
+                  <div className="flex justify-center items-center gap-2 mt-12">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      disabled={currentPage === 1}
+                      onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                    >
+                      {t("all_products_page.prev")}
+                    </Button>
+                    {Array.from({
+                      length: Math.ceil(
+                        localFilteredProducts.length / PRODUCTS_PER_PAGE
+                      ),
+                    }).map((_, idx) => (
+                      <Button
+                        key={idx + 1}
+                        variant={
+                          currentPage === idx + 1 ? "default" : "outline"
+                        }
+                        size="sm"
+                        onClick={() => setCurrentPage(idx + 1)}
+                      >
+                        {idx + 1}
+                      </Button>
+                    ))}
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      disabled={
+                        currentPage ===
+                        Math.ceil(
+                          localFilteredProducts.length / PRODUCTS_PER_PAGE
+                        )
+                      }
+                      onClick={() =>
+                        setCurrentPage((p) =>
+                          Math.min(
+                            Math.ceil(
+                              localFilteredProducts.length / PRODUCTS_PER_PAGE
+                            ),
+                            p + 1
+                          )
+                        )
+                      }
+                    >
+                      {t("all_products_page.next")}
+                    </Button>
+                  </div>
+                )}
               </>
             ) : (
               <div className="text-center py-16">

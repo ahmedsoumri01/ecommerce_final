@@ -31,19 +31,23 @@ export default function HomePage({ params }: { params: { locale: string } }) {
   // Update featured products and hero products when products change
   useEffect(() => {
     if (products.length > 0) {
+      // Only use products that are in stock
+      const inStockProducts = products.filter((p) => p.inStock);
       // Get random products for hero carousel (4 products)
-      const shuffledForHero = [...products].sort(() => 0.5 - Math.random());
+      const shuffledForHero = [...inStockProducts].sort(
+        () => 0.5 - Math.random()
+      );
       const randomHeroProducts = shuffledForHero.slice(0, 4);
       setHeroProducts(randomHeroProducts);
 
-      // Get random 8 products for featured section (excluding hero products)
-      const remainingProducts = products.filter(
+      // Get random 4 products for featured section (excluding hero products)
+      const remainingProducts = inStockProducts.filter(
         (p) => !randomHeroProducts.some((hp) => hp._id === p._id)
       );
       const shuffledForFeatured = [...remainingProducts].sort(
         () => 0.5 - Math.random()
       );
-      const randomFeaturedProducts = shuffledForFeatured.slice(0, 8);
+      const randomFeaturedProducts = shuffledForFeatured.slice(0, 4);
       setFeaturedProducts(randomFeaturedProducts);
     }
   }, [products]);

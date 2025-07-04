@@ -96,7 +96,7 @@ export function HeroCarousel({
               : "translate-x-full"
           }`}
         >
-          <div className="container mx-auto pt-12 px-4 h-full flex items-center">
+          <div className="container mx-auto pt-12 px-16 h-full flex items-center">
             <div
               className={`grid md:grid-cols-2 gap-8 items-center w-full ${
                 isRTL ? "text-right" : "text-left"
@@ -116,13 +116,16 @@ export function HeroCarousel({
                   <span className="text-3xl flex rtl:flex-row-reverse md:text-4xl font-bold">
                     <span> {product.price}</span> <span> DT</span>
                   </span>
-                  {product?.originalPrice &&
+                  {product?.originalPrice ? (
                     product?.originalPrice > product.price && (
                       <span className="text-xl flex rtl:flex-row-reverse opacity-60 line-through text-red-300">
                         <span> {product?.originalPrice}</span>
                         <span> DT</span>
                       </span>
-                    )}
+                    )
+                  ) : (
+                    <span></span>
+                  )}
                 </div>
 
                 <p className="text-lg opacity-80 max-w-lg line-clamp-3">

@@ -207,10 +207,6 @@ export function QuickOrderForm({
             <ShoppingCart className="h-6 w-6" />
             <span className="text-lg font-bold">طلب سريع</span>
           </div>
-          <div className="flex items-center justify-center gap-2 text-sm font-normal opacity-90 bg-white/10 rounded-full px-3 py-1">
-            <Phone className="h-4 w-4" />
-            <span>أو اتصل: 52573273</span>
-          </div>
         </CardTitle>
       </CardHeader>
 
@@ -473,8 +469,9 @@ export function QuickOrderForm({
                   <span className="text-gray-600">
                     المجموع الفرعي ({quantityWatch} قطعة)
                   </span>
-                  <span className="font-medium">
-                    {calculateSubtotal().toFixed(2)} DT
+                  <span className="font-medium flex rtl:flex-row-reverse">
+                    <span> {calculateSubtotal().toFixed(2)}</span>{" "}
+                    <span> DT</span>
                   </span>
                 </div>
                 {getDeliveryFee() > 0 && (
@@ -483,16 +480,17 @@ export function QuickOrderForm({
                       <Truck className="h-3 w-3" />
                       التوصيل
                     </span>
-                    <span className="font-medium text-green-600">
-                      {getDeliveryFee().toFixed(2)} DT
+                    <span className="font-medium text-green-600 flex rtl:flex-row-reverse">
+                      <span> {getDeliveryFee().toFixed(2)} </span>{" "}
+                      <span> DT</span>
                     </span>
                   </div>
                 )}
                 <Separator />
                 <div className="flex justify-between items-center text-lg font-bold">
                   <span>المجموع الإجمالي</span>
-                  <span className="text-green-600">
-                    {calculateTotal().toFixed(2)} DT
+                  <span className="text-green-600 flex rtl:flex-row-reverse">
+                    <span>{calculateTotal().toFixed(2)}</span> <span> DT</span>
                   </span>
                 </div>
               </div>
