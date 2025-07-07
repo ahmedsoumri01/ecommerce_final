@@ -65,7 +65,7 @@
     "phone_label": "الهاتف",
     "phone_value": "+216 95941469",
     "email_label": "البريد الإلكتروني",
-    "email_value": "Tunikado@store.com",
+    "email_value": "shop-elbaraka@store.com",
     "hours_label": "ساعات العمل",
     "hours_value": "الأحد - الخميس: 9:00 ص - 6:00 م",
     "form_title": "أرسل لنا رسالة",
@@ -194,7 +194,7 @@
     },
     "contact": {
       "title": "تواصل معنا",
-      "email": "TuniKado@store.com",
+      "email": "shop-elbaraka@store.com",
       "phone": "+216 95941469 ",
       "address": "الرياض، المملكة العربية السعودية"
     },

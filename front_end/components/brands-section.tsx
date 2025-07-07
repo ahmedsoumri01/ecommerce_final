@@ -10,7 +10,7 @@ interface Brand {
 }
 
 const brands: Brand[] = [
-  { id: 1, name: "Tunikado", logo: TuniKadoLogo },
+  { id: 1, name: "shop elbaraka", logo: TuniKadoLogo },
   { id: 2, name: "Samsung", logo: SamsungLogo },
   { id: 3, name: "Hoco", logo: HocoLogo },
   { id: 4, name: "apple ", logo: AppleLogo },

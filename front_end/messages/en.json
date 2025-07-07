@@ -38,9 +38,9 @@
   },
   "about_us_page": {
     "about_us_title": "About Us",
-    "about_us_subtitle": "TuniKado is a leading e-commerce store for the latest accessories, tech, and stylish clothing at great prices.",
+    "about_us_subtitle": "shop elbaraka is a leading e-commerce store for the latest accessories, tech, and stylish clothing at great prices.",
     "our_story_title": "Our Story",
-    "our_story_p1": "TuniKado began its journey in 2020 with a vision to make the latest technology, accessories, and fashion accessible to all.",
+    "our_story_p1": "shop elbaraka began its journey in 2020 with a vision to make the latest technology, accessories, and fashion accessible to all.",
     "our_story_p2": "Since our launch, we’ve grown into one of the most trusted e-commerce stores in the region, serving thousands of happy customers.",
     "our_story_p3": "We’re committed to delivering exceptional shopping experiences through outstanding service, fast delivery, and competitive pricing.",
     "our_values_title": "Our Values",
@@ -131,7 +131,7 @@
   },
   "footer": {
     "brand": {
-      "title": "TuniKado",
+      "title": "shop elbaraka",
       "description": "An online store specializing in selling the latest electronic and tech devices at the best prices"
     },
     "categories": {
@@ -150,11 +150,11 @@
     },
     "contact": {
       "title": "Contact Us",
-      "email": "tuniKado@store.com",
+      "email": "shop-elbaraka@store.com",
       "phone": "+216 95941469",
       "address": "Tunis,tunisia"
     },
-    "copyright": "© 2025 TuniKado. All rights reserved."
+    "copyright": "© 2025 shop elbaraka. All rights reserved."
   },
   "product_detail_page": {
     "discount": "Off",

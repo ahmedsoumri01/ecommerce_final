@@ -47,7 +47,7 @@ export function Header({ locale }: HeaderProps) {
           {/* Logo */}
           <Link href={`/${locale}`} className="flex items-center gap-2">
             <ShoppingBag className="h-6 w-6 text-primary" />
-            <span className="text-xl font-bold">TuniKado</span>
+            <span className="text-xl font-bold">shop elbaraka</span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -98,7 +98,7 @@ export function Header({ locale }: HeaderProps) {
                 <SheetHeader className="p-6 border-b">
                   <SheetTitle className="flex items-center gap-2 text-right">
                     <ShoppingBag className="h-6 w-6 text-primary" />
-                    <span className="text-xl font-bold">TuniKado</span>
+                    <span className="text-xl font-bold">shop elbaraka</span>
                   </SheetTitle>
                 </SheetHeader>
 

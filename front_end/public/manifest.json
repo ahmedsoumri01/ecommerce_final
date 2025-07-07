@@ -1,7 +1,7 @@
 {
-  "name": "TuniKado - Boutique en ligne de mode et accessoires",
-  "short_name": "TuniKado",
-  "description": "TuniKado - Achetez des vêtements et accessoires tendance en ligne en Tunisie.",
+  "name": "shop elbaraka - Boutique en ligne de mode et accessoires",
+  "short_name": "shop elbaraka",
+  "description": "shop elbaraka - Achetez des vêtements et accessoires tendance en ligne en Tunisie.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
