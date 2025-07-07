@@ -42,6 +42,7 @@ import {
 import { MultipleImageUpload } from "@/components/ui/multiple-image-upload";
 import { RichTextEditor } from "@/components/ui/rich-text-editor";
 import { useEffect } from "react";
+import { useClientDictionary } from "@/hooks/useClientDictionary";
 
 // Generate unique product reference
 const generateProductRef = () => {
@@ -58,6 +59,7 @@ export default function CreateProductPage({
   const router = useRouter();
   const { createProduct, isLoading } = useProductStore();
   const { categories, getAllCategories } = useCategoryStore();
+  const { t } = useClientDictionary(params.locale);
 
   const form = useForm<CreateProductFormData>({
     resolver: zodResolver(createProductSchema),
@@ -111,14 +113,16 @@ export default function CreateProductPage({
         <Link href={`/${params.locale}/admin/products`}>
           <Button variant="outline" size="sm" className="bg-transparent">
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Products
+            {t("adminDashboard.productsManagement.createProduct.back")}
           </Button>
         </Link>
         <div>
           <h1 className="text-2xl font-bold text-gray-900">
-            Create New Product
+            {t("adminDashboard.productsManagement.createProduct.title")}
           </h1>
-          <p className="text-gray-600">Add a new product to your inventory</p>
+          <p className="text-gray-600">
+            {t("adminDashboard.productsManagement.createProduct.subtitle")}
+          </p>
         </div>
       </div>
 
@@ -132,7 +136,9 @@ export default function CreateProductPage({
                 <CardHeader>
                   <CardTitle className="flex items-center">
                     <Tag className="h-5 w-5 mr-2" />
-                    Basic Information
+                    {t(
+                      "adminDashboard.productsManagement.createProduct.basicInfo"
+                    )}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -141,13 +147,19 @@ export default function CreateProductPage({
                     name="name"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Product Name *</FormLabel>
+                        <FormLabel>
+                          {t(
+                            "adminDashboard.productsManagement.createProduct.productName"
+                          )}
+                        </FormLabel>
                         <FormControl>
                           <div className="relative">
                             <Tag className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                             <Input
                               {...field}
-                              placeholder="Enter product name"
+                              placeholder={t(
+                                "adminDashboard.productsManagement.createProduct.productNamePlaceholder"
+                              )}
                               className="pl-10"
                               disabled={isLoading}
                             />
@@ -163,13 +175,19 @@ export default function CreateProductPage({
                       name="nameAr"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Arabic Name</FormLabel>
+                          <FormLabel>
+                            {t(
+                              "adminDashboard.productsManagement.createProduct.arabicName"
+                            )}
+                          </FormLabel>
                           <FormControl>
                             <div className="relative">
                               <Globe className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                               <Input
                                 {...field}
-                                placeholder="الاسم بالعربية"
+                                placeholder={t(
+                                  "adminDashboard.productsManagement.createProduct.arabicNamePlaceholder"
+                                )}
                                 className="pl-10"
                                 disabled={isLoading}
                                 dir="rtl"
@@ -185,13 +203,19 @@ export default function CreateProductPage({
                       name="nameFr"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>French Name</FormLabel>
+                          <FormLabel>
+                            {t(
+                              "adminDashboard.productsManagement.createProduct.frenchName"
+                            )}
+                          </FormLabel>
                           <FormControl>
                             <div className="relative">
                               <Globe className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                               <Input
                                 {...field}
-                                placeholder="Nom en français"
+                                placeholder={t(
+                                  "adminDashboard.productsManagement.createProduct.frenchNamePlaceholder"
+                                )}
                                 className="pl-10"
                                 disabled={isLoading}
                               />
@@ -208,11 +232,17 @@ export default function CreateProductPage({
                       name="brand"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Brand *</FormLabel>
+                          <FormLabel>
+                            {t(
+                              "adminDashboard.productsManagement.createProduct.brand"
+                            )}
+                          </FormLabel>
                           <FormControl>
                             <Input
                               {...field}
-                              placeholder="Enter brand name"
+                              placeholder={t(
+                                "adminDashboard.productsManagement.createProduct.brandPlaceholder"
+                              )}
                               disabled={isLoading}
                             />
                           </FormControl>
@@ -225,12 +255,18 @@ export default function CreateProductPage({
                       name="productRef"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Product Reference *</FormLabel>
+                          <FormLabel>
+                            {t(
+                              "adminDashboard.productsManagement.createProduct.productRef"
+                            )}
+                          </FormLabel>
                           <FormControl>
                             <div className="flex gap-2">
                               <Input
                                 {...field}
-                                placeholder="Auto-generated"
+                                placeholder={t(
+                                  "adminDashboard.productsManagement.createProduct.productRefPlaceholder"
+                                )}
                                 disabled={isLoading}
                                 className="font-mono text-sm bg-gray-50"
                                 readOnly
@@ -241,7 +277,9 @@ export default function CreateProductPage({
                                 size="icon"
                                 onClick={handleGenerateNewRef}
                                 disabled={isLoading}
-                                title="Generate new reference"
+                                title={t(
+                                  "adminDashboard.productsManagement.createProduct.generateRef"
+                                )}
                               >
                                 <RefreshCw className="h-4 w-4" />
                               </Button>
@@ -260,7 +298,9 @@ export default function CreateProductPage({
                 <CardHeader>
                   <CardTitle className="flex items-center">
                     <DollarSign className="h-5 w-5 mr-2" />
-                    Pricing
+                    {t(
+                      "adminDashboard.productsManagement.createProduct.pricing"
+                    )}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -270,7 +310,11 @@ export default function CreateProductPage({
                       name="price"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Price *</FormLabel>
+                          <FormLabel>
+                            {t(
+                              "adminDashboard.productsManagement.createProduct.price"
+                            )}
+                          </FormLabel>
                           <FormControl>
                             <div className="relative">
                               <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -279,7 +323,9 @@ export default function CreateProductPage({
                                 type="number"
                                 step="0.01"
                                 min="0"
-                                placeholder="0.00"
+                                placeholder={t(
+                                  "adminDashboard.productsManagement.createProduct.pricePlaceholder"
+                                )}
                                 className="pl-10"
                                 disabled={isLoading}
                                 onChange={(e) =>
@@ -299,7 +345,11 @@ export default function CreateProductPage({
                       name="originalPrice"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Original Price (Optional)</FormLabel>
+                          <FormLabel>
+                            {t(
+                              "adminDashboard.productsManagement.createProduct.originalPrice"
+                            )}
+                          </FormLabel>
                           <FormControl>
                             <div className="relative">
                               <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -308,7 +358,9 @@ export default function CreateProductPage({
                                 type="number"
                                 step="0.01"
                                 min="0"
-                                placeholder="0.00"
+                                placeholder={t(
+                                  "adminDashboard.productsManagement.createProduct.originalPricePlaceholder"
+                                )}
                                 className="pl-10"
                                 disabled={isLoading}
                                 onChange={(e) =>
@@ -329,7 +381,11 @@ export default function CreateProductPage({
                     name="deliveryFee"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Delivery Fee (DT)</FormLabel>
+                        <FormLabel>
+                          {t(
+                            "adminDashboard.productsManagement.createProduct.deliveryFee"
+                          )}
+                        </FormLabel>
                         <FormControl>
                           <div className="relative">
                             <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -338,7 +394,9 @@ export default function CreateProductPage({
                               type="number"
                               step="0.01"
                               min="0"
-                              placeholder="0.00 (0 = Free)"
+                              placeholder={t(
+                                "adminDashboard.productsManagement.createProduct.deliveryFeePlaceholder"
+                              )}
                               className="pl-10"
                               disabled={isLoading}
                               onChange={(e) =>
@@ -359,7 +417,11 @@ export default function CreateProductPage({
               {/* Category */}
               <Card>
                 <CardHeader>
-                  <CardTitle>Category</CardTitle>
+                  <CardTitle>
+                    {t(
+                      "adminDashboard.productsManagement.createProduct.category"
+                    )}
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <FormField
@@ -367,7 +429,11 @@ export default function CreateProductPage({
                     name="category"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Category *</FormLabel>
+                        <FormLabel>
+                          {t(
+                            "adminDashboard.productsManagement.createProduct.category"
+                          )}
+                        </FormLabel>
                         <FormControl>
                           <Select
                             onValueChange={field.onChange}
@@ -375,7 +441,11 @@ export default function CreateProductPage({
                             disabled={isLoading}
                           >
                             <SelectTrigger>
-                              <SelectValue placeholder="Select category" />
+                              <SelectValue
+                                placeholder={t(
+                                  "adminDashboard.productsManagement.createProduct.categoryPlaceholder"
+                                )}
+                              />
                             </SelectTrigger>
                             <SelectContent>
                               {categories.map((category) => (
@@ -399,7 +469,11 @@ export default function CreateProductPage({
               {/* Description */}
               <Card>
                 <CardHeader>
-                  <CardTitle>Description</CardTitle>
+                  <CardTitle>
+                    {t(
+                      "adminDashboard.productsManagement.createProduct.description"
+                    )}
+                  </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <FormField
@@ -407,12 +481,18 @@ export default function CreateProductPage({
                     name="description"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Description *</FormLabel>
+                        <FormLabel>
+                          {t(
+                            "adminDashboard.productsManagement.createProduct.description"
+                          )}
+                        </FormLabel>
                         <FormControl>
                           <RichTextEditor
                             value={field.value}
                             onChange={field.onChange}
-                            placeholder="Enter product description..."
+                            placeholder={t(
+                              "adminDashboard.productsManagement.createProduct.descriptionPlaceholder"
+                            )}
                             disabled={isLoading}
                           />
                         </FormControl>
@@ -426,12 +506,18 @@ export default function CreateProductPage({
                       name="descriptionAr"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Arabic Description</FormLabel>
+                          <FormLabel>
+                            {t(
+                              "adminDashboard.productsManagement.createProduct.arabicDescription"
+                            )}
+                          </FormLabel>
                           <FormControl>
                             <RichTextEditor
                               value={field.value}
                               onChange={field.onChange}
-                              placeholder="الوصف بالعربية..."
+                              placeholder={t(
+                                "adminDashboard.productsManagement.createProduct.arabicDescriptionPlaceholder"
+                              )}
                               disabled={isLoading}
                             />
                           </FormControl>
@@ -444,12 +530,18 @@ export default function CreateProductPage({
                       name="descriptionFr"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>French Description</FormLabel>
+                          <FormLabel>
+                            {t(
+                              "adminDashboard.productsManagement.createProduct.frenchDescription"
+                            )}
+                          </FormLabel>
                           <FormControl>
                             <RichTextEditor
                               value={field.value}
                               onChange={field.onChange}
-                              placeholder="Description en français..."
+                              placeholder={t(
+                                "adminDashboard.productsManagement.createProduct.frenchDescriptionPlaceholder"
+                              )}
                               disabled={isLoading}
                             />
                           </FormControl>
@@ -467,7 +559,11 @@ export default function CreateProductPage({
               {/* Images */}
               <Card>
                 <CardHeader>
-                  <CardTitle>Product Images</CardTitle>
+                  <CardTitle>
+                    {t(
+                      "adminDashboard.productsManagement.createProduct.productImages"
+                    )}
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <FormField
@@ -493,7 +589,11 @@ export default function CreateProductPage({
               {/* Settings */}
               <Card>
                 <CardHeader>
-                  <CardTitle>Settings</CardTitle>
+                  <CardTitle>
+                    {t(
+                      "adminDashboard.productsManagement.createProduct.settings"
+                    )}
+                  </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <FormField
@@ -504,10 +604,14 @@ export default function CreateProductPage({
                         <div className="space-y-0.5">
                           <FormLabel className="flex items-center">
                             <Package className="h-4 w-4 mr-2" />
-                            In Stock
+                            {t(
+                              "adminDashboard.productsManagement.createProduct.inStock"
+                            )}
                           </FormLabel>
                           <p className="text-sm text-gray-600">
-                            Product is available for purchase
+                            {t(
+                              "adminDashboard.productsManagement.createProduct.inStockDesc"
+                            )}
                           </p>
                         </div>
                         <FormControl>
@@ -529,10 +633,14 @@ export default function CreateProductPage({
                         <div className="space-y-0.5">
                           <FormLabel className="flex items-center">
                             <Star className="h-4 w-4 mr-2" />
-                            Featured Product
+                            {t(
+                              "adminDashboard.productsManagement.createProduct.featured"
+                            )}
                           </FormLabel>
                           <p className="text-sm text-gray-600">
-                            Highlight this product on homepage
+                            {t(
+                              "adminDashboard.productsManagement.createProduct.featuredDesc"
+                            )}
                           </p>
                         </div>
                         <FormControl>
@@ -553,7 +661,9 @@ export default function CreateProductPage({
                       <FormItem>
                         <FormLabel className="flex items-center">
                           <Users className="h-4 w-4 mr-2" />
-                          Audience
+                          {t(
+                            "adminDashboard.productsManagement.createProduct.audience"
+                          )}
                         </FormLabel>
                         <FormControl>
                           <Select
@@ -562,11 +672,23 @@ export default function CreateProductPage({
                             disabled={isLoading}
                           >
                             <SelectTrigger>
-                              <SelectValue placeholder="Select audience" />
+                              <SelectValue
+                                placeholder={t(
+                                  "adminDashboard.productsManagement.createProduct.audiencePlaceholder"
+                                )}
+                              />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="public">Public</SelectItem>
-                              <SelectItem value="private">Private</SelectItem>
+                              <SelectItem value="public">
+                                {t(
+                                  "adminDashboard.productsManagement.createProduct.public"
+                                )}
+                              </SelectItem>
+                              <SelectItem value="private">
+                                {t(
+                                  "adminDashboard.productsManagement.createProduct.private"
+                                )}
+                              </SelectItem>
                             </SelectContent>
                           </Select>
                         </FormControl>
@@ -585,10 +707,12 @@ export default function CreateProductPage({
               {isLoading ? (
                 <>
                   <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                  Creating Product...
+                  {t(
+                    "adminDashboard.productsManagement.createProduct.creating"
+                  )}
                 </>
               ) : (
-                "Create Product"
+                t("adminDashboard.productsManagement.createProduct.create")
               )}
             </Button>
             <Button
@@ -598,7 +722,7 @@ export default function CreateProductPage({
               disabled={isLoading}
               className="bg-transparent"
             >
-              Cancel
+              {t("adminDashboard.productsManagement.createProduct.cancel")}
             </Button>
           </div>
         </form>
