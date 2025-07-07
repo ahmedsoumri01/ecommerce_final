@@ -446,6 +446,34 @@
         "creating": "Création de l'utilisateur...",
         "cancel": "Annuler"
       }
+    },
+    "categoriesManagement": {
+      "title": "Gestion des catégories",
+      "subtitle": "Organisez vos produits avec des catégories",
+      "addCategory": "Ajouter une catégorie",
+      "totalCategories": "Nombre total de catégories",
+      "featuredCategories": "Catégories en vedette",
+      "regularCategories": "Catégories ordinaires",
+      "totalProducts": "Nombre total de produits",
+      "categoriesList": "Liste des catégories",
+      "searchPlaceholder": "Rechercher des catégories...",
+      "all": "Toutes",
+      "featured": "En vedette",
+      "regular": "Ordinaire",
+      "image": "Image",
+      "name": "Nom",
+      "translations": "Traductions",
+      "status": "Statut",
+      "created": "Créé le",
+      "actions": "Actions",
+      "noCategoriesFound": "Aucune catégorie trouvée",
+      "ar": "AR :",
+      "fr": "FR :",
+      "noTranslations": "Aucune traduction",
+      "view": "Voir",
+      "edit": "Modifier",
+      "delete": "Supprimer",
+      "loading": "Chargement des catégories..."
     }
   }
 }

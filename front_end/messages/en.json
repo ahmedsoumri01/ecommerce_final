@@ -402,6 +402,34 @@
         "creating": "Creating User...",
         "cancel": "Cancel"
       }
+    },
+    "categoriesManagement": {
+      "title": "Categories Management",
+      "subtitle": "Organize your products with categories",
+      "addCategory": "Add Category",
+      "totalCategories": "Total Categories",
+      "featuredCategories": "Featured Categories",
+      "regularCategories": "Regular Categories",
+      "totalProducts": "Total Products",
+      "categoriesList": "Categories List",
+      "searchPlaceholder": "Search categories...",
+      "all": "All",
+      "featured": "Featured",
+      "regular": "Regular",
+      "image": "Image",
+      "name": "Name",
+      "translations": "Translations",
+      "status": "Status",
+      "created": "Created",
+      "actions": "Actions",
+      "noCategoriesFound": "No categories found",
+      "ar": "AR:",
+      "fr": "FR:",
+      "noTranslations": "No translations",
+      "view": "View",
+      "edit": "Edit",
+      "delete": "Delete",
+      "loading": "Loading categories..."
     }
   }
 }

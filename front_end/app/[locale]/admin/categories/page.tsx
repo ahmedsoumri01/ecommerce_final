@@ -32,6 +32,7 @@ import {
 } from "@/stores/category-store";
 import { EditCategoryModal } from "@/components/modals/edit-category-modal";
 import { DeleteCategoryDialog } from "@/components/dialogs/delete-category-dialog";
+import { useClientDictionary } from "@/hooks/useClientDictionary";
 
 export default function CategoriesManagement({
   params,
@@ -50,6 +51,7 @@ export default function CategoriesManagement({
   } = useCategoryStore();
 
   const filteredCategories = useFilteredCategories();
+  const { t } = useClientDictionary(params.locale);
 
   // Modal/Dialog states
   const [editCategory, setEditCategory] = useState<Category | null>(null);
@@ -100,15 +102,17 @@ export default function CategoriesManagement({
       {/* Header */}
       <div className="md:flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold">Categories Management</h1>
+          <h1 className="text-2xl font-bold">
+            {t("adminDashboard.categoriesManagement.title")}
+          </h1>
           <p className="text-muted-foreground">
-            Organize your products with categories
+            {t("adminDashboard.categoriesManagement.subtitle")}
           </p>
         </div>
         <Link href={`/${params.locale}/admin/categories/create`}>
           <Button className="flex my-1 items-center">
             <Plus className="h-4 w-4 mr-2" />
-            Add Category
+            {t("adminDashboard.categoriesManagement.addCategory")}
           </Button>
         </Link>
       </div>
@@ -118,7 +122,9 @@ export default function CategoriesManagement({
         <Card>
           <CardContent className="p-4">
             <div className="text-2xl font-bold">{totalCategories}</div>
-            <p className="text-sm text-muted-foreground">Total Categories</p>
+            <p className="text-sm text-muted-foreground">
+              {t("adminDashboard.categoriesManagement.totalCategories")}
+            </p>
           </CardContent>
         </Card>
         <Card>
@@ -126,7 +132,9 @@ export default function CategoriesManagement({
             <div className="text-2xl font-bold text-yellow-600">
               {featuredCategories}
             </div>
-            <p className="text-sm text-muted-foreground">Featured Categories</p>
+            <p className="text-sm text-muted-foreground">
+              {t("adminDashboard.categoriesManagement.featuredCategories")}
+            </p>
           </CardContent>
         </Card>
         <Card>
@@ -134,7 +142,9 @@ export default function CategoriesManagement({
             <div className="text-2xl font-bold text-muted-foreground">
               {notFeaturedCategories}
             </div>
-            <p className="text-sm text-muted-foreground">Regular Categories</p>
+            <p className="text-sm text-muted-foreground">
+              {t("adminDashboard.categoriesManagement.regularCategories")}
+            </p>
           </CardContent>
         </Card>
         <Card>
@@ -142,7 +152,9 @@ export default function CategoriesManagement({
             <div className="text-2xl font-bold text-blue-600">
               {totalProducts}
             </div>
-            <p className="text-sm text-muted-foreground">Total Products</p>
+            <p className="text-sm text-muted-foreground">
+              {t("adminDashboard.categoriesManagement.totalProducts")}
+            </p>
           </CardContent>
         </Card>
       </div>
@@ -150,14 +162,18 @@ export default function CategoriesManagement({
       {/* Categories List */}
       <Card>
         <CardHeader>
-          <CardTitle>Categories List</CardTitle>
+          <CardTitle>
+            {t("adminDashboard.categoriesManagement.categoriesList")}
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex flex-col sm:flex-row gap-4 mb-6">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
               <Input
-                placeholder="Search categories..."
+                placeholder={t(
+                  "adminDashboard.categoriesManagement.searchPlaceholder"
+                )}
                 className="pl-10"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -169,7 +185,7 @@ export default function CategoriesManagement({
                 onClick={() => setFeaturedFilter("all")}
                 className={featuredFilter !== "all" ? "bg-transparent" : ""}
               >
-                All
+                {t("adminDashboard.categoriesManagement.all")}
               </Button>
               <Button
                 variant={featuredFilter === "featured" ? "default" : "outline"}
@@ -178,7 +194,7 @@ export default function CategoriesManagement({
                   featuredFilter !== "featured" ? "bg-transparent" : ""
                 }
               >
-                Featured
+                {t("adminDashboard.categoriesManagement.featured")}
               </Button>
               <Button
                 variant={
@@ -189,7 +205,7 @@ export default function CategoriesManagement({
                   featuredFilter !== "not-featured" ? "bg-transparent" : ""
                 }
               >
-                Regular
+                {t("adminDashboard.categoriesManagement.regular")}
               </Button>
             </div>
           </div>
@@ -199,7 +215,9 @@ export default function CategoriesManagement({
               {isLoading ? (
                 <div className="flex items-center justify-center p-8">
                   <Loader2 className="h-8 w-8 animate-spin" />
-                  <span className="ml-2">Loading categories...</span>
+                  <span className="ml-2">
+                    {t("adminDashboard.categoriesManagement.loading")}
+                  </span>
                 </div>
               ) : (
                 <div>
@@ -207,13 +225,26 @@ export default function CategoriesManagement({
                   <Table>
                     <TableHeader>
                       <TableRow>
-                        <TableHead>Image</TableHead>
-                        <TableHead>Name</TableHead>
-                        <TableHead>Translations</TableHead>
-
-                        <TableHead>Status</TableHead>
-                        <TableHead>Created</TableHead>
-                        <TableHead className="text-right">Actions</TableHead>
+                        <TableHead>
+                          {t("adminDashboard.categoriesManagement.image")}
+                        </TableHead>
+                        <TableHead>
+                          {t("adminDashboard.categoriesManagement.name")}
+                        </TableHead>
+                        <TableHead>
+                          {t(
+                            "adminDashboard.categoriesManagement.translations"
+                          )}
+                        </TableHead>
+                        <TableHead>
+                          {t("adminDashboard.categoriesManagement.status")}
+                        </TableHead>
+                        <TableHead>
+                          {t("adminDashboard.categoriesManagement.created")}
+                        </TableHead>
+                        <TableHead className="text-right">
+                          {t("adminDashboard.categoriesManagement.actions")}
+                        </TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -223,7 +254,9 @@ export default function CategoriesManagement({
                             colSpan={7}
                             className="text-center py-8 text-muted-foreground"
                           >
-                            No categories found
+                            {t(
+                              "adminDashboard.categoriesManagement.noCategoriesFound"
+                            )}
                           </TableCell>
                         </TableRow>
                       ) : (
@@ -257,7 +290,9 @@ export default function CategoriesManagement({
                                     {category.nameAr && (
                                       <tr>
                                         <td className="text-sm text-muted-foreground border-2">
-                                          AR:
+                                          {t(
+                                            "adminDashboard.categoriesManagement.ar"
+                                          )}
                                         </td>
                                         <td className="border-2">
                                           {category.nameAr}
@@ -267,7 +302,9 @@ export default function CategoriesManagement({
                                     {category.nameFr && (
                                       <tr>
                                         <td className="text-sm text-muted-foreground border-2">
-                                          FR:
+                                          {t(
+                                            "adminDashboard.categoriesManagement.fr"
+                                          )}
                                         </td>
                                         <td className="border-2">
                                           {category.nameFr}
@@ -276,7 +313,11 @@ export default function CategoriesManagement({
                                     )}
                                     {!category.nameAr && !category.nameFr && (
                                       <tr>
-                                        <td> No translations</td>
+                                        <td>
+                                          {t(
+                                            "adminDashboard.categoriesManagement.noTranslations"
+                                          )}
+                                        </td>
                                       </tr>
                                     )}
                                   </tbody>
@@ -295,7 +336,13 @@ export default function CategoriesManagement({
                                     : ""
                                 }
                               >
-                                {category.featured ? "Featured" : "Regular"}
+                                {category.featured
+                                  ? t(
+                                      "adminDashboard.categoriesManagement.featured"
+                                    )
+                                  : t(
+                                      "adminDashboard.categoriesManagement.regular"
+                                    )}
                               </Badge>
                             </TableCell>
                             <TableCell>

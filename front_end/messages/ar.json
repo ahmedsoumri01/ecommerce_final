@@ -446,6 +446,34 @@
         "creating": "جاري إنشاء المستخدم...",
         "cancel": "إلغاء"
       }
+    },
+    "categoriesManagement": {
+      "title": "إدارة الفئات",
+      "subtitle": "نظم منتجاتك باستخدام الفئات",
+      "addCategory": "إضافة فئة",
+      "totalCategories": "إجمالي الفئات",
+      "featuredCategories": "الفئات المميزة",
+      "regularCategories": "الفئات العادية",
+      "totalProducts": "إجمالي المنتجات",
+      "categoriesList": "قائمة الفئات",
+      "searchPlaceholder": "ابحث عن الفئات...",
+      "all": "الكل",
+      "featured": "مميز",
+      "regular": "عادي",
+      "image": "صورة",
+      "name": "الاسم",
+      "translations": "الترجمات",
+      "status": "الحالة",
+      "created": "تاريخ الإنشاء",
+      "actions": "الإجراءات",
+      "noCategoriesFound": "لم يتم العثور على فئات",
+      "ar": "عربي:",
+      "fr": "فرنسي:",
+      "noTranslations": "لا توجد ترجمات",
+      "view": "عرض",
+      "edit": "تعديل",
+      "delete": "حذف",
+      "loading": "جاري تحميل الفئات..."
     }
   }
 }
