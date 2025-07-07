@@ -23,6 +23,7 @@ const allowedOrigins = [
   "http://localhost:3000",
   "https://tuni-kado.vercel.app",
   "https://tuni-kado-ahmed-soumris-projects.vercel.app",
+  "https://shop-elbaraka.vercel.app",
   "https://ecommerce-final-efgc.onrender.com",
 ];
 

@@ -1,4 +1,8 @@
 import axios from "axios";
+import { toast } from "@/hooks/use-toast";
+import { resetAllStores } from "@/lib/store-reset";
+import Router from "next/router";
+import { useAuthStore } from "@/stores/auth-store";
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_APP_URL,
@@ -24,12 +28,23 @@ api.interceptors.response.use(
     return response;
   },
   (error) => {
-    // Handle 401 errors globally if needed
     if (error.response?.status === 401) {
-      // The auth store will handle this in checkAuth
-      console.warn("Unauthorized request:", error.config?.url);
+      // Notify user and logout on JWT expiration
+      toast({
+        title: "Session expired",
+        description: "Your session has expired. Please log in again.",
+        duration: 5000,
+      });
+      // Clear stores and logout
+      if (typeof window !== "undefined") {
+        const authStore = useAuthStore.getState();
+        authStore.logout();
+        resetAllStores();
+        // Redirect to login (try to extract locale from path)
+        const locale = window.location.pathname.split("/")[1] || "en";
+        window.location.href = `/${locale}/login`;
+      }
     }
-
     return Promise.reject(error);
   }
 );
