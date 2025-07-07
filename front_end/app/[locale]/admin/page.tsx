@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Users, Package, ShoppingCart, Tags } from "lucide-react";
 import Link from "next/link";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useKpi } from "@/stores/kpi-store";
 import {
   ChartContainer,
@@ -54,18 +54,70 @@ export default function AdminDashboard({
     fetchTopVisited();
   }, []);
 
-  // Transform data for charts
-  const visitsChartData =
-    visitsStats?.byMonth?.map((m: any) => ({
-      month: `Month ${m._id}`,
-      visits: m.total,
-    })) || [];
+  // Add state for chart view (month/day)
+  const [visitsView, setVisitsView] = useState<"month" | "day">("month");
+  const [topVisitedView, setTopVisitedView] = useState<"month" | "day">(
+    "month"
+  );
 
-  const topVisitedChartData =
-    topVisited?.map((p: any) => ({
-      name: p.name.length > 10 ? p.name.substring(0, 10) + "..." : p.name,
+  // Chart data for visits
+  const visitsChartData =
+    visitsView === "month"
+      ? visitsStats?.byMonth?.map((m: any) => ({
+          label: `Month ${m._id}`,
+          visits: m.total,
+        })) || []
+      : visitsStats?.byDay?.map((d: any) => ({
+          label: d._id,
+          visits: d.total,
+        })) || [];
+
+  // Chart data for top visited products
+  let topVisitedChartData: { id: string; name: string; visits: number }[] = [];
+  const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+  const thisMonth = new Date().toISOString().slice(0, 7); // YYYY-MM
+  if (
+    topVisitedView === "month" &&
+    topVisited &&
+    (topVisited as any).byMonth &&
+    Array.isArray((topVisited as any).byMonth)
+  ) {
+    // Find the current month entry
+    const monthEntry = (topVisited as any).byMonth.find(
+      (m: any) => m._id === thisMonth
+    );
+    if (monthEntry && Array.isArray(monthEntry.products)) {
+      topVisitedChartData = monthEntry.products.map((p: any) => ({
+        id: p._id,
+        name: p.name?.length > 10 ? p.name.substring(0, 10) + "..." : p.name,
+        visits: p.visits,
+      }));
+    }
+  } else if (
+    topVisitedView === "day" &&
+    topVisited &&
+    (topVisited as any).byDay &&
+    Array.isArray((topVisited as any).byDay)
+  ) {
+    // Find the current day entry
+    const dayEntry = (topVisited as any).byDay.find(
+      (d: any) => d._id === today
+    );
+    if (dayEntry && Array.isArray(dayEntry.products)) {
+      topVisitedChartData = dayEntry.products.map((p: any) => ({
+        id: p._id,
+        name: p.name?.length > 10 ? p.name.substring(0, 10) + "..." : p.name,
+        visits: p.visits,
+      }));
+    }
+  } else if (Array.isArray(topVisited)) {
+    // fallback for old data shape
+    topVisitedChartData = topVisited.map((p: any) => ({
+      id: p._id || p.id,
+      name: p.name?.length > 10 ? p.name.substring(0, 10) + "..." : p.name,
       visits: p.visits,
-    })) || [];
+    }));
+  }
 
   // Pie chart data for orders
   const ordersPieData =
@@ -113,7 +165,7 @@ export default function AdminDashboard({
         <CardHeader>
           <CardTitle className="text-2xl">Admin Dashboard</CardTitle>
           <p className="text-muted-foreground">
-            Overview of your system's performance and key metrics.
+            Overview of your system&apos;s performance and key metrics.
           </p>
         </CardHeader>
       </Card>
@@ -459,7 +511,25 @@ export default function AdminDashboard({
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card className="p-0">
           <CardHeader>
-            <CardTitle className="!p-0">Visits by Month</CardTitle>
+            <CardTitle className="!p-0">
+              Visits by {visitsView === "month" ? "Month" : "Day"}
+            </CardTitle>
+            <div className="flex gap-2 mt-2">
+              <Button
+                size="sm"
+                variant={visitsView === "month" ? "default" : "outline"}
+                onClick={() => setVisitsView("month")}
+              >
+                Month
+              </Button>
+              <Button
+                size="sm"
+                variant={visitsView === "day" ? "default" : "outline"}
+                onClick={() => setVisitsView("day")}
+              >
+                Day
+              </Button>
+            </div>
           </CardHeader>
           <CardContent>
             {visitsChartData.length > 0 ? (
@@ -474,7 +544,7 @@ export default function AdminDashboard({
               >
                 <BarChart data={visitsChartData}>
                   <XAxis
-                    dataKey="month"
+                    dataKey="label"
                     tickLine={false}
                     tickMargin={10}
                     axisLine={false}
@@ -504,7 +574,26 @@ export default function AdminDashboard({
 
         <Card>
           <CardHeader>
-            <CardTitle>Top Visited Products</CardTitle>
+            <CardTitle>
+              Top Visited Products (
+              {topVisitedView === "month" ? "Month" : "Day"})
+            </CardTitle>
+            <div className="flex gap-2 mt-2">
+              <Button
+                size="sm"
+                variant={topVisitedView === "month" ? "default" : "outline"}
+                onClick={() => setTopVisitedView("month")}
+              >
+                Month
+              </Button>
+              <Button
+                size="sm"
+                variant={topVisitedView === "day" ? "default" : "outline"}
+                onClick={() => setTopVisitedView("day")}
+              >
+                Day
+              </Button>
+            </div>
           </CardHeader>
           <CardContent>
             {topVisitedChartData.length > 0 ? (
@@ -534,6 +623,13 @@ export default function AdminDashboard({
                       <Cell
                         key={`cell-product-${index}`}
                         fill={BAR_COLORS[index % BAR_COLORS.length]}
+                        style={{ cursor: "pointer" }}
+                        onClick={() =>
+                          window.open(
+                            `/${params.locale}/products/${entry.id}`,
+                            "_blank"
+                          )
+                        }
                       />
                     ))}
                   </Bar>
