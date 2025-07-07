@@ -10,7 +10,10 @@
   "common": {
     "loading": "Loading...",
     "error": "An error occurred",
-    "language": "Language"
+    "language": "Language",
+    "language_en": "English",
+    "language_ar": "Arabic",
+    "language_fr": "French"
   },
   "contact_us_page": {
     "contact_us_title": "Contact us",
@@ -534,6 +537,38 @@
         "create": "Create Product",
         "creating": "Creating Product...",
         "cancel": "Cancel"
+      },
+      "product_details": {
+        "productNotFound": "Product not found",
+        "productNotFoundDesc": "The product you're looking for doesn't exist.",
+        "createProduct": {
+          "back": "Back to Products",
+          "productImages": "Product Images"
+        },
+        "pricing": "Pricing",
+        "noImagesAvailable": "No images available",
+        "description": "Description",
+        "arabicName": "Arabic Name",
+        "frenchName": "French Name",
+        "productInfo": "Product Information",
+        "brand": "Brand",
+        "category": "Category",
+        "price": "Price",
+        "originalPrice": "Original Price (Optional)",
+        "deliveryFee": "Delivery Fee (DT)",
+        "save": "Save",
+        "inStock": "In Stock",
+        "outOfStock": "Out of Stock",
+        "featured": "Featured",
+        "regular": "Regular",
+        "audience": "Audience",
+        "public": "Public",
+        "private": "Private",
+        "status": "Status",
+        "stockStatus": "Stock Status",
+        "timestamps": "Timestamps",
+        "created": "Created",
+        "lastUpdated": "Last Updated"
       }
     }
   }

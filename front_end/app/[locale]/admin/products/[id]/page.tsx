@@ -69,15 +69,21 @@ export default function ProductDetailsPage({
       <div className="flex flex-col items-center justify-center min-h-[400px]">
         <Package className="h-16 w-16 text-gray-400 mb-4" />
         <h2 className="text-xl font-semibold text-gray-900 mb-2">
-          {t("productsManagement.productNotFound")}
+          {t(
+            "adminDashboard.productsManagement.product_details.productNotFound"
+          )}
         </h2>
         <p className="text-gray-600 mb-4">
-          {t("productsManagement.productNotFoundDesc")}
+          {t(
+            "adminDashboard.productsManagement.product_details.productNotFoundDesc"
+          )}
         </p>
         <Link href={`/${params.locale}/admin/products`}>
           <Button variant="outline" className="bg-transparent">
             <ArrowLeft className="h-4 w-4 mr-2" />
-            {t("productsManagement.createProduct.back")}
+            {t(
+              "adminDashboard.productsManagement.product_details.createProduct.back"
+            )}
           </Button>
         </Link>
       </div>
@@ -92,7 +98,9 @@ export default function ProductDetailsPage({
           <Link href={`/${params.locale}/admin/products`}>
             <Button variant="outline" size="sm" className="bg-transparent">
               <ArrowLeft className="h-4 w-4 mr-2" />
-              {t('productsManagement.createProduct.back')}
+              {t(
+                "adminDashboard.productsManagement.product_details.createProduct.back"
+              )}
             </Button>
           </Link>
           <div>
@@ -103,14 +111,15 @@ export default function ProductDetailsPage({
               )}
             </h1>
             <p className="text-gray-600">
-              {t('productsManagement.ref')} {selectedProduct.productRef}
+              {t("adminDashboard.productsManagement.ref")}{" "}
+              {selectedProduct.productRef}
             </p>
           </div>
         </div>
         <div className="flex gap-2">
           <Button onClick={handleEdit} className="flex items-center">
             <Edit className="h-4 w-4 mr-2" />
-            {t('productsManagement.edit')}
+            {t("adminDashboard.productsManagement.edit")}
           </Button>
           <Button
             variant="destructive"
@@ -118,7 +127,7 @@ export default function ProductDetailsPage({
             className="flex items-center"
           >
             <Trash2 className="h-4 w-4 mr-2" />
-            {t('productsManagement.delete')}
+            {t("adminDashboard.productsManagement.delete")}
           </Button>
         </div>
       </div>
@@ -129,7 +138,11 @@ export default function ProductDetailsPage({
           {/* Images */}
           <Card>
             <CardHeader>
-              <CardTitle>{t('productsManagement.createProduct.productImages')}</CardTitle>
+              <CardTitle>
+                {t(
+                  "adminDashboard.productsManagement.product_details.createProduct.productImages"
+                )}
+              </CardTitle>
             </CardHeader>
             <CardContent>
               {selectedProduct.images.length > 0 ? (
@@ -150,7 +163,11 @@ export default function ProductDetailsPage({
               ) : (
                 <div className="text-center py-8 text-gray-500">
                   <Package className="h-16 w-16 mx-auto mb-4 text-gray-300" />
-                  <p>{t('productsManagement.noImagesAvailable')}</p>
+                  <p>
+                    {t(
+                      "adminDashboard.productsManagement.product_details.noImagesAvailable"
+                    )}
+                  </p>
                 </div>
               )}
             </CardContent>
@@ -159,12 +176,18 @@ export default function ProductDetailsPage({
           {/* Description */}
           <Card>
             <CardHeader>
-              <CardTitle>{t('productsManagement.createProduct.description')}</CardTitle>
+              <CardTitle>
+                {t(
+                  "adminDashboard.productsManagement.product_details.description"
+                )}
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 <div className="border-2 p-2">
-                  <h4 className="font-medium mb-2">{t('common.language_en')}</h4>
+                  <h4 className="font-medium mb-2">
+                    {t("common.language_en")}
+                  </h4>
                   <div
                     className="prose prose-sm max-w-none"
                     dangerouslySetInnerHTML={{
@@ -175,7 +198,9 @@ export default function ProductDetailsPage({
 
                 {selectedProduct.descriptionAr && (
                   <div className="border-2 p-2">
-                    <h4 className="font-medium mb-2">{t('common.language_ar')}</h4>
+                    <h4 className="font-medium mb-2">
+                      {t("common.language_ar")}
+                    </h4>
                     <div
                       className="prose prose-sm max-w-none"
                       dir="rtl"
@@ -188,7 +213,9 @@ export default function ProductDetailsPage({
 
                 {selectedProduct.descriptionFr && (
                   <div className="border-2 p-2">
-                    <h4 className="font-medium mb-2">{t('common.language_fr')}</h4>
+                    <h4 className="font-medium mb-2">
+                      {t("common.language_fr")}
+                    </h4>
                     <div
                       className="prose prose-sm max-w-none"
                       dangerouslySetInnerHTML={{
@@ -207,19 +234,25 @@ export default function ProductDetailsPage({
           {/* Basic Info */}
           <Card>
             <CardHeader>
-              <CardTitle>{t('productsManagement.productInfo')}</CardTitle>
+              <CardTitle>
+                {t(
+                  "adminDashboard.productsManagement.product_details.productInfo"
+                )}
+              </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
                 <label className="text-sm font-medium text-gray-600">
-                  {t('productsManagement.brand')}
+                  {t("adminDashboard.productsManagement.product_details.brand")}
                 </label>
                 <p className="text-lg">{selectedProduct.brand}</p>
               </div>
 
               <div>
                 <label className="text-sm font-medium text-gray-600">
-                  {t('productsManagement.category')}
+                  {t(
+                    "adminDashboard.productsManagement.product_details.category"
+                  )}
                 </label>
                 <p className="text-lg">
                   <Badge variant="secondary">
@@ -231,7 +264,9 @@ export default function ProductDetailsPage({
               {selectedProduct.nameAr && (
                 <div>
                   <label className="text-sm font-medium text-gray-600">
-                    {t('productsManagement.createProduct.arabicName')}
+                    {t(
+                      "adminDashboard.productsManagement.product_details.arabicName"
+                    )}
                   </label>
                   <p className="text-lg" dir="rtl">
                     {selectedProduct.nameAr}
@@ -242,7 +277,9 @@ export default function ProductDetailsPage({
               {selectedProduct.nameFr && (
                 <div>
                   <label className="text-sm font-medium text-gray-600">
-                    {t('productsManagement.createProduct.frenchName')}
+                    {t(
+                      "adminDashboard.productsManagement.product_details.frenchName"
+                    )}
                   </label>
                   <p className="text-lg">{selectedProduct.nameFr}</p>
                 </div>
@@ -255,79 +292,130 @@ export default function ProductDetailsPage({
             <CardHeader>
               <CardTitle className="flex items-center">
                 <DollarSign className="h-5 w-5 mr-2" />
-                {t('productsManagement.createProduct.pricing')}
+                {t("adminDashboard.productsManagement.product_details.pricing")}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
                 <label className="text-sm font-medium text-gray-600">
-                  {t('productsManagement.createProduct.price')}
+                  {t("adminDashboard.productsManagement.product_details.price")}
                 </label>
                 <p className="text-2xl font-bold text-green-600 flex rtl:flex-row-reverse">
                   <span> {selectedProduct.price} </span>
                   <span>DT</span>
                 </p>
               </div>
-              {selectedProduct.deliveryFee && selectedProduct.deliveryFee > 0 && (
-                <span className="text-sm text-green-500 ml-2">
-                  + {selectedProduct.deliveryFee} DT {t('productsManagement.createProduct.deliveryFee')}
-                </span>
-              )}
-              {selectedProduct.originalPrice && selectedProduct.originalPrice > selectedProduct.price && (
-                <div>
-                  <label className="text-sm font-medium text-gray-600">
-                    {t('productsManagement.createProduct.originalPrice')}
-                  </label>
-                  <p className="text-lg text-gray-500 line-through flex rtl:flex-row-reverse">
-                    <span>{selectedProduct.originalPrice} </span>
-                    <span>DT</span>
-                  </p>
-                  <p className="text-sm text-green-600 flex rtl:flex-row-reverse">
-                    {t('productsManagement.save')}
-                    <span>
-                      {selectedProduct.originalPrice - selectedProduct.price}
-                    </span>
-                    <span>DT</span>
-                  </p>
-                </div>
-              )}
+              {selectedProduct.deliveryFee &&
+                selectedProduct.deliveryFee > 0 && (
+                  <span className="text-sm text-green-500 ml-2">
+                    + {selectedProduct.deliveryFee} DT{" "}
+                    {t(
+                      "adminDashboard.productsManagement.product_details.deliveryFee"
+                    )}
+                  </span>
+                )}
+              {selectedProduct.originalPrice &&
+                selectedProduct.originalPrice > selectedProduct.price && (
+                  <div>
+                    <label className="text-sm font-medium text-gray-600">
+                      {t(
+                        "adminDashboard.productsManagement.product_details.originalPrice"
+                      )}
+                    </label>
+                    <p className="text-lg text-gray-500 line-through flex rtl:flex-row-reverse">
+                      <span>{selectedProduct.originalPrice} </span>
+                      <span>DT</span>
+                    </p>
+                    <p className="text-sm text-green-600 flex rtl:flex-row-reverse">
+                      {t(
+                        "adminDashboard.productsManagement.product_details.save"
+                      )}
+                      <span>
+                        {selectedProduct.originalPrice - selectedProduct.price}
+                      </span>
+                      <span>DT</span>
+                    </p>
+                  </div>
+                )}
             </CardContent>
           </Card>
 
           {/* Status */}
           <Card>
             <CardHeader>
-              <CardTitle>{t('productsManagement.status')}</CardTitle>
+              <CardTitle>
+                {t("adminDashboard.productsManagement.product_details.status")}
+              </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between">
-                <span className="text-sm font-medium">{t('productsManagement.stockStatus')}</span>
+                <span className="text-sm font-medium">
+                  {t(
+                    "adminDashboard.productsManagement.product_details.stockStatus"
+                  )}
+                </span>
                 <Badge
                   variant={selectedProduct.inStock ? "default" : "destructive"}
-                  className={selectedProduct.inStock ? "bg-green-100 text-green-800" : ""}
+                  className={
+                    selectedProduct.inStock ? "bg-green-100 text-green-800" : ""
+                  }
                 >
-                  {selectedProduct.inStock ? t('productsManagement.inStock') : t('productsManagement.outOfStock')}
+                  {selectedProduct.inStock
+                    ? t(
+                        "adminDashboard.productsManagement.product_details.inStock"
+                      )
+                    : t(
+                        "adminDashboard.productsManagement.product_details.outOfStock"
+                      )}
                 </Badge>
               </div>
 
               <div className="flex items-center justify-between">
-                <span className="text-sm font-medium">{t('productsManagement.featured')}</span>
+                <span className="text-sm font-medium">
+                  {t(
+                    "adminDashboard.productsManagement.product_details.featured"
+                  )}
+                </span>
                 <Badge
                   variant={selectedProduct.featured ? "default" : "secondary"}
-                  className={selectedProduct.featured ? "bg-yellow-100 text-yellow-800" : ""}
+                  className={
+                    selectedProduct.featured
+                      ? "bg-yellow-100 text-yellow-800"
+                      : ""
+                  }
                 >
-                  {selectedProduct.featured ? t('productsManagement.featured') : t('productsManagement.regular')}
+                  {selectedProduct.featured
+                    ? t(
+                        "adminDashboard.productsManagement.product_details.featured"
+                      )
+                    : t(
+                        "adminDashboard.productsManagement.product_details.regular"
+                      )}
                 </Badge>
               </div>
 
               <div className="flex items-center justify-between">
-                <span className="text-sm font-medium">{t('productsManagement.createProduct.audience')}</span>
+                <span className="text-sm font-medium">
+                  {t(
+                    "adminDashboard.productsManagement.product_details.audience"
+                  )}
+                </span>
                 <Badge
-                  variant={selectedProduct.audience === "public" ? "default" : "secondary"}
-                  className={selectedProduct.audience === "public" ? "bg-blue-100 text-blue-800" : "bg-gray-100 text-gray-800"}
+                  variant={
+                    selectedProduct.audience === "public"
+                      ? "default"
+                      : "secondary"
+                  }
+                  className={
+                    selectedProduct.audience === "public"
+                      ? "bg-blue-100 text-blue-800"
+                      : "bg-gray-100 text-gray-800"
+                  }
                 >
                   <Users className="h-3 w-3 mr-1" />
-                  {t(`productsManagement.${selectedProduct.audience}`)}
+                  {t(
+                    `adminDashboard.productsManagement.product_details.${selectedProduct.audience}`
+                  )}
                 </Badge>
               </div>
             </CardContent>
@@ -338,13 +426,17 @@ export default function ProductDetailsPage({
             <CardHeader>
               <CardTitle className="flex items-center">
                 <Calendar className="h-5 w-5 mr-2" />
-                {t('productsManagement.timestamps')}
+                {t(
+                  "adminDashboard.productsManagement.product_details.timestamps"
+                )}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
                 <label className="text-sm font-medium text-gray-600">
-                  {t('productsManagement.created')}
+                  {t(
+                    "adminDashboard.productsManagement.product_details.created"
+                  )}
                 </label>
                 <p className="text-sm">
                   {formatDate(selectedProduct.createdAt)}
@@ -353,7 +445,9 @@ export default function ProductDetailsPage({
 
               <div>
                 <label className="text-sm font-medium text-gray-600">
-                  {t('productsManagement.lastUpdated')}
+                  {t(
+                    "adminDashboard.productsManagement.product_details.lastUpdated"
+                  )}
                 </label>
                 <p className="text-sm">
                   {formatDate(selectedProduct.updatedAt)}

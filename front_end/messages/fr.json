@@ -52,7 +52,10 @@
   "common": {
     "loading": "Chargement...",
     "error": "Une erreur s'est produite",
-    "language": "Langue"
+    "language": "Langue",
+    "language_en": "Anglais",
+    "language_ar": "Arabe",
+    "language_fr": "Français"
   },
 
   "contact_us_page": {
@@ -516,6 +519,7 @@
       "searchPlaceholder": "Rechercher des produits par nom, marque ou référence...",
       "allCategories": "Toutes les catégories",
       "allStock": "Tous les stocks",
+      "productInfo": "Informations sur le produit",
       "private": "Privé",
       "image": "Image",
       "product": "Produit",
@@ -532,6 +536,7 @@
       "noProductsFound": "Aucun produit trouvé",
       "view": "Voir",
       "edit": "Modifier",
+
       "delete": "Supprimer",
       "loading": "Chargement des produits...",
       "createProduct": {
@@ -578,6 +583,38 @@
         "create": "Créer le produit",
         "creating": "Création du produit...",
         "cancel": "Annuler"
+      },
+      "product_details": {
+        "productNotFound": "Produit introuvable",
+        "productNotFoundDesc": "Le produit que vous recherchez n'existe pas.",
+        "createProduct": {
+          "back": "Retour aux produits",
+          "productImages": "Images du produit"
+        },
+        "pricing": "Tarification",
+        "noImagesAvailable": "Aucune image disponible",
+        "description": "Description",
+        "arabicName": "Nom arabe",
+        "frenchName": "Nom français",
+        "productInfo": "Informations sur le produit",
+        "brand": "Marque",
+        "category": "Catégorie",
+        "price": "Prix",
+        "originalPrice": "Prix d'origine (optionnel)",
+        "deliveryFee": "Frais de livraison (DT)",
+        "save": "Économiser",
+        "inStock": "En stock",
+        "outOfStock": "Rupture de stock",
+        "featured": "En vedette",
+        "regular": "Ordinaire",
+        "audience": "Audience",
+        "public": "Public",
+        "private": "Privé",
+        "status": "Statut",
+        "stockStatus": "Statut du stock",
+        "timestamps": "Horodatages",
+        "created": "Créé le",
+        "lastUpdated": "Dernière mise à jour"
       }
     }
   }

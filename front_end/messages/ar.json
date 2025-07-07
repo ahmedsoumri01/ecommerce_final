@@ -52,7 +52,10 @@
   "common": {
     "loading": "جاري التحميل...",
     "error": "حدث خطأ",
-    "language": "اللغة"
+    "language": "اللغة",
+    "language_en": "الإنجليزية",
+    "language_ar": "العربية",
+    "language_fr": "الفرنسية"
   },
 
   "contact_us_page": {
@@ -578,6 +581,38 @@
         "create": "إنشاء منتج",
         "creating": "جاري إنشاء المنتج...",
         "cancel": "إلغاء"
+      },
+      "product_details": {
+        "productNotFound": "المنتج غير موجود",
+        "productNotFoundDesc": "المنتج الذي تبحث عنه غير موجود.",
+        "createProduct": {
+          "back": "العودة إلى المنتجات",
+          "productImages": "صور المنتج"
+        },
+        "pricing": "التسعير",
+        "noImagesAvailable": "لا توجد صور متاحة",
+        "description": "الوصف",
+        "arabicName": "الاسم بالعربية",
+        "frenchName": "الاسم بالفرنسية",
+        "productInfo": "معلومات المنتج",
+        "brand": "العلامة التجارية",
+        "category": "الفئة",
+        "price": "السعر",
+        "originalPrice": "السعر الأصلي (اختياري)",
+        "deliveryFee": "رسوم التوصيل (د.ت)",
+        "save": "وفر",
+        "inStock": "متوفر",
+        "outOfStock": "غير متوفر",
+        "featured": "مميز",
+        "regular": "عادي",
+        "audience": "الجمهور",
+        "public": "عام",
+        "private": "خاص",
+        "status": "الحالة",
+        "stockStatus": "حالة المخزون",
+        "timestamps": "الطوابع الزمنية",
+        "created": "تاريخ الإنشاء",
+        "lastUpdated": "آخر تحديث"
       }
     }
   }
