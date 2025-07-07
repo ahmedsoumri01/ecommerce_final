@@ -213,7 +213,18 @@
     "share_product": "شارك المنتج",
     "secure": "آمن",
     "trusted": "موثوق",
-    "guaranteed": "مضمون"
+    "guaranteed": "مضمون",
+    "product_not_found": "المنتج غير موجود",
+    "product_not_found_desc": "المنتج الذي تبحث عنه غير موجود.",
+    "no_images_available": "لا توجد صور متاحة",
+    "product_info": "معلومات المنتج",
+    "stock_status": "حالة المخزون",
+    "save": "وفر",
+    "timestamps": "الطوابع الزمنية",
+    "last_updated": "آخر تحديث",
+    "language_en": "الإنجليزية",
+    "language_ar": "العربية",
+    "language_fr": "الفرنسية"
   },
   "cart_page": {
     "title": "سلة التسوق",

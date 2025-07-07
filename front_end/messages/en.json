@@ -169,7 +169,18 @@
     "share_product": "Share Product",
     "secure": "Secure",
     "trusted": "Trusted",
-    "guaranteed": "Guaranteed"
+    "guaranteed": "Guaranteed",
+    "product_not_found": "Product not found",
+    "product_not_found_desc": "The product you're looking for doesn't exist.",
+    "no_images_available": "No images available",
+    "product_info": "Product Information",
+    "stock_status": "Stock Status",
+    "save": "Save",
+    "timestamps": "Timestamps",
+    "last_updated": "Last Updated",
+    "language_en": "English",
+    "language_ar": "Arabic",
+    "language_fr": "French"
   },
   "cart_page": {
     "title": "Shopping Cart",

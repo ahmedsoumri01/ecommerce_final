@@ -213,7 +213,18 @@
     "share_product": "Partager le produit",
     "secure": "Sécurisé",
     "trusted": "Fiable",
-    "guaranteed": "Garanti"
+    "guaranteed": "Garanti",
+    "productNotFound": "Produit introuvable",
+    "productNotFoundDesc": "Le produit que vous recherchez n'existe pas.",
+    "noImagesAvailable": "Aucune image disponible",
+    "productInfo": "Informations sur le produit",
+    "stockStatus": "Statut du stock",
+    "save": "Économiser",
+    "timestamps": "Horodatages",
+    "lastUpdated": "Dernière mise à jour",
+    "language_en": "Anglais",
+    "language_ar": "Arabe",
+    "language_fr": "Français"
   },
   "cart_page": {
     "title": "Panier",
