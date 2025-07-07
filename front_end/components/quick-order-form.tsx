@@ -43,6 +43,7 @@ import type { Product } from "@/stores/product-store";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useClientDictionary } from "@/hooks/useClientDictionary";
 
 interface QuickOrderFormProps {
   product: Product;
@@ -82,6 +83,7 @@ export function QuickOrderForm({
   const { toast } = useToast();
   const { createOrder } = useOrderStore();
   const [selectedState, setSelectedState] = useState("");
+  const { t } = useClientDictionary(locale);
 
   const form = useForm<QuickOrderFormType>({
     resolver: zodResolver(quickOrderSchema),
@@ -151,24 +153,23 @@ export function QuickOrderForm({
 
       if (success) {
         toast({
-          title: "✅ تم إرسال الطلب بنجاح!",
-          description: "سيتم التواصل معك لتأكيد الطلب",
+          title: t("quick_order_form.toast.success_title"),
+          description: t("quick_order_form.toast.success_description"),
           duration: 5000,
         });
         reset();
         setSelectedState("");
       } else {
         toast({
-          title: "⚠️ تم حظرك مؤقتاً",
-          description: "لقد قمت بعدد كبير من الطلبات. أنت محظور لمدة 24 ساعة.",
-
+          title: t("quick_order_form.toast.blocked_title"),
+          description: t("quick_order_form.toast.blocked_description"),
           duration: 7000,
         });
       }
     } catch (error) {
       toast({
-        title: "❌ خطأ في الطلب",
-        description: "حدث خطأ أثناء إرسال الطلب. يرجى المحاولة مرة أخرى.",
+        title: t("quick_order_form.toast.error_title"),
+        description: t("quick_order_form.toast.error_description"),
       });
     }
   };
@@ -205,7 +206,9 @@ export function QuickOrderForm({
         <CardTitle className="text-center space-y-2">
           <div className="flex items-center justify-center gap-2">
             <ShoppingCart className="h-6 w-6" />
-            <span className="text-lg font-bold">طلب سريع</span>
+            <span className="text-lg font-bold">
+              {t("quick_order_form.title")}
+            </span>
           </div>
         </CardTitle>
       </CardHeader>
@@ -224,7 +227,9 @@ export function QuickOrderForm({
                   variant={product.inStock ? "default" : "destructive"}
                   className="text-xs"
                 >
-                  {product.inStock ? "متوفر" : "غير متوفر"}
+                  {product.inStock
+                    ? t("quick_order_form.product_available")
+                    : t("quick_order_form.product_not_available")}
                 </Badge>
                 <span className="text-lg font-bold flex rtl:flex-row-reverse text-green-600">
                   <span> {product.price.toFixed(2)} </span> <span> DT</span>
@@ -244,12 +249,14 @@ export function QuickOrderForm({
                 <FormItem>
                   <FormLabel className="flex items-center gap-2 text-sm font-medium">
                     <User className="h-4 w-4 text-gray-600" />
-                    الاسم الكامل *
+                    {t("quick_order_form.customer_name_label")}
                   </FormLabel>
                   <FormControl>
                     <Input
                       {...field}
-                      placeholder="أدخل اسمك الكامل"
+                      placeholder={t(
+                        "quick_order_form.customer_name_placeholder"
+                      )}
                       className="text-right h-11 border-gray-300 focus:border-green-500 focus:ring-green-500"
                       dir="rtl"
                     />
@@ -267,14 +274,14 @@ export function QuickOrderForm({
                 <FormItem>
                   <FormLabel className="flex items-center gap-2 text-sm font-medium">
                     <Phone className="h-4 w-4 text-gray-600" />
-                    رقم الهاتف * (8 أرقام)
+                    {t("quick_order_form.phone_label")}
                   </FormLabel>
                   <FormControl>
                     <div className="relative">
                       <Input
                         {...field}
                         type="tel"
-                        placeholder="مثال: 20123456"
+                        placeholder={t("quick_order_form.phone_example")}
                         className="text-right h-11 border-gray-300 focus:border-green-500 focus:ring-green-500 pl-12"
                         dir="rtl"
                         maxLength={8}
@@ -291,7 +298,7 @@ export function QuickOrderForm({
                   <FormMessage className="text-xs" />
                   <div className="text-xs text-gray-500 mt-1">
                     <CheckCircle className="h-3 w-3 inline mr-1" />
-                    يجب أن يبدأ بـ 2، 3، 4، 5، 7، 9
+                    {t("quick_order_form.phone_note")}
                   </div>
                 </FormItem>
               )}
@@ -305,7 +312,7 @@ export function QuickOrderForm({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-sm font-medium">
-                      الولاية *
+                      {t("quick_order_form.state_label")}
                     </FormLabel>
                     <FormControl>
                       <Select
@@ -317,7 +324,9 @@ export function QuickOrderForm({
                         }}
                       >
                         <SelectTrigger className="text-right h-11 border-gray-300">
-                          <SelectValue placeholder="اختر الولاية" />
+                          <SelectValue
+                            placeholder={t("quick_order_form.state_label")}
+                          />
                         </SelectTrigger>
                         <SelectContent>
                           {tunisiaStates.map((state) => (
@@ -339,7 +348,7 @@ export function QuickOrderForm({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-sm font-medium">
-                      المدينة *
+                      {t("quick_order_form.city_label")}
                     </FormLabel>
                     <FormControl>
                       <Select
@@ -348,7 +357,9 @@ export function QuickOrderForm({
                         disabled={!selectedState}
                       >
                         <SelectTrigger className="text-right h-11 border-gray-300">
-                          <SelectValue placeholder="اختر المدينة" />
+                          <SelectValue
+                            placeholder={t("quick_order_form.city_label")}
+                          />
                         </SelectTrigger>
                         <SelectContent>
                           {(tunisiaCities[selectedState] || []).map((city) => (
@@ -373,12 +384,12 @@ export function QuickOrderForm({
                 <FormItem>
                   <FormLabel className="flex items-center gap-2 text-sm font-medium">
                     <MapPin className="h-4 w-4 text-gray-600" />
-                    العنوان التفصيلي *
+                    {t("quick_order_form.address_label")}
                   </FormLabel>
                   <FormControl>
                     <Textarea
                       {...field}
-                      placeholder="مثال: شارع الحبيب بورقيبة، عمارة رقم 15، الطابق الثالث"
+                      placeholder={t("quick_order_form.address_placeholder")}
                       className="text-right min-h-[80px] border-gray-300 focus:border-green-500 focus:ring-green-500 resize-none"
                       dir="rtl"
                     />
@@ -394,7 +405,9 @@ export function QuickOrderForm({
               name="quantity"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-sm font-medium">الكمية</FormLabel>
+                  <FormLabel className="text-sm font-medium">
+                    {t("quick_order_form.quantity_label")}
+                  </FormLabel>
                   <FormControl>
                     <div className="flex items-center gap-3">
                       <Button
@@ -426,7 +439,7 @@ export function QuickOrderForm({
                         <Plus className="h-4 w-4" />
                       </Button>
                       <span className="text-sm text-gray-500">
-                        (الحد الأقصى: 10)
+                        {t("quick_order_form.max_quantity_note")}
                       </span>
                     </div>
                   </FormControl>
@@ -442,13 +455,13 @@ export function QuickOrderForm({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-sm font-medium">
-                    ملاحظات إضافية
+                    {t("quick_order_form.comment_label")}
                   </FormLabel>
                   <FormControl>
                     <Textarea
                       {...field}
                       rows={2}
-                      placeholder="أي ملاحظات أو تعليمات خاصة للتوصيل (اختياري)"
+                      placeholder={t("quick_order_form.comment_label")}
                       className="text-right border-gray-300 focus:border-green-500 focus:ring-green-500 resize-none"
                       dir="rtl"
                     />
@@ -462,12 +475,12 @@ export function QuickOrderForm({
             <div className="bg-gradient-to-r from-gray-50 to-gray-100 p-4 rounded-lg border border-gray-200">
               <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
                 <CreditCard className="h-4 w-4" />
-                ملخص الطلب
+                {t("quick_order_form.order_summary_title")}
               </h3>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">
-                    المجموع الفرعي ({quantityWatch} قطعة)
+                    {t("quick_order_form.subtotal")} ({quantityWatch} قطعة)
                   </span>
                   <span className="font-medium flex rtl:flex-row-reverse">
                     <span> {calculateSubtotal().toFixed(2)}</span>{" "}
@@ -478,7 +491,7 @@ export function QuickOrderForm({
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600 flex items-center gap-1">
                       <Truck className="h-3 w-3" />
-                      التوصيل
+                      {t("quick_order_form.delivery_fee")}
                     </span>
                     <span className="font-medium text-green-600 flex rtl:flex-row-reverse">
                       <span> {getDeliveryFee().toFixed(2)} </span>{" "}
@@ -488,7 +501,7 @@ export function QuickOrderForm({
                 )}
                 <Separator />
                 <div className="flex justify-between items-center text-lg font-bold">
-                  <span>المجموع الإجمالي</span>
+                  <span>{t("quick_order_form.total")}</span>
                   <span className="text-green-600 flex rtl:flex-row-reverse">
                     <span>{calculateTotal().toFixed(2)}</span> <span> DT</span>
                   </span>
@@ -505,12 +518,12 @@ export function QuickOrderForm({
               {isSubmitting ? (
                 <>
                   <Loader2 className="animate-spin h-5 w-5 mr-2" />
-                  جاري الإرسال...
+                  {t("quick_order_form.submit_button")}...
                 </>
               ) : (
                 <>
                   <ShoppingCart className="h-5 w-5 mr-2" />
-                  اشتري الآن -{" "}
+                  {t("quick_order_form.submit_button")}
                   <div className="flex rtl:flex-row-reverse">
                     <span> {calculateTotal().toFixed(2)}</span> <span> DT</span>
                   </div>
@@ -521,7 +534,7 @@ export function QuickOrderForm({
             {!product.inStock && (
               <div className="flex items-center gap-2 text-red-600 text-sm bg-red-50 p-3 rounded-lg">
                 <AlertCircle className="h-4 w-4" />
-                <span>عذراً، هذا المنتج غير متوفر حالياً</span>
+                <span>{t("quick_order_form.out_of_stock_message")}</span>
               </div>
             )}
           </form>

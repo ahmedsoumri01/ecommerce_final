@@ -327,5 +327,36 @@
       "success_title": "Account created successfully! 🎉",
       "success_description": "You can now log in to your account"
     }
+  },
+  "quick_order_form": {
+    "title": "Commande Rapide",
+    "product_available": "Disponible",
+    "product_not_available": "Non disponible",
+    "customer_name_label": "Nom complet *",
+    "customer_name_placeholder": "Entrez votre nom complet",
+    "phone_label": "Numéro de téléphone * (8 chiffres)",
+    "phone_example": "Exemple : 20123456",
+    "phone_note": "Doit commencer par 2, 3, 4, 5, 7 ou 9",
+    "state_label": "État *",
+    "city_label": "Ville *",
+    "address_label": "Adresse détaillée *",
+    "address_placeholder": "Exemple : Avenue Habib Bourguiba, Bâtiment 15, 3e étage",
+    "quantity_label": "Quantité",
+    "max_quantity_note": "(Maximum : 10)",
+    "comment_label": "Notes supplémentaires",
+    "order_summary_title": "Résumé de la commande",
+    "subtotal": "Sous-total",
+    "delivery_fee": "Livraison",
+    "total": "Total",
+    "submit_button": "Acheter maintenant - ",
+    "out_of_stock_message": "Désolé, ce produit n'est pas disponible pour le moment",
+    "toast": {
+      "success_title": "✅ Commande envoyée avec succès !",
+      "success_description": "Nous vous contacterons pour confirmer la commande",
+      "error_title": "❌ Échec de l'envoi de la commande",
+      "error_description": "Une erreur s'est produite lors de l'envoi de la commande. Veuillez réessayer.",
+      "blocked_title": "⚠️ Blocage temporaire",
+      "blocked_description": "Vous avez effectué trop de demandes. Vous êtes bloqué pendant 24 heures."
+    }
   }
 }

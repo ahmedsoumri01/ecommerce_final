@@ -283,5 +283,36 @@
       "success_title": "Compte créé avec succès ! 🎉",
       "success_description": "Vous pouvez maintenant vous connecter à votre compte"
     }
+  },
+  "quick_order_form": {
+    "title": "Quick Order",
+    "product_available": "Available",
+    "product_not_available": "Not Available",
+    "customer_name_label": "Full Name *",
+    "customer_name_placeholder": "Enter your full name",
+    "phone_label": "Phone Number * (8 digits)",
+    "phone_example": "Example: 20123456",
+    "phone_note": "Must start with 2, 3, 4, 5, 7, or 9",
+    "state_label": "State *",
+    "city_label": "City *",
+    "address_label": "Detailed Address *",
+    "address_placeholder": "Example: Avenue Habib Bourguiba, Building 15, 3rd Floor",
+    "quantity_label": "Quantity",
+    "max_quantity_note": "(Max: 10)",
+    "comment_label": "Additional Notes",
+    "order_summary_title": "Order Summary",
+    "subtotal": "Subtotal",
+    "delivery_fee": "Delivery",
+    "total": "Total",
+    "submit_button": "Buy Now - ",
+    "out_of_stock_message": "Sorry, this product is currently unavailable",
+    "toast": {
+      "success_title": "✅ Order submitted successfully!",
+      "success_description": "We will contact you to confirm the order",
+      "error_title": "❌ Order submission failed",
+      "error_description": "An error occurred while submitting your order. Please try again.",
+      "blocked_title": "⚠️ Temporarily Blocked",
+      "blocked_description": "You've made too many requests. You are blocked for 24 hours."
+    }
   }
 }
