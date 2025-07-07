@@ -396,6 +396,33 @@
       "month": "Mois",
       "day": "Jour",
       "topVisitedProducts": "Produits les plus visités"
+    },
+    "userManagement": {
+      "title": "Gestion des utilisateurs",
+      "subtitle": "Gérer les utilisateurs du système et leurs autorisations",
+      "addUser": "Ajouter un utilisateur",
+      "totalUsers": "Nombre total d'utilisateurs",
+      "activeUsers": "Utilisateurs actifs",
+      "blockedUsers": "Utilisateurs bloqués",
+      "admins": "Administrateurs",
+      "usersList": "Liste des utilisateurs",
+      "searchPlaceholder": "Rechercher des utilisateurs par nom ou e-mail...",
+      "allUsers": "Tous les utilisateurs",
+      "active": "Actif",
+      "blocked": "Bloqué",
+      "adminsBtn": "Administrateurs",
+      "name": "Nom",
+      "email": "E-mail",
+      "role": "Rôle",
+      "status": "Statut",
+      "created": "Créé le",
+      "actions": "Actions",
+      "noUsersFound": "Aucun utilisateur trouvé",
+      "update": "Mettre à jour",
+      "block": "Bloquer",
+      "activate": "Activer",
+      "delete": "Supprimer",
+      "loading": "Chargement des utilisateurs..."
     }
   }
 }

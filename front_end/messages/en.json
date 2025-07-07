@@ -352,6 +352,33 @@
       "month": "Month",
       "day": "Day",
       "topVisitedProducts": "Top Visited Products"
+    },
+    "userManagement": {
+      "title": "User Management",
+      "subtitle": "Manage system users and their permissions",
+      "addUser": "Add User",
+      "totalUsers": "Total Users",
+      "activeUsers": "Active Users",
+      "blockedUsers": "Blocked Users",
+      "admins": "Admins",
+      "usersList": "Users List",
+      "searchPlaceholder": "Search users by name or email...",
+      "allUsers": "All Users",
+      "active": "Active",
+      "blocked": "Blocked",
+      "adminsBtn": "Admins",
+      "name": "Name",
+      "email": "Email",
+      "role": "Role",
+      "status": "Status",
+      "created": "Created",
+      "actions": "Actions",
+      "noUsersFound": "No users found",
+      "update": "Update",
+      "block": "Block",
+      "activate": "Activate",
+      "delete": "Delete",
+      "loading": "Loading users..."
     }
   }
 }
