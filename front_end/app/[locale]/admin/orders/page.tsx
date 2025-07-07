@@ -523,6 +523,15 @@ export default function OrdersManagement({
                 >
                   Delivered
                 </Button>
+                <Button
+                  variant={statusFilter === "cancelled" ? "default" : "outline"}
+                  onClick={() => setStatusFilter("cancelled")}
+                  className={
+                    statusFilter !== "cancelled" ? "bg-transparent" : ""
+                  }
+                >
+                  Cancelled
+                </Button>
               </div>
             </div>
 
