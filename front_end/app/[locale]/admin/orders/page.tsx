@@ -371,6 +371,14 @@ export default function OrdersManagement({
               <p className="text-sm text-muted-foreground">Delivered</p>
             </CardContent>
           </Card>
+          <Card>
+            <CardContent className="p-4">
+              <div className="text-2xl font-bold text-red-600">
+                {stats.cancelled}
+              </div>
+              <p className="text-sm text-muted-foreground">Cancelled</p>
+            </CardContent>
+          </Card>
         </div>
 
         {/* Orders List */}
