@@ -96,7 +96,7 @@ export function HeroCarousel({
               : "translate-x-full"
           }`}
         >
-          <div className="container mx-auto pt-12 px-16 h-full flex items-center">
+          <div className="container mx-auto pt-20 px-10 md:pt-12 md:px-16 h-full flex items-center">
             <div
               className={`grid md:grid-cols-2 gap-8 items-center w-full ${
                 isRTL ? "text-right" : "text-left"

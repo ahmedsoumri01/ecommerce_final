@@ -56,7 +56,7 @@ export function Header({ locale }: HeaderProps) {
               <Link
                 key={item.href}
                 href={item.href}
-                className="text-sm font-medium hover:text-primary transition-colors"
+                className="text-lg font-bold hover:text-primary transition-colors"
               >
                 {item.label}
               </Link>
@@ -111,7 +111,7 @@ export function Header({ locale }: HeaderProps) {
                           key={item.href}
                           href={item.href}
                           onClick={() => setIsMobileMenuOpen(false)}
-                          className="block text-lg font-medium py-3 px-4 rounded-lg hover:bg-gray-100 transition-colors"
+                          className="block text-lg font-bold py-3 px-4 rounded-lg hover:bg-gray-100 transition-colors"
                         >
                           {item.label}
                         </Link>

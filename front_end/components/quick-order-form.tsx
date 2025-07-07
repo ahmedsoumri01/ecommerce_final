@@ -226,8 +226,8 @@ export function QuickOrderForm({
                 >
                   {product.inStock ? "متوفر" : "غير متوفر"}
                 </Badge>
-                <span className="text-lg font-bold text-green-600">
-                  {product.price.toFixed(2)} DT
+                <span className="text-lg font-bold flex rtl:flex-row-reverse text-green-600">
+                  <span> {product.price.toFixed(2)} </span> <span> DT</span>
                 </span>
               </div>
             </div>
@@ -510,7 +510,10 @@ export function QuickOrderForm({
               ) : (
                 <>
                   <ShoppingCart className="h-5 w-5 mr-2" />
-                  اشتري الآن - {calculateTotal().toFixed(2)} DT
+                  اشتري الآن -{" "}
+                  <div className="flex rtl:flex-row-reverse">
+                    <span> {calculateTotal().toFixed(2)}</span> <span> DT</span>
+                  </div>
                 </>
               )}
             </Button>
