@@ -448,6 +448,37 @@
         "creating": "Creating Category...",
         "cancel": "Cancel"
       }
+    },
+    "productsManagement": {
+      "title": "Products Management",
+      "subtitle": "Manage your product inventory and details",
+      "addProduct": "Add Product",
+      "totalProducts": "Total Products",
+      "inStock": "In Stock",
+      "outOfStock": "Out of Stock",
+      "featured": "Featured",
+      "productsList": "Products List",
+      "searchPlaceholder": "Search products by name, brand, or reference...",
+      "allCategories": "All Categories",
+      "allStock": "All Stock",
+      "private": "Private",
+      "image": "Image",
+      "product": "Product",
+      "brand": "Brand",
+      "category": "Category",
+      "price": "Price",
+      "stock": "Stock",
+      "status": "Status",
+      "created": "Created",
+      "actions": "Actions",
+      "ref": "Ref:",
+      "regular": "Regular",
+      "public": "Public",
+      "noProductsFound": "No products found",
+      "view": "View",
+      "edit": "Edit",
+      "delete": "Delete",
+      "loading": "Loading products..."
     }
   }
 }

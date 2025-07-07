@@ -40,6 +40,7 @@ import {
 import { useCategoryStore } from "@/stores/category-store";
 import { EditProductModal } from "@/components/modals/edit-product-modal";
 import { DeleteProductDialog } from "@/components/dialogs/delete-product-dialog";
+import { useClientDictionary } from "@/hooks/useClientDictionary";
 
 export default function ProductsManagement({
   params,
@@ -65,6 +66,7 @@ export default function ProductsManagement({
 
   const { getAllCategories, categories } = useCategoryStore();
   const filteredProducts = useFilteredProducts();
+  const { t } = useClientDictionary(params.locale);
 
   // Modal/Dialog states
   const [editProduct, setEditProduct] = useState<Product | null>(null);
@@ -115,15 +117,17 @@ export default function ProductsManagement({
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold">Products Management</h1>
+          <h1 className="text-2xl font-bold">
+            {t("adminDashboard.productsManagement.title")}
+          </h1>
           <p className="text-muted-foreground">
-            Manage your product inventory and details
+            {t("adminDashboard.productsManagement.subtitle")}
           </p>
         </div>
         <Link href={`/${params.locale}/admin/products/create`}>
           <Button className="flex items-center">
             <Plus className="h-4 w-4 mr-2" />
-            Add Product
+            {t("adminDashboard.productsManagement.addProduct")}
           </Button>
         </Link>
       </div>
@@ -133,7 +137,9 @@ export default function ProductsManagement({
         <Card>
           <CardContent className="p-4">
             <div className="text-2xl font-bold">{totalProducts}</div>
-            <p className="text-sm text-muted-foreground">Total Products</p>
+            <p className="text-sm text-muted-foreground">
+              {t("adminDashboard.productsManagement.totalProducts")}
+            </p>
           </CardContent>
         </Card>
         <Card>
@@ -141,7 +147,9 @@ export default function ProductsManagement({
             <div className="text-2xl font-bold text-green-600">
               {inStockProducts}
             </div>
-            <p className="text-sm text-muted-foreground">In Stock</p>
+            <p className="text-sm text-muted-foreground">
+              {t("adminDashboard.productsManagement.inStock")}
+            </p>
           </CardContent>
         </Card>
         <Card>
@@ -149,7 +157,9 @@ export default function ProductsManagement({
             <div className="text-2xl font-bold text-red-600">
               {outOfStockProducts}
             </div>
-            <p className="text-sm text-muted-foreground">Out of Stock</p>
+            <p className="text-sm text-muted-foreground">
+              {t("adminDashboard.productsManagement.outOfStock")}
+            </p>
           </CardContent>
         </Card>
         <Card>
@@ -157,7 +167,9 @@ export default function ProductsManagement({
             <div className="text-2xl font-bold text-yellow-600">
               {featuredProducts}
             </div>
-            <p className="text-sm text-muted-foreground">Featured</p>
+            <p className="text-sm text-muted-foreground">
+              {t("adminDashboard.productsManagement.featured")}
+            </p>
           </CardContent>
         </Card>
       </div>
@@ -165,7 +177,9 @@ export default function ProductsManagement({
       {/* Products List */}
       <Card>
         <CardHeader>
-          <CardTitle>Products List</CardTitle>
+          <CardTitle>
+            {t("adminDashboard.productsManagement.productsList")}
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex flex-col gap-4 mb-6">
@@ -173,7 +187,9 @@ export default function ProductsManagement({
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
               <Input
-                placeholder="Search products by name, brand, or reference..."
+                placeholder={t(
+                  "adminDashboard.productsManagement.searchPlaceholder"
+                )}
                 className="pl-10"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -184,10 +200,16 @@ export default function ProductsManagement({
             <div className="flex flex-wrap gap-2">
               <Select value={categoryFilter} onValueChange={setCategoryFilter}>
                 <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="All Categories" />
+                  <SelectValue
+                    placeholder={t(
+                      "adminDashboard.productsManagement.allCategories"
+                    )}
+                  />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Categories</SelectItem>
+                  <SelectItem value="all">
+                    {t("adminDashboard.productsManagement.allCategories")}
+                  </SelectItem>
                   {categories.map((category) => (
                     <SelectItem key={category._id} value={category._id}>
                       {category.name}
@@ -201,14 +223,14 @@ export default function ProductsManagement({
                 onClick={() => setStockFilter("all")}
                 className={stockFilter !== "all" ? "bg-transparent" : ""}
               >
-                All Stock
+                {t("adminDashboard.productsManagement.allStock")}
               </Button>
               <Button
                 variant={stockFilter === "in-stock" ? "default" : "outline"}
                 onClick={() => setStockFilter("in-stock")}
                 className={stockFilter !== "in-stock" ? "bg-transparent" : ""}
               >
-                In Stock
+                {t("adminDashboard.productsManagement.inStock")}
               </Button>
               <Button
                 variant={stockFilter === "out-of-stock" ? "default" : "outline"}
@@ -217,7 +239,7 @@ export default function ProductsManagement({
                   stockFilter !== "out-of-stock" ? "bg-transparent" : ""
                 }
               >
-                Out of Stock
+                {t("adminDashboard.productsManagement.outOfStock")}
               </Button>
               <Button
                 variant={featuredFilter === "featured" ? "default" : "outline"}
@@ -230,7 +252,7 @@ export default function ProductsManagement({
                   featuredFilter !== "featured" ? "bg-transparent" : ""
                 }
               >
-                Featured
+                {t("adminDashboard.productsManagement.featured")}
               </Button>
               <Button
                 variant={audienceFilter === "private" ? "default" : "outline"}
@@ -241,7 +263,7 @@ export default function ProductsManagement({
                 }
                 className={audienceFilter !== "private" ? "bg-transparent" : ""}
               >
-                Private
+                {t("adminDashboard.productsManagement.private")}
               </Button>
             </div>
           </div>
@@ -251,21 +273,41 @@ export default function ProductsManagement({
             {isLoading ? (
               <div className="flex items-center justify-center p-8">
                 <Loader2 className="h-8 w-8 animate-spin" />
-                <span className="ml-2">Loading products...</span>
+                <span className="ml-2">
+                  {t("adminDashboard.productsManagement.loading")}
+                </span>
               </div>
             ) : (
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Image</TableHead>
-                    <TableHead>Product</TableHead>
-                    <TableHead>Brand</TableHead>
-                    <TableHead>Category</TableHead>
-                    <TableHead>Price</TableHead>
-                    <TableHead>Stock</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Created</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
+                    <TableHead>
+                      {t("adminDashboard.productsManagement.image")}
+                    </TableHead>
+                    <TableHead>
+                      {t("adminDashboard.productsManagement.product")}
+                    </TableHead>
+                    <TableHead>
+                      {t("adminDashboard.productsManagement.brand")}
+                    </TableHead>
+                    <TableHead>
+                      {t("adminDashboard.productsManagement.category")}
+                    </TableHead>
+                    <TableHead>
+                      {t("adminDashboard.productsManagement.price")}
+                    </TableHead>
+                    <TableHead>
+                      {t("adminDashboard.productsManagement.stock")}
+                    </TableHead>
+                    <TableHead>
+                      {t("adminDashboard.productsManagement.status")}
+                    </TableHead>
+                    <TableHead>
+                      {t("adminDashboard.productsManagement.created")}
+                    </TableHead>
+                    <TableHead className="text-right">
+                      {t("adminDashboard.productsManagement.actions")}
+                    </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -275,7 +317,7 @@ export default function ProductsManagement({
                         colSpan={9}
                         className="text-center py-8 text-muted-foreground"
                       >
-                        No products found
+                        {t("adminDashboard.productsManagement.noProductsFound")}
                       </TableCell>
                     </TableRow>
                   ) : (
@@ -299,7 +341,8 @@ export default function ProductsManagement({
                             <div>
                               <div className="font-medium">{product.name}</div>
                               <div className="text-sm text-muted-foreground">
-                                Ref: {product.productRef}
+                                {t("adminDashboard.productsManagement.ref")}{" "}
+                                {product.productRef}
                               </div>
                             </div>
                             {product.featured && (
@@ -340,7 +383,11 @@ export default function ProductsManagement({
                                 : ""
                             }
                           >
-                            {product.inStock ? "In Stock" : "Out of Stock"}
+                            {product.inStock
+                              ? t("adminDashboard.productsManagement.inStock")
+                              : t(
+                                  "adminDashboard.productsManagement.outOfStock"
+                                )}
                           </Badge>
                         </TableCell>
                         <TableCell>
@@ -355,7 +402,13 @@ export default function ProductsManagement({
                                   : ""
                               }
                             >
-                              {product.featured ? "Featured" : "Regular"}
+                              {product.featured
+                                ? t(
+                                    "adminDashboard.productsManagement.featured"
+                                  )
+                                : t(
+                                    "adminDashboard.productsManagement.regular"
+                                  )}
                             </Badge>
                             <Badge
                               variant={
@@ -369,7 +422,11 @@ export default function ProductsManagement({
                                   : "bg-gray-100 text-gray-800"
                               }
                             >
-                              {product.audience}
+                              {t(
+                                product.audience === "public"
+                                  ? "adminDashboard.productsManagement.public"
+                                  : "adminDashboard.productsManagement.private"
+                              )}
                             </Badge>
                           </div>
                         </TableCell>

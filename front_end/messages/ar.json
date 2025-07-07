@@ -492,6 +492,37 @@
         "creating": "جاري إنشاء الفئة...",
         "cancel": "إلغاء"
       }
+    },
+    "productsManagement": {
+      "title": "إدارة المنتجات",
+      "subtitle": "إدارة مخزون المنتجات وتفاصيلها",
+      "addProduct": "إضافة منتج",
+      "totalProducts": "إجمالي المنتجات",
+      "inStock": "متوفر",
+      "outOfStock": "غير متوفر",
+      "featured": "مميز",
+      "productsList": "قائمة المنتجات",
+      "searchPlaceholder": "ابحث عن المنتجات بالاسم أو العلامة التجارية أو المرجع...",
+      "allCategories": "كل الفئات",
+      "allStock": "كل المخزون",
+      "private": "خاص",
+      "image": "صورة",
+      "product": "المنتج",
+      "brand": "العلامة التجارية",
+      "category": "الفئة",
+      "price": "السعر",
+      "stock": "المخزون",
+      "status": "الحالة",
+      "created": "تاريخ الإنشاء",
+      "actions": "الإجراءات",
+      "ref": "المرجع:",
+      "regular": "عادي",
+      "public": "عام",
+      "noProductsFound": "لم يتم العثور على منتجات",
+      "view": "عرض",
+      "edit": "تعديل",
+      "delete": "حذف",
+      "loading": "جاري تحميل المنتجات..."
     }
   }
 }
