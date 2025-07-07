@@ -1,12 +1,19 @@
 "use client";
 
 import { useEffect } from "react";
+import { useClientDictionary } from "@/hooks/useClientDictionary";
+import { Footer } from "@/components/footer";
 
 export default function ClientLayout({
   children,
+  locale,
 }: {
   children: React.ReactNode;
+  locale: string;
 }) {
+  const { t } = useClientDictionary(locale);
+  const isRTL = locale === "ar";
+
   useEffect(() => {
     if (typeof window !== "undefined" && "serviceWorker" in navigator) {
       window.addEventListener("load", () => {
@@ -21,6 +28,7 @@ export default function ClientLayout({
     <>
       {/* Show PWA install prompt */}
       {children}
+      <Footer dict={t("footer")} locale={locale} isRTL={isRTL} />
     </>
   );
 }

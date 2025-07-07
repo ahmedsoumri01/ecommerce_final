@@ -21,12 +21,16 @@ import {
   Cell,
   ResponsiveContainer,
 } from "recharts";
+import { getDictionary } from "@/lib/dictionaries";
+import { useClientDictionary } from "@/hooks/useClientDictionary";
 
 export default function AdminDashboard({
   params,
 }: {
   params: { locale: string };
 }) {
+  const { t, dict } = useClientDictionary(params.locale);
+
   const {
     userCount,
     productStats,
@@ -131,12 +135,12 @@ export default function AdminDashboard({
   const productStockData = productStats
     ? [
         {
-          name: "In Stock",
+          name: t("adminDashboard.kpi.inStock"),
           value: productStats.inStock || 0,
           fill: "hsl(var(--chart-1))",
         },
         {
-          name: "Out of Stock",
+          name: t("adminDashboard.kpi.outStock"),
           value: productStats.outStock || 0,
           fill: "hsl(var(--chart-2))",
         },
@@ -163,10 +167,8 @@ export default function AdminDashboard({
       {/* Welcome Card */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-2xl">Admin Dashboard</CardTitle>
-          <p className="text-muted-foreground">
-            Overview of your system&apos;s performance and key metrics.
-          </p>
+          <CardTitle className="text-2xl">{t("adminDashboard.title")}</CardTitle>
+          <p className="text-muted-foreground">{t("adminDashboard.subtitle")}</p>
         </CardHeader>
       </Card>
 
@@ -178,7 +180,7 @@ export default function AdminDashboard({
               <Users className="h-8 w-8 text-blue-600" />
               <div className="ml-4">
                 <p className="text-sm font-medium text-muted-foreground">
-                  Total Users
+                  {t("adminDashboard.kpi.users")}
                 </p>
                 <p className="text-2xl font-bold">{userCount ?? "-"}</p>
               </div>
@@ -192,14 +194,13 @@ export default function AdminDashboard({
               <Package className="h-8 w-8 text-green-600" />
               <div className="ml-4">
                 <p className="text-sm font-medium text-muted-foreground">
-                  Products
+                  {t("adminDashboard.kpi.products")}
                 </p>
                 <p className="text-2xl font-bold">
                   {productStats?.total ?? "-"}
                 </p>
                 <p className="text-xs text-green-600">
-                  In Stock: {productStats?.inStock ?? "-"} / Out:{" "}
-                  {productStats?.outStock ?? "-"}
+                  {t("adminDashboard.kpi.inStock")}: {productStats?.inStock ?? "-"} / {t("adminDashboard.kpi.outStock")}: {productStats?.outStock ?? "-"}
                 </p>
               </div>
             </div>
@@ -212,7 +213,7 @@ export default function AdminDashboard({
               <ShoppingCart className="h-8 w-8 text-purple-600" />
               <div className="ml-4">
                 <p className="text-sm font-medium text-muted-foreground">
-                  Orders
+                  {t("adminDashboard.kpi.orders")}
                 </p>
                 <p className="text-2xl font-bold">
                   {orderStats
@@ -236,7 +237,7 @@ export default function AdminDashboard({
               <Tags className="h-8 w-8 text-orange-600" />
               <div className="ml-4">
                 <p className="text-sm font-medium text-muted-foreground">
-                  Categories
+                  {t("adminDashboard.kpi.categories")}
                 </p>
                 <p className="text-2xl font-bold">{categoryCount ?? "-"}</p>
               </div>
@@ -249,9 +250,9 @@ export default function AdminDashboard({
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card>
           <CardHeader>
-            <CardTitle>Order Status Distribution</CardTitle>
+            <CardTitle>{t("adminDashboard.kpi.orderStatusDistribution")}</CardTitle>
             <p className="text-muted-foreground">
-              Breakdown of orders by status
+              {t("adminDashboard.kpi.orderStatusDistributionDesc")}
             </p>
           </CardHeader>
           <CardContent>
@@ -259,19 +260,19 @@ export default function AdminDashboard({
               <ChartContainer
                 config={{
                   pending: {
-                    label: "Pending",
+                    label: t("adminDashboard.kpi.pending"),
                     color: "hsl(var(--chart-1))",
                   },
                   completed: {
-                    label: "Completed",
+                    label: t("adminDashboard.kpi.completed"),
                     color: "hsl(var(--chart-2))",
                   },
                   cancelled: {
-                    label: "Cancelled",
+                    label: t("adminDashboard.kpi.cancelled"),
                     color: "hsl(var(--chart-3))",
                   },
                   processing: {
-                    label: "Processing",
+                    label: t("adminDashboard.kpi.processing"),
                     color: "hsl(var(--chart-4))",
                   },
                 }}
@@ -300,7 +301,7 @@ export default function AdminDashboard({
               </ChartContainer>
             ) : (
               <div className="flex items-center justify-center h-[250px] text-muted-foreground">
-                No order data available
+                {t("adminDashboard.kpi.noOrderData")}
               </div>
             )}
             {/* Legend */}
@@ -324,9 +325,9 @@ export default function AdminDashboard({
 
         <Card>
           <CardHeader>
-            <CardTitle>Product Stock Status</CardTitle>
+            <CardTitle>{t("adminDashboard.kpi.productStockStatus")}</CardTitle>
             <p className="text-muted-foreground">
-              In stock vs out of stock products
+              {t("adminDashboard.kpi.productStockStatusDesc")}
             </p>
           </CardHeader>
           <CardContent>
@@ -335,11 +336,11 @@ export default function AdminDashboard({
               <ChartContainer
                 config={{
                   inStock: {
-                    label: "In Stock",
+                    label: t("adminDashboard.kpi.inStock"),
                     color: "hsl(var(--chart-1))",
                   },
                   outStock: {
-                    label: "Out of Stock",
+                    label: t("adminDashboard.kpi.outStock"),
                     color: "hsl(var(--chart-2))",
                   },
                 }}
@@ -368,7 +369,7 @@ export default function AdminDashboard({
               </ChartContainer>
             ) : (
               <div className="flex items-center justify-center h-[250px] text-muted-foreground">
-                No product data available
+                {t("adminDashboard.kpi.noProductData")}
               </div>
             )}
             {/* Legend */}
@@ -397,15 +398,15 @@ export default function AdminDashboard({
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card>
           <CardHeader>
-            <CardTitle>Quick Actions</CardTitle>
-            <p className="text-muted-foreground">Common administrative tasks</p>
+            <CardTitle>{t("adminDashboard.kpi.quickActions")}</CardTitle>
+            <p className="text-muted-foreground">{t("adminDashboard.kpi.quickActionsDesc")}</p>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-2 gap-4">
               <Link href={`/${params.locale}/admin/users`}>
                 <Button className="w-full h-20 flex flex-col items-center justify-center">
                   <Users className="h-6 w-6 mb-2" />
-                  Manage Users
+                  {t("adminDashboard.kpi.manageUsers")}
                 </Button>
               </Link>
               <Link href={`/${params.locale}/admin/products`}>
@@ -414,7 +415,7 @@ export default function AdminDashboard({
                   className="w-full h-20 flex flex-col items-center justify-center bg-transparent"
                 >
                   <Package className="h-6 w-6 mb-2" />
-                  Add Product
+                  {t("adminDashboard.kpi.addProduct")}
                 </Button>
               </Link>
               <Link href={`/${params.locale}/admin/categories`}>
@@ -423,7 +424,7 @@ export default function AdminDashboard({
                   className="w-full h-20 flex flex-col items-center justify-center bg-transparent"
                 >
                   <Tags className="h-6 w-6 mb-2" />
-                  Categories
+                  {t("adminDashboard.kpi.categoriesBtn")}
                 </Button>
               </Link>
               <Link href={`/${params.locale}/admin/orders`}>
@@ -432,7 +433,7 @@ export default function AdminDashboard({
                   className="w-full h-20 flex flex-col items-center justify-center bg-transparent"
                 >
                   <ShoppingCart className="h-6 w-6 mb-2" />
-                  View Orders
+                  {t("adminDashboard.kpi.viewOrders")}
                 </Button>
               </Link>
             </div>
@@ -441,8 +442,8 @@ export default function AdminDashboard({
 
         <Card>
           <CardHeader>
-            <CardTitle>Recent Activity</CardTitle>
-            <p className="text-muted-foreground">Latest system activities</p>
+            <CardTitle>{t("adminDashboard.kpi.recentActivity")}</CardTitle>
+            <p className="text-muted-foreground">{t("adminDashboard.kpi.recentActivityDesc")}</p>
           </CardHeader>
           <CardContent>
             <div className="space-y-2 max-h-80 overflow-y-auto">
@@ -453,7 +454,7 @@ export default function AdminDashboard({
                       <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                       <div className="flex-1">
                         <p className="text-sm font-medium">
-                          New user: {u.firstName} {u.lastName}
+                          {t("adminDashboard.kpi.newUser")}: {u.firstName} {u.lastName}
                         </p>
                         <p className="text-xs text-muted-foreground">
                           {new Date(u.createdAt).toLocaleString()}
@@ -466,7 +467,7 @@ export default function AdminDashboard({
                       <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
                       <div className="flex-1">
                         <p className="text-sm font-medium">
-                          Product added: {p.name}
+                          {t("adminDashboard.kpi.productAdded")}: {p.name}
                         </p>
                         <p className="text-xs text-muted-foreground">
                           {new Date(p.createdAt).toLocaleString()}
@@ -479,7 +480,7 @@ export default function AdminDashboard({
                       <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
                       <div className="flex-1">
                         <p className="text-sm font-medium">
-                          Order: {o.orderRef}
+                          {t("adminDashboard.kpi.order")}: {o.orderRef}
                         </p>
                         <p className="text-xs text-muted-foreground">
                           {new Date(o.createdAt).toLocaleString()}
@@ -492,7 +493,7 @@ export default function AdminDashboard({
                       <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
                       <div className="flex-1">
                         <p className="text-sm font-medium">
-                          Category: {c.name}
+                          {t("adminDashboard.kpi.category")}: {c.name}
                         </p>
                         <p className="text-xs text-muted-foreground">
                           {new Date(c.createdAt).toLocaleString()}
@@ -512,7 +513,7 @@ export default function AdminDashboard({
         <Card className="p-0">
           <CardHeader>
             <CardTitle className="!p-0">
-              Visits by {visitsView === "month" ? "Month" : "Day"}
+              {t("adminDashboard.kpi.visitsBy")} {visitsView === "month" ? t("adminDashboard.kpi.month") : t("adminDashboard.kpi.day")}
             </CardTitle>
             <div className="flex gap-2 mt-2">
               <Button
@@ -520,14 +521,14 @@ export default function AdminDashboard({
                 variant={visitsView === "month" ? "default" : "outline"}
                 onClick={() => setVisitsView("month")}
               >
-                Month
+                {t("adminDashboard.kpi.month")}
               </Button>
               <Button
                 size="sm"
                 variant={visitsView === "day" ? "default" : "outline"}
                 onClick={() => setVisitsView("day")}
               >
-                Day
+                {t("adminDashboard.kpi.day")}
               </Button>
             </div>
           </CardHeader>
@@ -536,7 +537,7 @@ export default function AdminDashboard({
               <ChartContainer
                 config={{
                   visits: {
-                    label: "Visits",
+                    label: t("adminDashboard.kpi.visitsBy"),
                     color: "hsl(var(--chart-1))",
                   },
                 }}
@@ -566,7 +567,7 @@ export default function AdminDashboard({
               </ChartContainer>
             ) : (
               <div className="flex items-center justify-center h-[200px] text-muted-foreground">
-                No data available
+                {t("adminDashboard.kpi.noData")}
               </div>
             )}
           </CardContent>
@@ -575,8 +576,7 @@ export default function AdminDashboard({
         <Card>
           <CardHeader>
             <CardTitle>
-              Top Visited Products (
-              {topVisitedView === "month" ? "Month" : "Day"})
+              {t("adminDashboard.kpi.topVisitedProducts")} ({topVisitedView === "month" ? t("adminDashboard.kpi.month") : t("adminDashboard.kpi.day")})
             </CardTitle>
             <div className="flex gap-2 mt-2">
               <Button
@@ -584,14 +584,14 @@ export default function AdminDashboard({
                 variant={topVisitedView === "month" ? "default" : "outline"}
                 onClick={() => setTopVisitedView("month")}
               >
-                Month
+                {t("adminDashboard.kpi.month")}
               </Button>
               <Button
                 size="sm"
                 variant={topVisitedView === "day" ? "default" : "outline"}
                 onClick={() => setTopVisitedView("day")}
               >
-                Day
+                {t("adminDashboard.kpi.day")}
               </Button>
             </div>
           </CardHeader>
@@ -600,7 +600,7 @@ export default function AdminDashboard({
               <ChartContainer
                 config={{
                   visits: {
-                    label: "Visits",
+                    label: t("adminDashboard.kpi.visitsBy"),
                     color: "hsl(var(--chart-2))",
                   },
                 }}
@@ -637,7 +637,7 @@ export default function AdminDashboard({
               </ChartContainer>
             ) : (
               <div className="flex items-center justify-center h-[200px] text-muted-foreground">
-                No data available
+                {t("adminDashboard.kpi.noData")}
               </div>
             )}
           </CardContent>

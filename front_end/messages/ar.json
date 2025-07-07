@@ -358,5 +358,44 @@
       "blocked_title": "⚠️ تم حظرك مؤقتاً",
       "blocked_description": "لقد قمت بعدد كبير من الطلبات. أنت محظور لمدة 24 ساعة."
     }
+  },
+  "adminDashboard": {
+    "title": "لوحة تحكم المدير",
+    "subtitle": "نظرة عامة على أداء النظام والمؤشرات الرئيسية.",
+    "kpi": {
+      "users": "إجمالي المستخدمين",
+      "products": "المنتجات",
+      "orders": "الطلبات",
+      "categories": "الفئات",
+      "inStock": "متوفر",
+      "outStock": "غير متوفر",
+      "orderStatusDistribution": "توزيع حالة الطلبات",
+      "orderStatusDistributionDesc": "تفصيل الطلبات حسب الحالة",
+      "productStockStatus": "حالة مخزون المنتجات",
+      "productStockStatusDesc": "المنتجات المتوفرة مقابل غير المتوفرة",
+      "pending": "قيد الانتظار",
+      "completed": "مكتمل",
+      "cancelled": "ملغي",
+      "processing": "قيد المعالجة",
+      "noOrderData": "لا توجد بيانات طلبات متاحة",
+      "noProductData": "لا توجد بيانات منتجات متاحة",
+      "quickActions": "إجراءات سريعة",
+      "quickActionsDesc": "مهام إدارية شائعة",
+      "manageUsers": "إدارة المستخدمين",
+      "addProduct": "إضافة منتج",
+      "categoriesBtn": "الفئات",
+      "viewOrders": "عرض الطلبات",
+      "recentActivity": "النشاطات الأخيرة",
+      "recentActivityDesc": "أحدث أنشطة النظام",
+      "newUser": "مستخدم جديد",
+      "productAdded": "تمت إضافة منتج",
+      "order": "طلب",
+      "category": "فئة",
+      "noData": "لا توجد بيانات متاحة",
+      "visitsBy": "الزيارات حسب",
+      "month": "شهر",
+      "day": "يوم",
+      "topVisitedProducts": "المنتجات الأكثر زيارة"
+    }
   }
 }

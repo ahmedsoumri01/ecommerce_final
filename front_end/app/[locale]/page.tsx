@@ -177,9 +177,6 @@ export default function HomePage({ params }: { params: { locale: string } }) {
 
       {/* Newsletter Section */}
       <NewsletterSection dict={t("home_page")} isRTL={isRTL} />
-
-      {/* Footer */}
-      <Footer dict={t("footer")} locale={params.locale} isRTL={isRTL} />
     </div>
   );
 }

@@ -358,5 +358,44 @@
       "blocked_title": "⚠️ Blocage temporaire",
       "blocked_description": "Vous avez effectué trop de demandes. Vous êtes bloqué pendant 24 heures."
     }
+  },
+  "adminDashboard": {
+    "title": "Tableau de bord administrateur",
+    "subtitle": "Aperçu des performances du système et des indicateurs clés.",
+    "kpi": {
+      "users": "Nombre total d'utilisateurs",
+      "products": "Produits",
+      "orders": "Commandes",
+      "categories": "Catégories",
+      "inStock": "En stock",
+      "outStock": "Rupture",
+      "orderStatusDistribution": "Répartition des statuts de commande",
+      "orderStatusDistributionDesc": "Répartition des commandes par statut",
+      "productStockStatus": "Statut du stock produit",
+      "productStockStatusDesc": "Produits en stock vs en rupture de stock",
+      "pending": "En attente",
+      "completed": "Terminée",
+      "cancelled": "Annulée",
+      "processing": "En cours",
+      "noOrderData": "Aucune donnée de commande disponible",
+      "noProductData": "Aucune donnée produit disponible",
+      "quickActions": "Actions rapides",
+      "quickActionsDesc": "Tâches administratives courantes",
+      "manageUsers": "Gérer les utilisateurs",
+      "addProduct": "Ajouter un produit",
+      "categoriesBtn": "Catégories",
+      "viewOrders": "Voir les commandes",
+      "recentActivity": "Activité récente",
+      "recentActivityDesc": "Dernières activités du système",
+      "newUser": "Nouvel utilisateur",
+      "productAdded": "Produit ajouté",
+      "order": "Commande",
+      "category": "Catégorie",
+      "noData": "Aucune donnée disponible",
+      "visitsBy": "Visites par",
+      "month": "Mois",
+      "day": "Jour",
+      "topVisitedProducts": "Produits les plus visités"
+    }
   }
 }

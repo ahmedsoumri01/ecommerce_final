@@ -50,8 +50,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
+  params,
 }: {
   children: React.ReactNode;
+  params: { locale: string };
 }) {
   return (
     <html lang="fr">
@@ -109,11 +111,7 @@ export default function RootLayout({
         <meta name="msapplication-config" content="/icons/browserconfig.xml" />
         <meta name="msapplication-TileColor" content="#3b82f6" />
         <meta name="msapplication-tap-highlight" content="no" />
-        <link
-          rel="apple-touch-icon"
-          sizes="152x152"
-          href="/icons/icon-152x152.png"
-        />
+
         <link
           rel="icon"
           type="image/png"
@@ -147,7 +145,8 @@ export default function RootLayout({
         />
       </head>
       <body className={inter.className}>
-        <ClientLayout>{children}</ClientLayout> <Analytics />
+        <ClientLayout locale={params.locale}>{children}</ClientLayout>
+        <Analytics />
       </body>
     </html>
   );

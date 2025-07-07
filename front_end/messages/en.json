@@ -314,5 +314,44 @@
       "blocked_title": "⚠️ Temporarily Blocked",
       "blocked_description": "You've made too many requests. You are blocked for 24 hours."
     }
+  },
+  "adminDashboard": {
+    "title": "Admin Dashboard",
+    "subtitle": "Overview of your system's performance and key metrics.",
+    "kpi": {
+      "users": "Total Users",
+      "products": "Products",
+      "orders": "Orders",
+      "categories": "Categories",
+      "inStock": "In Stock",
+      "outStock": "Out",
+      "orderStatusDistribution": "Order Status Distribution",
+      "orderStatusDistributionDesc": "Breakdown of orders by status",
+      "productStockStatus": "Product Stock Status",
+      "productStockStatusDesc": "In stock vs out of stock products",
+      "pending": "Pending",
+      "completed": "Completed",
+      "cancelled": "Cancelled",
+      "processing": "Processing",
+      "noOrderData": "No order data available",
+      "noProductData": "No product data available",
+      "quickActions": "Quick Actions",
+      "quickActionsDesc": "Common administrative tasks",
+      "manageUsers": "Manage Users",
+      "addProduct": "Add Product",
+      "categoriesBtn": "Categories",
+      "viewOrders": "View Orders",
+      "recentActivity": "Recent Activity",
+      "recentActivityDesc": "Latest system activities",
+      "newUser": "New user",
+      "productAdded": "Product added",
+      "order": "Order",
+      "category": "Category",
+      "noData": "No data available",
+      "visitsBy": "Visits by",
+      "month": "Month",
+      "day": "Day",
+      "topVisitedProducts": "Top Visited Products"
+    }
   }
 }
