@@ -473,7 +473,25 @@
       "view": "Voir",
       "edit": "Modifier",
       "delete": "Supprimer",
-      "loading": "Chargement des catégories..."
+      "loading": "Chargement des catégories...",
+      "createCategory": {
+        "back": "Retour aux catégories",
+        "title": "Créer une nouvelle catégorie",
+        "subtitle": "Ajoutez une nouvelle catégorie pour organiser vos produits",
+        "categoryInfo": "Informations sur la catégorie",
+        "categoryName": "Nom de la catégorie *",
+        "categoryNamePlaceholder": "Entrez le nom de la catégorie",
+        "arabicName": "Nom arabe",
+        "arabicNamePlaceholder": "الاسم بالعربية",
+        "frenchName": "Nom français",
+        "frenchNamePlaceholder": "Nom en français",
+        "featured": "Catégorie en vedette",
+        "featuredDesc": "Les catégories en vedette seront mises en avant sur la page d'accueil",
+        "categoryImage": "Image de la catégorie",
+        "create": "Créer la catégorie",
+        "creating": "Création de la catégorie...",
+        "cancel": "Annuler"
+      }
     }
   }
 }

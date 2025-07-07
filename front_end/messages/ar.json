@@ -473,7 +473,25 @@
       "view": "عرض",
       "edit": "تعديل",
       "delete": "حذف",
-      "loading": "جاري تحميل الفئات..."
+      "loading": "جاري تحميل الفئات...",
+      "createCategory": {
+        "back": "العودة إلى الفئات",
+        "title": "إنشاء فئة جديدة",
+        "subtitle": "أضف فئة جديدة لتنظيم منتجاتك",
+        "categoryInfo": "معلومات الفئة",
+        "categoryName": "اسم الفئة *",
+        "categoryNamePlaceholder": "أدخل اسم الفئة",
+        "arabicName": "الاسم بالعربية",
+        "arabicNamePlaceholder": "الاسم بالعربية",
+        "frenchName": "الاسم بالفرنسية",
+        "frenchNamePlaceholder": "Nom en français",
+        "featured": "فئة مميزة",
+        "featuredDesc": "سيتم إبراز الفئات المميزة في الصفحة الرئيسية",
+        "categoryImage": "صورة الفئة",
+        "create": "إنشاء فئة",
+        "creating": "جاري إنشاء الفئة...",
+        "cancel": "إلغاء"
+      }
     }
   }
 }

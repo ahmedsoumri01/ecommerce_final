@@ -23,6 +23,7 @@ import {
 import { ImageUpload } from "@/components/ui/image-upload";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useClientDictionary } from "@/hooks/useClientDictionary";
 
 export default function CreateCategoryPage({
   params,
@@ -31,6 +32,7 @@ export default function CreateCategoryPage({
 }) {
   const router = useRouter();
   const { createCategory, isLoading } = useCategoryStore();
+  const { t } = useClientDictionary(params.locale);
 
   const form = useForm<CreateCategoryFormData>({
     resolver: zodResolver(createCategorySchema),
@@ -66,15 +68,15 @@ export default function CreateCategoryPage({
         <Link href={`/${params.locale}/admin/categories`}>
           <Button variant="outline" size="sm" className="bg-transparent">
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Categories
+            {t("adminDashboard.categoriesManagement.createCategory.back")}
           </Button>
         </Link>
         <div>
           <h1 className="text-2xl font-bold text-gray-900">
-            Create New Category
+            {t("adminDashboard.categoriesManagement.createCategory.title")}
           </h1>
           <p className="text-gray-600">
-            Add a new category to organize your products
+            {t("adminDashboard.categoriesManagement.createCategory.subtitle")}
           </p>
         </div>
       </div>
@@ -88,7 +90,9 @@ export default function CreateCategoryPage({
                 <CardHeader>
                   <CardTitle className="flex items-center">
                     <Tag className="h-5 w-5 mr-2" />
-                    Category Information
+                    {t(
+                      "adminDashboard.categoriesManagement.createCategory.categoryInfo"
+                    )}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
@@ -97,13 +101,19 @@ export default function CreateCategoryPage({
                     name="name"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Category Name *</FormLabel>
+                        <FormLabel>
+                          {t(
+                            "adminDashboard.categoriesManagement.createCategory.categoryName"
+                          )}
+                        </FormLabel>
                         <FormControl>
                           <div className="relative">
                             <Tag className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                             <Input
                               {...field}
-                              placeholder="Enter category name"
+                              placeholder={t(
+                                "adminDashboard.categoriesManagement.createCategory.categoryNamePlaceholder"
+                              )}
                               className="pl-10"
                               disabled={isLoading}
                             />
@@ -120,13 +130,19 @@ export default function CreateCategoryPage({
                       name="nameAr"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Arabic Name</FormLabel>
+                          <FormLabel>
+                            {t(
+                              "adminDashboard.categoriesManagement.createCategory.arabicName"
+                            )}
+                          </FormLabel>
                           <FormControl>
                             <div className="relative">
                               <Globe className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                               <Input
                                 {...field}
-                                placeholder="الاسم بالعربية"
+                                placeholder={t(
+                                  "adminDashboard.categoriesManagement.createCategory.arabicNamePlaceholder"
+                                )}
                                 className="pl-10"
                                 disabled={isLoading}
                                 dir="rtl"
@@ -143,13 +159,19 @@ export default function CreateCategoryPage({
                       name="nameFr"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>French Name</FormLabel>
+                          <FormLabel>
+                            {t(
+                              "adminDashboard.categoriesManagement.createCategory.frenchName"
+                            )}
+                          </FormLabel>
                           <FormControl>
                             <div className="relative">
                               <Globe className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                               <Input
                                 {...field}
-                                placeholder="Nom en français"
+                                placeholder={t(
+                                  "adminDashboard.categoriesManagement.createCategory.frenchNamePlaceholder"
+                                )}
                                 className="pl-10"
                                 disabled={isLoading}
                               />
@@ -169,11 +191,14 @@ export default function CreateCategoryPage({
                         <div className="space-y-0.5">
                           <FormLabel className="flex items-center">
                             <Star className="h-4 w-4 mr-2" />
-                            Featured Category
+                            {t(
+                              "adminDashboard.categoriesManagement.createCategory.featured"
+                            )}
                           </FormLabel>
                           <p className="text-sm text-gray-600">
-                            Featured categories will be highlighted on the
-                            homepage
+                            {t(
+                              "adminDashboard.categoriesManagement.createCategory.featuredDesc"
+                            )}
                           </p>
                         </div>
                         <FormControl>
@@ -194,7 +219,11 @@ export default function CreateCategoryPage({
             <div>
               <Card>
                 <CardHeader>
-                  <CardTitle>Category Image</CardTitle>
+                  <CardTitle>
+                    {t(
+                      "adminDashboard.categoriesManagement.createCategory.categoryImage"
+                    )}
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <FormField
@@ -224,10 +253,12 @@ export default function CreateCategoryPage({
               {isLoading ? (
                 <>
                   <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                  Creating Category...
+                  {t(
+                    "adminDashboard.categoriesManagement.createCategory.creating"
+                  )}
                 </>
               ) : (
-                "Create Category"
+                t("adminDashboard.categoriesManagement.createCategory.create")
               )}
             </Button>
             <Button
@@ -237,7 +268,7 @@ export default function CreateCategoryPage({
               disabled={isLoading}
               className="bg-transparent"
             >
-              Cancel
+              {t("adminDashboard.categoriesManagement.createCategory.cancel")}
             </Button>
           </div>
         </form>
