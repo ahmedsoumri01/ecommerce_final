@@ -29,6 +29,7 @@ import {
   type CreateUserFormData,
 } from "@/lib/validations/user";
 import { useState } from "react";
+import { useClientDictionary } from "@/hooks/useClientDictionary";
 
 export default function CreateUserPage({
   params,
@@ -38,6 +39,7 @@ export default function CreateUserPage({
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
   const { createUser, isLoading } = useUserStore();
+  const { t } = useClientDictionary(params.locale);
 
   const form = useForm<CreateUserFormData>({
     resolver: zodResolver(createUserSchema),
@@ -65,12 +67,16 @@ export default function CreateUserPage({
         <Link href={`/${params.locale}/admin/users`}>
           <Button variant="outline" size="sm" className="bg-transparent">
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Users
+            {t("adminDashboard.userManagement.createUser.back")}
           </Button>
         </Link>
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Create New User</h1>
-          <p className="text-gray-600">Add a new user to the system</p>
+          <h1 className="text-2xl font-bold text-gray-900">
+            {t("adminDashboard.userManagement.createUser.title")}
+          </h1>
+          <p className="text-gray-600">
+            {t("adminDashboard.userManagement.createUser.subtitle")}
+          </p>
         </div>
       </div>
 
@@ -79,7 +85,7 @@ export default function CreateUserPage({
         <CardHeader>
           <CardTitle className="flex items-center">
             <User className="h-5 w-5 mr-2" />
-            User Information
+            {t("adminDashboard.userManagement.createUser.userInfo")}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -91,13 +97,19 @@ export default function CreateUserPage({
                   name="firstName"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>First Name</FormLabel>
+                      <FormLabel>
+                        {t(
+                          "adminDashboard.userManagement.createUser.firstName"
+                        )}
+                      </FormLabel>
                       <FormControl>
                         <div className="relative">
                           <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                           <Input
                             {...field}
-                            placeholder="Enter first name"
+                            placeholder={t(
+                              "adminDashboard.userManagement.createUser.firstNamePlaceholder"
+                            )}
                             className="pl-10"
                             disabled={isLoading}
                           />
@@ -113,11 +125,15 @@ export default function CreateUserPage({
                   name="lastName"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Last Name</FormLabel>
+                      <FormLabel>
+                        {t("adminDashboard.userManagement.createUser.lastName")}
+                      </FormLabel>
                       <FormControl>
                         <Input
                           {...field}
-                          placeholder="Enter last name"
+                          placeholder={t(
+                            "adminDashboard.userManagement.createUser.lastNamePlaceholder"
+                          )}
                           disabled={isLoading}
                         />
                       </FormControl>
@@ -132,14 +148,18 @@ export default function CreateUserPage({
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email Address</FormLabel>
+                    <FormLabel>
+                      {t("adminDashboard.userManagement.createUser.email")}
+                    </FormLabel>
                     <FormControl>
                       <div className="relative">
                         <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                         <Input
                           {...field}
                           type="email"
-                          placeholder="Enter email address"
+                          placeholder={t(
+                            "adminDashboard.userManagement.createUser.emailPlaceholder"
+                          )}
                           className="pl-10"
                           disabled={isLoading}
                         />
@@ -155,14 +175,18 @@ export default function CreateUserPage({
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Password</FormLabel>
+                    <FormLabel>
+                      {t("adminDashboard.userManagement.createUser.password")}
+                    </FormLabel>
                     <FormControl>
                       <div className="relative">
                         <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                         <Input
                           {...field}
                           type={showPassword ? "text" : "password"}
-                          placeholder="Enter password"
+                          placeholder={t(
+                            "adminDashboard.userManagement.createUser.passwordPlaceholder"
+                          )}
                           className="pl-10 pr-10"
                           disabled={isLoading}
                         />
@@ -172,7 +196,11 @@ export default function CreateUserPage({
                           className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                           disabled={isLoading}
                         >
-                          {showPassword ? "Hide" : "Show"}
+                          {showPassword
+                            ? t("adminDashboard.userManagement.createUser.hide")
+                            : t(
+                                "adminDashboard.userManagement.createUser.show"
+                              )}
                         </button>
                       </div>
                     </FormControl>
@@ -186,7 +214,9 @@ export default function CreateUserPage({
                 name="role"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Role</FormLabel>
+                    <FormLabel>
+                      {t("adminDashboard.userManagement.createUser.role")}
+                    </FormLabel>
                     <FormControl>
                       <div className="relative">
                         <Shield className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 z-10" />
@@ -196,11 +226,23 @@ export default function CreateUserPage({
                           disabled={isLoading}
                         >
                           <SelectTrigger className="pl-10">
-                            <SelectValue placeholder="Select user role" />
+                            <SelectValue
+                              placeholder={t(
+                                "adminDashboard.userManagement.createUser.rolePlaceholder"
+                              )}
+                            />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="client">Client</SelectItem>
-                            <SelectItem value="admin">Admin</SelectItem>
+                            <SelectItem value="client">
+                              {t(
+                                "adminDashboard.userManagement.createUser.client"
+                              )}
+                            </SelectItem>
+                            <SelectItem value="admin">
+                              {t(
+                                "adminDashboard.userManagement.createUser.admin"
+                              )}
+                            </SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
@@ -215,10 +257,10 @@ export default function CreateUserPage({
                   {isLoading ? (
                     <>
                       <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                      Creating User...
+                      {t("adminDashboard.userManagement.createUser.creating")}
                     </>
                   ) : (
-                    "Create User"
+                    t("adminDashboard.userManagement.createUser.create")
                   )}
                 </Button>
                 <Button
@@ -228,7 +270,7 @@ export default function CreateUserPage({
                   disabled={isLoading}
                   className="bg-transparent"
                 >
-                  Cancel
+                  {t("adminDashboard.userManagement.createUser.cancel")}
                 </Button>
               </div>
             </form>

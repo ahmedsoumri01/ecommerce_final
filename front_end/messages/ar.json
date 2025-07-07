@@ -422,7 +422,30 @@
       "block": "حظر",
       "activate": "تفعيل",
       "delete": "حذف",
-      "loading": "جاري تحميل المستخدمين..."
+      "loading": "جاري تحميل المستخدمين...",
+      "createUser": {
+        "back": "العودة إلى المستخدمين",
+        "title": "إنشاء مستخدم جديد",
+        "subtitle": "إضافة مستخدم جديد للنظام",
+        "userInfo": "معلومات المستخدم",
+        "firstName": "الاسم الأول",
+        "firstNamePlaceholder": "أدخل الاسم الأول",
+        "lastName": "اسم العائلة",
+        "lastNamePlaceholder": "أدخل اسم العائلة",
+        "email": "البريد الإلكتروني",
+        "emailPlaceholder": "أدخل البريد الإلكتروني",
+        "password": "كلمة المرور",
+        "passwordPlaceholder": "أدخل كلمة المرور",
+        "show": "إظهار",
+        "hide": "إخفاء",
+        "role": "الدور",
+        "rolePlaceholder": "اختر دور المستخدم",
+        "client": "عميل",
+        "admin": "مسؤول",
+        "create": "إنشاء مستخدم",
+        "creating": "جاري إنشاء المستخدم...",
+        "cancel": "إلغاء"
+      }
     }
   }
 }

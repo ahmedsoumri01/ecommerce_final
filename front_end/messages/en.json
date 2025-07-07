@@ -378,7 +378,30 @@
       "block": "Block",
       "activate": "Activate",
       "delete": "Delete",
-      "loading": "Loading users..."
+      "loading": "Loading users...",
+      "createUser": {
+        "back": "Back to Users",
+        "title": "Create New User",
+        "subtitle": "Add a new user to the system",
+        "userInfo": "User Information",
+        "firstName": "First Name",
+        "firstNamePlaceholder": "Enter first name",
+        "lastName": "Last Name",
+        "lastNamePlaceholder": "Enter last name",
+        "email": "Email Address",
+        "emailPlaceholder": "Enter email address",
+        "password": "Password",
+        "passwordPlaceholder": "Enter password",
+        "show": "Show",
+        "hide": "Hide",
+        "role": "Role",
+        "rolePlaceholder": "Select user role",
+        "client": "Client",
+        "admin": "Admin",
+        "create": "Create User",
+        "creating": "Creating User...",
+        "cancel": "Cancel"
+      }
     }
   }
 }

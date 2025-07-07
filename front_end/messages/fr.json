@@ -422,7 +422,30 @@
       "block": "Bloquer",
       "activate": "Activer",
       "delete": "Supprimer",
-      "loading": "Chargement des utilisateurs..."
+      "loading": "Chargement des utilisateurs...",
+      "createUser": {
+        "back": "Retour à la liste",
+        "title": "Créer un nouvel utilisateur",
+        "subtitle": "Ajouter un nouvel utilisateur au système",
+        "userInfo": "Informations utilisateur",
+        "firstName": "Prénom",
+        "firstNamePlaceholder": "Entrez le prénom",
+        "lastName": "Nom",
+        "lastNamePlaceholder": "Entrez le nom",
+        "email": "Adresse e-mail",
+        "emailPlaceholder": "Entrez l'adresse e-mail",
+        "password": "Mot de passe",
+        "passwordPlaceholder": "Entrez le mot de passe",
+        "show": "Afficher",
+        "hide": "Masquer",
+        "role": "Rôle",
+        "rolePlaceholder": "Sélectionnez le rôle",
+        "client": "Client",
+        "admin": "Administrateur",
+        "create": "Créer l'utilisateur",
+        "creating": "Création de l'utilisateur...",
+        "cancel": "Annuler"
+      }
     }
   }
 }
